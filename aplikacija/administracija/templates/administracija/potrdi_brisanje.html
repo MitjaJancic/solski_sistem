@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block naslov %}Potrdi brisanje – Šolski IS{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Potrdi brisanje</h1>
+  <p>Ali res želiš izbrisati <strong>{{ object }}</strong>? Tega dejanja ni mogoče razveljaviti.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Izbriši</button>
+    <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}

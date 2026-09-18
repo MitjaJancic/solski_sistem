@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block naslov %}Začetna stran – Šolski IS{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Administratorski pogled</h1>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Predmeti</h5>
+          <p class="card-text display-6">{{ stevilo_predmetov }}</p>
+          <a href="{% url 'predmet_seznam' %}" class="btn btn-primary">Uredi predmete</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Učitelji</h5>
+          <p class="card-text display-6">{{ stevilo_uciteljev }}</p>
+          <a href="{% url 'ucitelj_seznam' %}" class="btn btn-primary">Uredi učitelje</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Učenci</h5>
+          <p class="card-text display-6">{{ stevilo_ucencev }}</p>
+          <a href="{% url 'ucenec_seznam' %}" class="btn btn-primary">Uredi učence</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
