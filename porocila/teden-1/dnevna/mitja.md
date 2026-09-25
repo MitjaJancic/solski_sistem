@@ -13,8 +13,9 @@
 - pripravil Nginx konfiguracijo kot obrnjeni posrednik + skripto za generiranje samopodpisanega TLS potrdila in ga generiral
 - začel dokumentacijo strežnika ([`streznik.md`](../../dokumentacija/streznik.md))
 
-**Kaj sem dokončal:** ogrodje projekta, specifikacija, ER diagram, wireframi, CRUD administratorja, docker-compose in nginx konfiguracija (še nepreizkušena v resničnem Dockerju).
+**Kaj sem dokončal:** ogrodje projekta, specifikacija, ER diagram, wireframi, CRUD administratorja, docker-compose in nginx konfiguracija; ustvaril GitHub repozitorij ([MitjaJancic/solski_sistem](https://github.com/MitjaJancic/solski_sistem)), povezal veje `main`/`develop`/`mitja`/`nal` in povabil Nala kot sodelavca.
+
+**Popoldanska posodobitev:** po namestitvi Docker Desktop sem dejansko pognal `docker compose up -d --build` — vsi štirje vsebniki (baza, aplikacija, adminer, proxy) so se zagnali in delujejo; `entrypoint.sh` je pravilno počakal na bazo in pognal migracije. Poganjal sem `seed_podatki` na resnični MariaDB bazi (10 predmetov, 20 učiteljev, 100 učencev) in preveril, da je aplikacija dosegljiva na https://localhost (skozi Nginx, samopodpisano potrdilo) ter Adminer na http://localhost:8081.
 
 **Kaj mi ni uspelo in zakaj:**
-- nisem mogel dejansko pognati `docker compose up`, ker Docker Desktop ni nameščen na tem računalniku — potrebna je namestitev, preden preverimo delovanje v resničnih vsebnikih
-- GitHub repozitorij še ni ustvarjen/povezan (čakam na mentorja, ki bo dodan kot sodelavec)
+- GitHub repozitorij je javen (public), mentor še ni dodan kot sodelavec, ker njegovo uporabniško ime še ni znano — dodam ga takoj, ko bo določen
