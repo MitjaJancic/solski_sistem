@@ -1,0 +1,39 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <rect width="800" height="500" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  <rect x="0" y="0" width="800" height="50" fill="#333"/>
+  <text x="20" y="32" fill="#fff" font-size="18">Šolski IS</text>
+  <text x="500" y="32" fill="#fff" font-size="14">Predmeti | Učitelji | Učenci</text>
+
+  <text x="20" y="90" font-size="22" fill="#111">Administratorski pogled – Učenci</text>
+
+  <rect x="600" y="105" width="180" height="34" rx="4" fill="#e9ecef" stroke="#333"/>
+  <text x="625" y="128" font-size="14">+ Nov učenec</text>
+
+  <rect x="20" y="150" width="760" height="34" fill="#f1f3f5" stroke="#333"/>
+  <text x="30" y="172" font-size="13">Priimek in ime</text>
+  <text x="280" y="172" font-size="13">E-pošta</text>
+  <text x="500" y="172" font-size="13">Predmeti</text>
+  <text x="700" y="172" font-size="13">Dejanja</text>
+
+  <g font-size="13">
+    <rect x="20" y="184" width="760" height="34" fill="#fff" stroke="#dee2e6"/>
+    <text x="30" y="206">Kovač Ana</text>
+    <text x="280" y="206">ana.kovac@dijaki...</text>
+    <text x="500" y="206">MAT, SLO, ANG</text>
+    <text x="690" y="206">Uredi | Izbriši</text>
+
+    <rect x="20" y="218" width="760" height="34" fill="#f8f9fa" stroke="#dee2e6"/>
+    <text x="30" y="240">Novak Luka</text>
+    <text x="280" y="240">luka.novak@dijaki...</text>
+    <text x="500" y="240">ZGO, GEO</text>
+    <text x="690" y="240">Uredi | Izbriši</text>
+
+    <rect x="20" y="252" width="760" height="34" fill="#fff" stroke="#dee2e6"/>
+    <text x="30" y="274">... (skupaj 100 vnosov)</text>
+  </g>
+
+  <rect x="20" y="300" width="760" height="30" fill="#e9ecef" stroke="#333" stroke-dasharray="4"/>
+  <text x="330" y="320" font-size="13">« Prejšnja  Stran 1 od 5  Naslednja »</text>
+
+  <text x="20" y="370" font-size="14" fill="#555">Enaka postavitev (seznam + obrazec) tudi za poglede Predmeti in Učitelji.</text>
+</svg>

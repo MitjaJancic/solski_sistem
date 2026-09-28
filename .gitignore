@@ -1,0 +1,33 @@
+# Okoljske spremenljivke
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Django
+aplikacija/staticfiles/
+aplikacija/media/
+db.sqlite3
+
+# Docker / podatki
+mariadb_data/
+
+# Certifikati (samopodpisani, generirani lokalno)
+nginx/certs/*.pem
+nginx/certs/*.key
+nginx/certs/*.crt
+
+# Urejevalniki / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Izvirna navodila mentorja/šole (referenčno, ni del oddaje)
+/navodila.txt
+/5. Časovni načrt dela – 6 tednov.txt

@@ -1,0 +1,42 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <rect width="800" height="500" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  <rect x="0" y="0" width="800" height="50" fill="#333"/>
+  <text x="20" y="32" fill="#fff" font-size="18">Šolski IS</text>
+  <text x="550" y="32" fill="#fff" font-size="14">Moji predmeti | Odjava</text>
+
+  <text x="20" y="90" font-size="22" fill="#111">Pogled učitelja – Matematika</text>
+
+  <rect x="20" y="110" width="240" height="34" rx="4" fill="#e9ecef" stroke="#333"/>
+  <text x="35" y="132" font-size="13">Predmet: [ Matematika ▾ ]</text>
+
+  <text x="20" y="175" font-size="16" font-weight="bold">Gradiva</text>
+  <rect x="600" y="155" width="180" height="34" rx="4" fill="#e9ecef" stroke="#333"/>
+  <text x="620" y="178" font-size="13">+ Naloži gradivo</text>
+
+  <g font-size="13">
+    <rect x="20" y="190" width="760" height="30" fill="#fff" stroke="#dee2e6"/>
+    <text x="30" y="210">Uvod v enačbe.pdf</text>
+    <text x="700" y="210">Izbriši</text>
+
+    <rect x="20" y="220" width="760" height="30" fill="#f8f9fa" stroke="#dee2e6"/>
+    <text x="30" y="240">Vaje – kvadratne funkcije.docx</text>
+    <text x="700" y="240">Izbriši</text>
+  </g>
+
+  <text x="20" y="290" font-size="16" font-weight="bold">Oddane naloge</text>
+  <rect x="20" y="305" width="760" height="34" fill="#f1f3f5" stroke="#333"/>
+  <text x="30" y="327" font-size="13">Učenec</text>
+  <text x="280" y="327" font-size="13">Naloga</text>
+  <text x="550" y="327" font-size="13">Oddano</text>
+  <text x="680" y="327" font-size="13">Datoteka</text>
+
+  <g font-size="13">
+    <rect x="20" y="339" width="760" height="30" fill="#fff" stroke="#dee2e6"/>
+    <text x="30" y="359">Kovač Ana</text>
+    <text x="280" y="359">Domača naloga 3</text>
+    <text x="550" y="359">12. 10.</text>
+    <text x="680" y="359">Kovač Ana – DN3.pdf</text>
+  </g>
+
+  <text x="20" y="420" font-size="14" fill="#555">Učitelj vidi in ureja samo predmete, ki jih dejansko poučuje (glej 4. teden).</text>
+</svg>

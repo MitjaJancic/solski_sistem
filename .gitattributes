@@ -1,0 +1,5 @@
+# Skriptne datoteke, ki tečejo v Linux vsebnikih, morajo obdržati LF konec
+# vrstice, sicer se ob checkoutu na Windows (core.autocrlf) pokvari shebang.
+*.sh text eol=lf
+Dockerfile text eol=lf
+entrypoint.sh text eol=lf

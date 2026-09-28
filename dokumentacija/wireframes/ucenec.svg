@@ -1,0 +1,43 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <rect width="800" height="500" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  <rect x="0" y="0" width="800" height="50" fill="#333"/>
+  <text x="20" y="32" fill="#fff" font-size="18">Šolski IS</text>
+  <text x="530" y="32" fill="#fff" font-size="14">Moj profil | Moji predmeti | Odjava</text>
+
+  <text x="20" y="90" font-size="22" fill="#111">Pogled učenca – Moji predmeti</text>
+
+  <rect x="600" y="105" width="180" height="34" rx="4" fill="#e9ecef" stroke="#333"/>
+  <text x="615" y="128" font-size="13">Uredi seznam predmetov</text>
+
+  <g font-size="13">
+    <rect x="20" y="150" width="240" height="90" fill="#f8f9fa" stroke="#333"/>
+    <text x="30" y="170" font-weight="bold">Matematika</text>
+    <text x="30" y="190">Gradiva (4)</text>
+    <text x="30" y="210">Oddaj nalogo »</text>
+
+    <rect x="280" y="150" width="240" height="90" fill="#f8f9fa" stroke="#333"/>
+    <text x="290" y="170" font-weight="bold">Slovenščina</text>
+    <text x="290" y="190">Gradiva (2)</text>
+    <text x="290" y="210">Oddaj nalogo »</text>
+
+    <rect x="540" y="150" width="240" height="90" fill="#f8f9fa" stroke="#333"/>
+    <text x="550" y="170" font-weight="bold">Angleščina</text>
+    <text x="550" y="190">Gradiva (3)</text>
+    <text x="550" y="210">Oddaj nalogo »</text>
+  </g>
+
+  <text x="20" y="280" font-size="16" font-weight="bold">Oddaja naloge – Matematika: Domača naloga 3</text>
+  <rect x="20" y="295" width="400" height="34" fill="#fff" stroke="#333"/>
+  <text x="30" y="317" font-size="13">[ Izberi datoteko... ]</text>
+  <rect x="430" y="295" width="140" height="34" rx="4" fill="#e9ecef" stroke="#333"/>
+  <text x="455" y="317" font-size="13">Oddaj</text>
+
+  <text x="20" y="345" font-size="12" fill="#555">
+    Shrani se kot »Priimek Ime – Naslov naloge«. Ponovna oddaja povozi
+  </text>
+  <text x="20" y="362" font-size="12" fill="#555">
+    prejšnjo datoteko šele po potrditvi ("Ali res želiš zamenjati oddajo?").
+  </text>
+
+  <text x="20" y="420" font-size="14" fill="#555">Registracija/urejanje profila in avtorizacija se izvedeta v 4. tednu.</text>
+</svg>
