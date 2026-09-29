@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block naslov %}Oddaj nalogo – Šolski IS{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Oddaj nalogo</h1>
+  <p class="text-muted">
+    Datoteka se na strežniku shrani pod imenom
+    <code>Priimek Ime – Naslov naloge</code> z ustrezno končnico. Če za isto
+    nalogo (isti predmet in naslov) že obstaja oddaja, jo nova povozi šele, ko
+    to potrdiš.
+  </p>
+  <form method="post" enctype="multipart/form-data" novalidate class="col-lg-6">
+    {% csrf_token %}
+    {% include "portal/_polja.html" %}
+    <button type="submit" class="btn btn-primary">Oddaj</button>
+    <a href="{% url 'moje_oddaje' %}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}

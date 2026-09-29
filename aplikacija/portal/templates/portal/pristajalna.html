@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block naslov %}Šolski IS{% endblock %}
+{% block vsebina %}
+  <div class="p-5 mb-4 bg-light rounded-3">
+    <h1 class="display-6">Šolski informacijski sistem</h1>
+    <p class="lead">Podpora šolskemu delu na daljavo — gradiva, oddaja nalog in upravljanje predmetov.</p>
+    <a href="{% url 'prijava' %}" class="btn btn-primary btn-lg">Prijava</a>
+    <a href="{% url 'registracija' %}" class="btn btn-outline-primary btn-lg">Registracija učenca</a>
+  </div>
+  <div class="row g-3">
+    <div class="col-md-4"><div class="card"><div class="card-body">
+      <h5 class="card-title">Učenec</h5>
+      <p class="card-text">Registriraj se, izberi predmete, prebiraj gradiva in oddaj naloge.</p>
+    </div></div></div>
+    <div class="col-md-4"><div class="card"><div class="card-body">
+      <h5 class="card-title">Učitelj</h5>
+      <p class="card-text">Naloži gradiva za svoje predmete in preglej oddane naloge učencev.</p>
+    </div></div></div>
+    <div class="col-md-4"><div class="card"><div class="card-body">
+      <h5 class="card-title">Administrator</h5>
+      <p class="card-text">Upravljaj predmete, učitelje in učence ter njihove povezave.</p>
+    </div></div></div>
+  </div>
+{% endblock %}

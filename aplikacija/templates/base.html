@@ -17,9 +17,31 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="{% url 'predmet_seznam' %}">Predmeti</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'ucitelj_seznam' %}">Učitelji</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'ucenec_seznam' %}">Učenci</a></li>
+          {% if user.is_authenticated and user.profil.je_admin or user.is_superuser %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'predmet_seznam' %}">Predmeti</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'ucitelj_seznam' %}">Učitelji</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'ucenec_seznam' %}">Učenci</a></li>
+          {% elif user.is_authenticated and user.profil.je_ucitelj %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'ucitelj_predmeti' %}">Moji predmeti</a></li>
+          {% elif user.is_authenticated and user.profil.je_ucenec %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'ucenec_domov' %}">Domov</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'moji_predmeti' %}">Moji predmeti</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'moje_oddaje' %}">Moje oddaje</a></li>
+          {% endif %}
+        </ul>
+        <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+            <li class="nav-item"><span class="navbar-text me-3">{{ user.username }}</span></li>
+            <li class="nav-item">
+              <form method="post" action="{% url 'odjava' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-light">Odjava</button>
+              </form>
+            </li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'prijava' %}">Prijava</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'registracija' %}">Registracija</a></li>
+          {% endif %}
         </ul>
       </div>
     </div>

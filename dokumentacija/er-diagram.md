@@ -44,39 +44,53 @@ unikatno omejitvijo na paru tujih ključev (`(ucitelj_id, predmet_id)` in
 `(ucenec_id, predmet_id)`), kar preprečuje podvojene povezave. Skupaj je to
 **5 tabel**, kar presega zahtevanih najmanj 4.
 
-## Načrtovana razširitev (4. teden – prijava, gradiva, naloge)
+## Razširitev v 4. tednu (prijava, gradiva, oddaje) – implementirano
 
 ```mermaid
 erDiagram
-    UCITELJ ||--o| AUTH_USER : prijava
-    UCENEC ||--o| AUTH_USER : prijava
+    AUTH_USER ||--|| PROFIL : ima
+    PROFIL }o--o| UCITELJ : povezan
+    PROFIL }o--o| UCENEC : povezan
     PREDMET ||--o{ GRADIVO : vsebuje
-    PREDMET ||--o{ NALOGA : vsebuje
+    UCITELJ ||--o{ GRADIVO : nalozi
+    PREDMET ||--o{ ODDAJA : prejme
     UCENEC ||--o{ ODDAJA : odda
-    NALOGA ||--o{ ODDAJA : prejme
 
+    PROFIL {
+        int id PK
+        int uporabnik_id FK "OneToOne auth_user"
+        string vloga "admin | ucitelj | ucenec"
+        int ucitelj_id FK "null"
+        int ucenec_id FK "null"
+    }
     GRADIVO {
         int id PK
         int predmet_id FK
         string naslov
         string datoteka
-    }
-    NALOGA {
-        int id PK
-        int predmet_id FK
-        string naslov
-        text opis
+        int nalozil_id FK "Ucitelj, null"
+        datetime ustvarjeno
     }
     ODDAJA {
         int id PK
-        int naloga_id FK
+        int predmet_id FK
         int ucenec_id FK
-        string datoteka
-        datetime cas_oddaje
+        string naslov "naslov naloge"
+        string datoteka "Priimek Ime – Naslov naloge.ext"
+        datetime oddano
     }
 ```
 
-`AUTH_USER` je Djangov vgrajeni model uporabnikov (`django.contrib.auth.User`);
-`UCITELJ`/`UCENEC` bosta v 4. tednu dobila neobvezen `OneToOne` na ta model za
-prijavo in avtorizacijo (dve vrsti uporabnikov: učitelj, učenec — administrator
-je Djangov `is_staff`/`is_superuser`).
+Ključne odločitve:
+
+- **`PROFIL`** povezuje Djangov vgrajeni model uporabnikov
+  (`django.contrib.auth.User`, ki hrani zgoščeno geslo) z vlogo in – po potrebi –
+  z zapisom `UCITELJ` ali `UCENEC`. Dve vrsti prijavljenih uporabnikov po
+  zahtevi sta učitelj in učenec; administrator je tretja vloga
+  (`is_staff`/`is_superuser`).
+- **`ODDAJA`** je vezana neposredno na `PREDMET` (in ne na ločeno tabelo nalog),
+  saj navodila od učitelja ne zahtevajo vnaprejšnjega ustvarjanja nalog –
+  učenec odda nalogo z naslovom. Unikatna omejitev `(ucenec, predmet, naslov)`
+  poskrbi, da ima ista naloga učenca eno oddajo; ponovna oddaja jo povozi (po
+  potrditvi).
+- Skupno je zdaj **8 tabel** (5 iz 3. tedna + `PROFIL`, `GRADIVO`, `ODDAJA`).

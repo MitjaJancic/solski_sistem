@@ -2,7 +2,7 @@
 
 Šolski IS je spletna aplikacija za podporo šolskemu delu na daljavo. Sistem
 omogoča tri poglede: **administrator**, **učitelj** in **učenec**, vsak s
-svojimi pravicami (avtorizacija se izvede v 4. tednu).
+svojimi pravicami (avtorizacija je uvedena v 4. tednu).
 
 ## 1. Administrator
 
@@ -17,8 +17,9 @@ svojimi pravicami (avtorizacija se izvede v 4. tednu).
 Vse zgornje operacije so dostopne prek uporabniškega vmesnika (`/predmeti/`,
 `/ucitelji/`, `/ucenci/`), neposreden vnos v bazo pa ni obvezen, je pa mogoč.
 
-**Status v 3. tednu:** A1–A5 implementirano (CRUD + urejanje relacij prek
-obrazcev). Prijava administratorja in omejitev dostopa prideta v 4. tednu.
+**Status v 4. tednu:** A1–A5 implementirano (CRUD + urejanje relacij prek
+obrazcev). Dostop do administratorskih pogledov je od 4. tedna omejen na
+prijavljenega administratorja (`AdminZahtevanMixin`).
 
 ## 2. Učitelj
 
@@ -27,7 +28,10 @@ obrazcev). Prijava administratorja in omejitev dostopa prideta v 4. tednu.
 | U1 | Nalaganje in brisanje gradiv za predmete, ki jih dejansko poučuje |
 | U2 | Pregled nalog, ki so jih učenci oddali pri izbranem predmetu |
 
-**Status v 3. tednu:** načrtovano za 4. teden (odvisno od prijave/avtorizacije).
+**Status v 4. tednu:** implementirano. Učitelj vidi in ureja izključno predmete,
+ki jih poučuje (queryset omejen na `Predmet.objects.filter(ucitelji=...)`,
+dodatno preverjanje ob shranjevanju). Nalaganje/brisanje gradiv:
+`/ucitelj/gradivo/...`; pregled oddanih nalog: `/ucitelj/predmet/<id>/`.
 
 ## 3. Učenec
 
@@ -38,15 +42,36 @@ obrazcev). Prijava administratorja in omejitev dostopa prideta v 4. tednu.
 | E3 | Vpogled v gradiva vsakega predmeta s seznama |
 | E4 | Oddaja nalog; datoteka se shrani kot `Priimek Ime – Naslov naloge`; ponovna oddaja povozi prejšnjo šele po potrditvi učenca |
 
-**Status v 3. tednu:** načrtovano za 4. teden.
+**Status v 4. tednu:** implementirano. Učenec se samoregistrira
+(`/registracija/`), ureja profil (`/ucenec/profil/`) in seznam predmetov
+(`/ucenec/predmeti/`, vsaj en predmet), pregleduje gradiva vpisanih predmetov
+in oddaja naloge (`/ucenec/oddaje/nova/`). Datoteka se na strežniku shrani pod
+imenom »Priimek Ime – Naslov naloge« z izvorno končnico (`pot_oddaje` +
+`PovoznoShranjevanje`). Ponovna oddaja iste naloge povozi prejšnjo datoteko
+šele, ko učenec označi potrditev povozitve.
 
 ## Skupne zahteve
 
-- gesla se shranjujejo izključno zgoščena (Django `PBKDF2`/`argon2`, glej
-  [`AUTH_PASSWORD_VALIDATORS`](../aplikacija/solski_sistem/settings.py))
+- gesla se shranjujejo izključno zgoščena (Django privzeto `PBKDF2-SHA256`;
+  preverjeno s testom, da zapis uporabnika ne vsebuje gesla v čistem besedilu)
+- naložene datoteke (gradiva, oddaje) **niso javno dostopne** — postrežejo se
+  le prek prijavljenih poti s preverjanjem pravic (`/prenos/...`); zunanji
+  posrednik (Nginx) mape `media/` ne izpostavlja
 - odzivno oblikovanje (Bootstrap 5)
 - vsa koda je pod nadzorom različic (Git/GitHub), delo je sledljivo po
   članih skupine prek vej in commit-ov
+
+## Avtorizacija (4. teden)
+
+Dve vrsti prijavljenih uporabnikov po zahtevi navodil sta **učitelj** in
+**učenec**; **administrator** je tretja vloga (Djangov `is_staff`/`is_superuser`
+oz. `Profil.vloga = admin`). Vloga je shranjena v modelu
+[`portal.Profil`](../aplikacija/portal/models.py), ki povezuje Djangovega
+uporabnika z zapisom `Ucitelj`/`Ucenec`. Preverjanje pravic je zbrano v
+[`portal/dovoljenja.py`](../aplikacija/portal/dovoljenja.py) (mešalniki
+`AdminZahtevanMixin`, `UciteljZahtevanMixin`, `UcenecZahtevanMixin` in funkcije
+`je_admin`/`je_ucitelj`/`je_ucenec`). Pravilo: noben uporabnik ne dostopa do
+funkcij, ki mu ne pripadajo (nepooblaščen dostop vrne 403).
 
 ## Tehnološke odločitve in utemeljitev
 

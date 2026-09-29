@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block naslov %}Prijava – Šolski IS{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Prijava</h1>
+  {% if form.errors %}
+    <div class="alert alert-danger">Napačno uporabniško ime ali geslo.</div>
+  {% endif %}
+  <form method="post" class="col-lg-5">
+    {% csrf_token %}
+    {% for polje in form %}
+      <div class="mb-3">
+        <label class="form-label" for="{{ polje.id_for_label }}">{{ polje.label }}</label>
+        <input type="{% if polje.name == 'password' %}password{% else %}text{% endif %}"
+               name="{{ polje.name }}" id="{{ polje.id_for_label }}" class="form-control" required>
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Prijava</button>
+    <a href="{% url 'registracija' %}" class="btn btn-link">Nimam računa (registracija učenca)</a>
+  </form>
+{% endblock %}

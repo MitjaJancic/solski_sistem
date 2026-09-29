@@ -17,6 +17,9 @@ db.sqlite3
 # Docker / podatki
 mariadb_data/
 
+# Varnostne kopije baze (ustvari jih scripts/varnostna-kopija.sh)
+backup/
+
 # Certifikati (samopodpisani, generirani lokalno)
 nginx/certs/*.pem
 nginx/certs/*.key

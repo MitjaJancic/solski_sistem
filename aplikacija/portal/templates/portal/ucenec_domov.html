@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block naslov %}Moj portal – Šolski IS{% endblock %}
+{% block vsebina %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Pozdravljen/a, {{ ucenec.ime }} {{ ucenec.priimek }}</h1>
+    <div>
+      <a href="{% url 'profil_uredi' %}" class="btn btn-outline-primary">Uredi profil</a>
+      <a href="{% url 'oddaja_nova' %}" class="btn btn-success">Oddaj nalogo</a>
+    </div>
+  </div>
+
+  <h2 class="h4 mt-4">Moji predmeti</h2>
+  <p><a href="{% url 'moji_predmeti' %}" class="btn btn-sm btn-outline-secondary">Uredi seznam predmetov</a></p>
+  <div class="row g-3">
+    {% for predmet in predmeti %}
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ predmet.ime }}</h5>
+            <p class="card-text text-muted">{{ predmet.sifra }}</p>
+            <a href="{% url 'ucenec_gradiva' predmet.pk %}" class="btn btn-sm btn-primary">Gradiva</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted">Ne obiskuješ še nobenega predmeta. <a href="{% url 'moji_predmeti' %}">Izberi predmete.</a></p>
+    {% endfor %}
+  </div>
+{% endblock %}
