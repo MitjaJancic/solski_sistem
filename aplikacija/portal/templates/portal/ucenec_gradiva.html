@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block naslov %}Gradiva – {{ predmet.ime }}{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Gradiva – {{ predmet.ime }} <small class="text-muted">({{ predmet.sifra }})</small></h1>
+  <table class="table table-striped bg-white">
+    <thead><tr><th>Naslov</th><th>Datoteka</th><th>Naloženo</th><th class="text-end"></th></tr></thead>
+    <tbody>
+      {% for gradivo in gradiva %}
+        <tr>
+          <td>{{ gradivo.naslov }}</td>
+          <td>{{ gradivo.ime_datoteke }}</td>
+          <td>{{ gradivo.ustvarjeno|date:"d.m.Y H:i" }}</td>
+          <td class="text-end"><a href="{% url 'gradivo_prenos' gradivo.pk %}" class="btn btn-sm btn-primary">Prenesi</a></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="text-center text-muted">Za ta predmet še ni gradiv.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'ucenec_domov' %}" class="btn btn-secondary">Nazaj</a>
+{% endblock %}

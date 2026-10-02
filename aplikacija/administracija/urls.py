@@ -3,7 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.zacetna, name="zacetna"),
     # Predmeti
     path("predmeti/", views.PredmetListView.as_view(), name="predmet_seznam"),
     path("predmeti/dodaj/", views.PredmetCreateView.as_view(), name="predmet_dodaj"),

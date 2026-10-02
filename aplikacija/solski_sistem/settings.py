@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "administracija",
+    "portal",
 ]
 
 MIDDLEWARE = [
@@ -66,19 +67,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "solski_sistem.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("DB_IME", "sola_is"),
-        "USER": os.environ.get("DB_UPORABNIK", "sola_is_app"),
-        "PASSWORD": os.environ.get("DB_GESLO", ""),
-        "HOST": os.environ.get("DB_GOSTITELJ", "baza"),
-        "PORT": os.environ.get("DB_VRATA", "3306"),
-        "OPTIONS": {
-            "charset": "utf8mb4",
-        },
+# Med samodejnimi testi (DJANGO_TEST_SQLITE=1) uporabimo lahko SQLite v
+# pomnilniku, da testi tečejo brez zagnane MariaDB. V razvoju in produkciji
+# se uporablja MariaDB iz spremenljivk okolja.
+if os.environ.get("DJANGO_TEST_SQLITE") == "1":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ.get("DB_IME", "sola_is"),
+            "USER": os.environ.get("DB_UPORABNIK", "sola_is_app"),
+            "PASSWORD": os.environ.get("DB_GESLO", ""),
+            "HOST": os.environ.get("DB_GOSTITELJ", "baza"),
+            "PORT": os.environ.get("DB_VRATA", "3306"),
+            "OPTIONS": {
+                "charset": "utf8mb4",
+            },
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

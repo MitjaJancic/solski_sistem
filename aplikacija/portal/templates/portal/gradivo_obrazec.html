@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block naslov %}Naloži gradivo – Šolski IS{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Naloži gradivo</h1>
+  <p class="text-muted">Izbrati je mogoče le predmete, ki jih poučuješ.</p>
+  <form method="post" enctype="multipart/form-data" novalidate class="col-lg-6">
+    {% csrf_token %}
+    {% include "portal/_polja.html" %}
+    <button type="submit" class="btn btn-primary">Naloži</button>
+    <a href="{% url 'ucitelj_predmeti' %}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}

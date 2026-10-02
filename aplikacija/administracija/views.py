@@ -1,32 +1,26 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
+from portal.dovoljenja import AdminZahtevanMixin
 
 from .forms import PredmetForm, UcenecForm, UciteljForm
 from .models import Predmet, Ucenec, Ucitelj
 
 
-def zacetna(request):
-    kontekst = {
-        "stevilo_predmetov": Predmet.objects.count(),
-        "stevilo_uciteljev": Ucitelj.objects.count(),
-        "stevilo_ucencev": Ucenec.objects.count(),
-    }
-    return render(request, "administracija/zacetna.html", kontekst)
-
+# Vsi administratorski pogledi zahtevajo prijavljenega administratorja.
 
 # --- Predmeti -----------------------------------------------------------
 
-class PredmetListView(ListView):
+class PredmetListView(AdminZahtevanMixin, ListView):
     model = Predmet
     template_name = "administracija/predmet_seznam.html"
     context_object_name = "predmeti"
     paginate_by = 20
 
 
-class PredmetCreateView(SuccessMessageMixin, CreateView):
+class PredmetCreateView(AdminZahtevanMixin, SuccessMessageMixin, CreateView):
     model = Predmet
     form_class = PredmetForm
     template_name = "administracija/obrazec.html"
@@ -35,7 +29,7 @@ class PredmetCreateView(SuccessMessageMixin, CreateView):
     extra_context = {"naslov": "Nov predmet"}
 
 
-class PredmetUpdateView(SuccessMessageMixin, UpdateView):
+class PredmetUpdateView(AdminZahtevanMixin, SuccessMessageMixin, UpdateView):
     model = Predmet
     form_class = PredmetForm
     template_name = "administracija/obrazec.html"
@@ -44,7 +38,7 @@ class PredmetUpdateView(SuccessMessageMixin, UpdateView):
     extra_context = {"naslov": "Uredi predmet"}
 
 
-class PredmetDeleteView(DeleteView):
+class PredmetDeleteView(AdminZahtevanMixin, DeleteView):
     model = Predmet
     template_name = "administracija/potrdi_brisanje.html"
     success_url = reverse_lazy("predmet_seznam")
@@ -56,7 +50,7 @@ class PredmetDeleteView(DeleteView):
 
 # --- Učitelji -------------------------------------------------------------
 
-class UciteljListView(ListView):
+class UciteljListView(AdminZahtevanMixin, ListView):
     model = Ucitelj
     template_name = "administracija/ucitelj_seznam.html"
     context_object_name = "ucitelji"
@@ -66,7 +60,7 @@ class UciteljListView(ListView):
         return Ucitelj.objects.prefetch_related("predmeti")
 
 
-class UciteljCreateView(SuccessMessageMixin, CreateView):
+class UciteljCreateView(AdminZahtevanMixin, SuccessMessageMixin, CreateView):
     model = Ucitelj
     form_class = UciteljForm
     template_name = "administracija/obrazec.html"
@@ -75,7 +69,7 @@ class UciteljCreateView(SuccessMessageMixin, CreateView):
     extra_context = {"naslov": "Nov učitelj"}
 
 
-class UciteljUpdateView(SuccessMessageMixin, UpdateView):
+class UciteljUpdateView(AdminZahtevanMixin, SuccessMessageMixin, UpdateView):
     model = Ucitelj
     form_class = UciteljForm
     template_name = "administracija/obrazec.html"
@@ -84,7 +78,7 @@ class UciteljUpdateView(SuccessMessageMixin, UpdateView):
     extra_context = {"naslov": "Uredi učitelja"}
 
 
-class UciteljDeleteView(DeleteView):
+class UciteljDeleteView(AdminZahtevanMixin, DeleteView):
     model = Ucitelj
     template_name = "administracija/potrdi_brisanje.html"
     success_url = reverse_lazy("ucitelj_seznam")
@@ -96,7 +90,7 @@ class UciteljDeleteView(DeleteView):
 
 # --- Učenci -----------------------------------------------------------
 
-class UcenecListView(ListView):
+class UcenecListView(AdminZahtevanMixin, ListView):
     model = Ucenec
     template_name = "administracija/ucenec_seznam.html"
     context_object_name = "ucenci"
@@ -106,7 +100,7 @@ class UcenecListView(ListView):
         return Ucenec.objects.prefetch_related("predmeti")
 
 
-class UcenecCreateView(SuccessMessageMixin, CreateView):
+class UcenecCreateView(AdminZahtevanMixin, SuccessMessageMixin, CreateView):
     model = Ucenec
     form_class = UcenecForm
     template_name = "administracija/obrazec.html"
@@ -115,7 +109,7 @@ class UcenecCreateView(SuccessMessageMixin, CreateView):
     extra_context = {"naslov": "Nov učenec"}
 
 
-class UcenecUpdateView(SuccessMessageMixin, UpdateView):
+class UcenecUpdateView(AdminZahtevanMixin, SuccessMessageMixin, UpdateView):
     model = Ucenec
     form_class = UcenecForm
     template_name = "administracija/obrazec.html"
@@ -124,7 +118,7 @@ class UcenecUpdateView(SuccessMessageMixin, UpdateView):
     extra_context = {"naslov": "Uredi učenca"}
 
 
-class UcenecDeleteView(DeleteView):
+class UcenecDeleteView(AdminZahtevanMixin, DeleteView):
     model = Ucenec
     template_name = "administracija/potrdi_brisanje.html"
     success_url = reverse_lazy("ucenec_seznam")

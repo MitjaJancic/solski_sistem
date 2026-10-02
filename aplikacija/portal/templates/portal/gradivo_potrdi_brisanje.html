@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block naslov %}Potrdi brisanje gradiva{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Potrdi brisanje</h1>
+  <p>Ali res želiš izbrisati gradivo <strong>{{ gradivo.naslov }}</strong>
+     ({{ gradivo.predmet.sifra }})? Tega dejanja ni mogoče razveljaviti.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Izbriši</button>
+    <a href="{% url 'ucitelj_predmet' gradivo.predmet_id %}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}

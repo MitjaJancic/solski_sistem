@@ -1,0 +1,20 @@
+{% comment %}Ponovno uporabljen izpis polj obrazca (Bootstrap).{% endcomment %}
+{% if form.non_field_errors %}
+  <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+{% endif %}
+{% for polje in form %}
+  {% if polje.field.widget.input_type == "checkbox" %}
+    <div class="form-check mb-3">
+      {{ polje }}
+      <label class="form-check-label" for="{{ polje.id_for_label }}">{{ polje.label }}</label>
+      {% for napaka in polje.errors %}<div class="text-danger small">{{ napaka }}</div>{% endfor %}
+    </div>
+  {% else %}
+    <div class="mb-3">
+      <label class="form-label" for="{{ polje.id_for_label }}">{{ polje.label }}</label>
+      {{ polje }}
+      {% if polje.help_text %}<div class="form-text">{{ polje.help_text|safe }}</div>{% endif %}
+      {% for napaka in polje.errors %}<div class="text-danger small">{{ napaka }}</div>{% endfor %}
+    </div>
+  {% endif %}
+{% endfor %}

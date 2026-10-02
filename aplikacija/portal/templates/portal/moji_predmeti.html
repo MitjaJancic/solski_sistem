@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block naslov %}Moji predmeti – Šolski IS{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Izberi predmete, ki jih obiskuješ</h1>
+  <form method="post" novalidate class="col-lg-8">
+    {% csrf_token %}
+    {% if form.predmeti.errors %}
+      <div class="alert alert-danger">{{ form.predmeti.errors }}</div>
+    {% endif %}
+    <div class="row row-cols-1 row-cols-md-2 g-2 mb-3">
+      {% for izbira in form.predmeti %}
+        <div class="col">
+          <div class="form-check">
+            {{ izbira.tag }}
+            <label class="form-check-label" for="{{ izbira.id_for_label }}">{{ izbira.choice_label }}</label>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Shrani</button>
+    <a href="{% url 'ucenec_domov' %}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}
