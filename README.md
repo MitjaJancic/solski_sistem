@@ -77,11 +77,15 @@ Podrobnosti: [dokumentacija/streznik.md](dokumentacija/streznik.md).
 Izvorna navodila: glejte `navodila.txt` in `5. Časovni načrt dela – 6 tednov.txt`
 v mapi projekta. Tedenska poročila o napredku: [porocila/](porocila/).
 
-**Trenutno stanje: teden 4 od 6** — poleg administratorskega CRUD-a (teden 3)
-so implementirani prijava/registracija, avtorizacija po vlogah (administrator,
-učitelj, učenec), pogled učitelja (nalaganje/brisanje gradiv za svoje predmete,
-pregled oddanih nalog) in pogled učenca (registracija, profil, izbira predmetov,
-vpogled v gradiva, oddaja nalog s pravilnim poimenovanjem datotek in potrditvijo
-povozitve). Naložene datoteke niso javno dostopne. Pripravljena je skripta za
-varnostne kopije baze in napotki za postavitev na javno domeno z Let's Encrypt
-(gl. [dokumentacija/streznik.md](dokumentacija/streznik.md)).
+**Trenutno stanje: teden 5 od 6** — vse funkcionalnosti iz 3. in 4. tedna
+(administratorski CRUD; prijava/avtorizacija; pogleda učitelja in učenca;
+zaščitene naložene datoteke; varnostne kopije baze). V 5. tednu dodano:
+sistematično testiranje vseh treh pogledov (26 avtomatiziranih testov, vsi
+uspešni), odprava odkritih napak, izboljšave odzivnega oblikovanja ter
+dokončana dokumentacija in uporabniška navodila.
+
+Ključni dokumenti:
+- [dokumentacija/testni-primeri.md](dokumentacija/testni-primeri.md) — seznam testnih primerov in status
+- [dokumentacija/arhitektura.md](dokumentacija/arhitektura.md) — arhitektura z diagramom
+- [dokumentacija/uporabniska-navodila.md](dokumentacija/uporabniska-navodila.md) — navodila za vse tri vloge
+- [dokumentacija/streznik.md](dokumentacija/streznik.md) — namestitev, javna domena, varnostne kopije

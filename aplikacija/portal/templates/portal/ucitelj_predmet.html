@@ -7,7 +7,9 @@
   </div>
 
   <h2 class="h4 mt-3">Gradiva</h2>
-  <table class="table table-striped bg-white">
+  <div class="table-responsive">
+
+    <table class="table table-striped bg-white">
     <thead><tr><th>Naslov</th><th>Datoteka</th><th>Naloženo</th><th class="text-end">Dejanja</th></tr></thead>
     <tbody>
       {% for gradivo in gradiva %}
@@ -24,10 +26,14 @@
         <tr><td colspan="4" class="text-center text-muted">Ni naloženih gradiv.</td></tr>
       {% endfor %}
     </tbody>
-  </table>
+    </table>
+
+  </div>
 
   <h2 class="h4 mt-4">Oddane naloge učencev</h2>
-  <table class="table table-striped bg-white">
+  <div class="table-responsive">
+
+    <table class="table table-striped bg-white">
     <thead><tr><th>Učenec</th><th>Naslov naloge</th><th>Datoteka</th><th>Oddano</th><th class="text-end"></th></tr></thead>
     <tbody>
       {% for oddaja in oddaje %}
@@ -42,6 +48,8 @@
         <tr><td colspan="5" class="text-center text-muted">Ni oddanih nalog.</td></tr>
       {% endfor %}
     </tbody>
-  </table>
+    </table>
+
+  </div>
   <a href="{% url 'ucitelj_predmeti' %}" class="btn btn-secondary">Nazaj</a>
 {% endblock %}

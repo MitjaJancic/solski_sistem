@@ -199,3 +199,38 @@ class PortalTest(TestCase):
         dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
         self.client.login(username="t1", password="geslo12345")
         self.assertEqual(self.client.get(reverse("oddaja_prenos", args=[oddaja.pk])).status_code, 200)
+
+    # --- Dodatni testi (5. teden) ---------------------------------------
+
+    def test_ucenec_uredi_profil(self):
+        dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
+        self.client.login(username="u1", password="geslo12345")
+        odgovor = self.client.post(
+            reverse("profil_uredi"),
+            {"ime": "Bine", "priimek": "Novak-Kovač", "email": "bine@dijaki.si"},
+        )
+        self.assertEqual(odgovor.status_code, 302)
+        self.ucenec.refresh_from_db()
+        self.assertEqual(self.ucenec.priimek, "Novak-Kovač")
+
+    def test_ucitelj_izbrise_svoje_gradivo(self):
+        dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
+        self.client.login(username="t1", password="geslo12345")
+        gradivo = Gradivo.objects.create(predmet=self.mat, naslov="G", nalozil=self.ucitelj)
+        gradivo.datoteka.save("g.txt", SimpleUploadedFile("g.txt", b"x"), save=True)
+        odgovor = self.client.post(reverse("gradivo_izbrisi", args=[gradivo.pk]))
+        self.assertEqual(odgovor.status_code, 302)
+        self.assertFalse(Gradivo.objects.filter(pk=gradivo.pk).exists())
+
+    def test_ucitelj_ne_izbrise_tujega_gradiva(self):
+        # Gradivo pri predmetu SLO, ki ga učitelj (samo MAT) ne poučuje.
+        tuj = Gradivo.objects.create(predmet=self.slo, naslov="Tuje")
+        dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
+        self.client.login(username="t1", password="geslo12345")
+        self.assertEqual(self.client.get(reverse("gradivo_izbrisi", args=[tuj.pk])).status_code, 403)
+
+    def test_oznaka_sporocila_o_napaki_je_danger(self):
+        # BUG-01 (5. teden): Django oznako ERROR "error" preslikamo v Bootstrap "danger".
+        from django.contrib.messages import constants
+        from django.conf import settings
+        self.assertEqual(settings.MESSAGE_TAGS.get(constants.ERROR), "danger")

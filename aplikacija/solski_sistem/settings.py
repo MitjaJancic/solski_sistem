@@ -99,6 +99,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# Django privzeto označi sporočila vrste ERROR z oznako "error", Bootstrap pa
+# pričakuje razred "danger" (alert-danger). Brez te preslikave bi se sporočila o
+# napakah izpisala brez oblikovanja. (Odkrito pri testiranju v 5. tednu – BUG-01.)
+from django.contrib.messages import constants as messages_constants  # noqa: E402
+
+MESSAGE_TAGS = {messages_constants.ERROR: "danger"}
+
 LANGUAGE_CODE = "sl"
 TIME_ZONE = "Europe/Ljubljana"
 USE_I18N = True

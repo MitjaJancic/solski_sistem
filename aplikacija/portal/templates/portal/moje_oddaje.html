@@ -5,7 +5,9 @@
     <h1>Moje oddane naloge</h1>
     <a href="{% url 'oddaja_nova' %}" class="btn btn-success">Oddaj nalogo</a>
   </div>
-  <table class="table table-striped bg-white">
+  <div class="table-responsive">
+
+    <table class="table table-striped bg-white">
     <thead><tr><th>Predmet</th><th>Naslov naloge</th><th>Datoteka</th><th>Zadnja oddaja</th><th class="text-end"></th></tr></thead>
     <tbody>
       {% for oddaja in oddaje %}
@@ -20,5 +22,7 @@
         <tr><td colspan="5" class="text-center text-muted">Ni oddanih nalog.</td></tr>
       {% endfor %}
     </tbody>
-  </table>
+    </table>
+
+  </div>
 {% endblock %}
