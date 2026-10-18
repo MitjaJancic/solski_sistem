@@ -16,4 +16,8 @@ echo "Baza je dosegljiva."
 
 python manage.py migrate --noinput
 
+# Zberi statične datoteke (za WhiteNoise/gunicorn v produkciji). V razvoju
+# (runserver) je neškodljivo.
+python manage.py collectstatic --noinput
+
 exec "$@"

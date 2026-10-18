@@ -20,4 +20,6 @@ RUN chmod +x entrypoint.sh
 EXPOSE 8000
 
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Privzeto (produkcija): aplikacijski strežnik gunicorn.
+# Razvojni docker-compose.override.yml ta ukaz zamenja z `runserver`.
+CMD ["gunicorn", "solski_sistem.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

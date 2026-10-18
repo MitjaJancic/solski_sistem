@@ -2,3 +2,6 @@ Django>=5.0,<5.2
 mysqlclient>=2.2,<3
 python-dotenv>=1.0,<2
 Faker>=24.0
+# Produkcija: aplikacijski strežnik + streženje statičnih datotek
+gunicorn>=21,<23
+whitenoise>=6.6,<7

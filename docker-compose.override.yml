@@ -1,0 +1,20 @@
+# Razvojni dodatek – Docker Compose ga samodejno naloži poleg docker-compose.yml,
+# ko poženeš `docker compose up` (brez -f). NI namenjen produkciji.
+#
+# Razlike od produkcije:
+#   - aplikacija teče prek Django runserver (samodejno ponovno nalaganje kode),
+#   - izvorna koda je priklopljena z gostitelja (hitro urejanje brez ponovnega builda),
+#   - dodan je Adminer (spletna administracija baze) na vratih 8081.
+services:
+  aplikacija:
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./aplikacija:/app
+
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    depends_on:
+      - baza
+    ports:
+      - "8081:8080"

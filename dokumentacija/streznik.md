@@ -37,13 +37,34 @@ Predpogoj: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 cp .env.example .env          # uredi gesla po želji
 sh scripts/generiraj-certifikat.sh   # ustvari samopodpisano TLS potrdilo
 docker compose up -d --build
-docker compose exec aplikacija python manage.py seed_podatki   # testni podatki
+docker compose exec aplikacija python manage.py seed_podatki    # testni podatki
+docker compose exec aplikacija python manage.py seed_uporabniki # demo računi
 ```
 
 - aplikacija (prek posrednika, HTTPS): https://localhost — brskalnik bo
   opozoril na samopodpisano potrdilo, kar je v razvojni fazi pričakovano
 - Adminer (administracija baze): http://localhost:8081 — sistem: MySQL,
   strežnik: `baza`, uporabnik/geslo iz `.env`
+
+V razvoju Docker Compose poleg `docker-compose.yml` samodejno naloži še
+`docker-compose.override.yml`, ki aplikacijo požene z Django `runserver`
+(samodejno nalaganje kode), priklopi izvorno kodo z gostitelja in doda Adminer.
+
+### Produkcijska sestava (javna domena)
+
+Za javno domeno se uporablja **samo** osnovna datoteka (brez razvojnega
+overrida), kjer aplikacijo streže **gunicorn**, statične datoteke pa
+**WhiteNoise**:
+
+```bash
+docker compose -f docker-compose.yml up -d --build
+docker compose -f docker-compose.yml exec aplikacija python manage.py seed_podatki
+```
+
+V produkciji ni vsebnika Adminer in ni priklopa kode (koda je v sliki).
+Nastavi `DJANGO_DEBUG=0` in `DJANGO_ALLOWED_HOSTS` na javno domeno (glej 4.
+poglavje). `collectstatic` se izvede samodejno ob zagonu vsebnika
+(`entrypoint.sh`).
 
 ## 3. Obrnjeni posrednik (reverse proxy)
 
@@ -109,3 +130,23 @@ Za redno izvajanje (npr. vsak dan ob 2:30) se doda vnos v cron na strežniku:
 
 Glej [`.env.example`](../.env.example) za popoln seznam. Datoteka `.env`
 ni v repozitoriju (`.gitignore`) — vsak član skupine si jo ustvari lokalno.
+
+## 8. Zaključni pregled stabilnosti in varnostnih kopij (teden 6)
+
+Kontrolni seznam, ki ga vzdrževalec IS preveri pred zagovorom:
+
+- [ ] vsi vsebniki tečejo in imajo `restart: unless-stopped`
+      (`docker compose -f docker-compose.yml ps`)
+- [ ] aplikacija je dostopna na javni domeni prek HTTPS (veljavno Let's Encrypt
+      potrdilo, preusmeritev `80 → 443` deluje)
+- [ ] `DJANGO_DEBUG=0` in `DJANGO_ALLOWED_HOSTS` nastavljen na javno domeno
+- [ ] statične datoteke se pravilno strežejo (WhiteNoise; `collectstatic` je
+      uspel ob zagonu)
+- [ ] naložene datoteke niso javno dostopne (neposreden `GET` na `/media/...`
+      ne vrne datoteke)
+- [ ] varnostna kopija baze deluje: ročni zagon
+      `sh scripts/varnostna-kopija.sh` ustvari stisnjen dump v `backup/`
+- [ ] obnovitev iz kopije je preizkušena (testni uvoz dumpa v prazno bazo)
+- [ ] cron za dnevno varnostno kopijo je nastavljen na strežniku
+- [ ] Django preverjanje za produkcijo je čisto:
+      `docker compose -f docker-compose.yml exec aplikacija python manage.py check --deploy`

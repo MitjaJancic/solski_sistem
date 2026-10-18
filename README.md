@@ -71,21 +71,38 @@ cd aplikacija
 DJANGO_TEST_SQLITE=1 python manage.py test
 ```
 
+### Produkcija (javna domena)
+
+V produkciji se uporablja samo osnovna sestava (gunicorn + WhiteNoise, brez
+Adminerja in priklopa kode). V `.env` nastavi `DJANGO_DEBUG=0` in
+`DJANGO_ALLOWED_HOSTS` na javno domeno, nato:
+
+```bash
+docker compose -f docker-compose.yml up -d --build
+```
+
+Podrobnosti (domena, Let's Encrypt, varnostne kopije, zaključni pregled):
+[dokumentacija/streznik.md](dokumentacija/streznik.md).
+
 Podrobnosti: [dokumentacija/streznik.md](dokumentacija/streznik.md).
 
 ## Časovni načrt (6 tednov)
 Izvorna navodila: glejte `navodila.txt` in `5. Časovni načrt dela – 6 tednov.txt`
 v mapi projekta. Tedenska poročila o napredku: [porocila/](porocila/).
 
-**Trenutno stanje: teden 5 od 6** — vse funkcionalnosti iz 3. in 4. tedna
-(administratorski CRUD; prijava/avtorizacija; pogleda učitelja in učenca;
-zaščitene naložene datoteke; varnostne kopije baze). V 5. tednu dodano:
-sistematično testiranje vseh treh pogledov (26 avtomatiziranih testov, vsi
-uspešni), odprava odkritih napak, izboljšave odzivnega oblikovanja ter
-dokončana dokumentacija in uporabniška navodila.
+**Stanje: teden 6 od 6 — zaključeno (`v1.0`).** Projekt izpolnjuje zahteve iz
+3. in 4. poglavja navodil: administratorski CRUD; prijava in avtorizacija po
+vlogah; pogleda učitelja in učenca; zaščitene naložene datoteke; varnostne
+kopije baze; 26 avtomatiziranih testov (vsi uspešni); dokončana dokumentacija
+in uporabniška navodila. V 6. tednu dodana produkcijska sestava (gunicorn +
+WhiteNoise, varnostne nastavitve), predstavitev in zaključno poročilo.
 
 Ključni dokumenti:
+- [porocila/zakljucno-porocilo.md](porocila/zakljucno-porocilo.md) — zaključno poročilo skupine
+- [predstavitev/predstavitev.md](predstavitev/predstavitev.md) — diapozitivi + [demo-scenarij](predstavitev/demo-scenarij.md)
 - [dokumentacija/testni-primeri.md](dokumentacija/testni-primeri.md) — seznam testnih primerov in status
 - [dokumentacija/arhitektura.md](dokumentacija/arhitektura.md) — arhitektura z diagramom
 - [dokumentacija/uporabniska-navodila.md](dokumentacija/uporabniska-navodila.md) — navodila za vse tri vloge
 - [dokumentacija/streznik.md](dokumentacija/streznik.md) — namestitev, javna domena, varnostne kopije
+
+**Delujoča aplikacija (javna domena):** _<vstavi URL>_

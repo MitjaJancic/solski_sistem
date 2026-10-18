@@ -1,3 +1,9 @@
+# Osnovna (produkcijska) sestava: baza, aplikacija (gunicorn) in obrnjeni
+# posrednik. Za javno domeno se uporablja SAMO ta datoteka:
+#   docker compose -f docker-compose.yml up -d --build
+#
+# Za razvoj se poleg te samodejno naloži še docker-compose.override.yml
+# (runserver, adminer, priklop kode), ko poženeš samo `docker compose up`.
 services:
   baza:
     image: mariadb:11
@@ -10,14 +16,6 @@ services:
     volumes:
       - baza_podatki:/var/lib/mysql
 
-  adminer:
-    image: adminer:latest
-    restart: unless-stopped
-    depends_on:
-      - baza
-    ports:
-      - "8081:8080"
-
   aplikacija:
     build: ./aplikacija
     restart: unless-stopped
@@ -26,8 +24,7 @@ services:
     expose:
       - "8000"
     env_file: .env
-    volumes:
-      - ./aplikacija:/app
+    # ukaz (gunicorn) je privzet v Dockerfile; razvojni override ga zamenja
 
   proxy:
     image: nginx:alpine
