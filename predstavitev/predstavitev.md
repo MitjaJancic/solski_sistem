@@ -8,11 +8,11 @@ paginate: true
 
 ### Spletna aplikacija za podporo šolskemu delu na daljavo
 
-Zaključni projekt · skupina 3 dijakov + mentor
+Zaključni projekt · skupina 2 dijakov + mentor
 
 - Mitja Jančič — vzdrževalec IS + razvijalec
 - Nal Dobravc — razvijalec
-- mentor — spremljanje in potrjevanje mejnikov
+- Matic Holobar — mentor (spremljanje in potrjevanje mejnikov)
 
 ---
 
@@ -136,8 +136,8 @@ DJANGO_TEST_SQLITE=1 python manage.py test
 ## Zaključek
 
 - projekt izpolnjuje vse zahteve navodil (3. in 4. poglavje)
-- delujoča aplikacija na javni domeni: _<URL>_
-- repozitorij: _<povezava do GitHub repozitorija>_
+- repozitorij: https://github.com/MitjaJancic/solski_sistem
+- delujoča aplikacija na javni domeni: _<URL javne domene ali Cloudflare tunela>_
 - končna različica označena z oznako `v1.0`
 
 ### Hvala za pozornost — vprašanja?

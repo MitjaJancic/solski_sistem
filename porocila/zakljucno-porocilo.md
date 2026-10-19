@@ -1,9 +1,9 @@
 # Zaključno poročilo skupine
 
 **Projekt:** Šolski IS — spletna aplikacija za podporo šolskemu delu na daljavo
-**Skupina:** Mitja Jančič (vzdrževalec IS + razvijalec), Nal Dobravc (razvijalec), mentor
-**Povezava do repozitorija:** _<vstavi povezavo do GitHub repozitorija>_
-**Povezava do delujoče aplikacije:** _<vstavi URL javne domene>_
+**Skupina:** Mitja Jančič (vzdrževalec IS + razvijalec), Nal Dobravc (razvijalec), Matic Holobar (mentor)
+**Povezava do repozitorija:** https://github.com/MitjaJancic/solski_sistem
+**Povezava do delujoče aplikacije:** _<vstavi URL javne domene ali Cloudflare tunela>_
 **Končna različica:** oznaka (tag) `v1.0`
 
 ## 1. Povzetek
@@ -64,7 +64,7 @@ Git + GitHub (veje, vlečni zahtevki, Issues).
   navodila; sodelovanje pri testiranju.
 - **Oba (skupno):** sistematično testiranje, odprava napak (GitHub Issues),
   dnevna in tedenska poročila, predstavitev.
-- **Mentor:** pregled ob mejnikih in potrjevanje napredka.
+- **Matic Holobar (mentor):** pregled ob mejnikih in potrjevanje napredka.
 
 > Sledljivost dela vseh članov je razvidna iz zgodovine commitov in vlečnih
 > zahtevkov v repozitoriju.

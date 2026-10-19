@@ -38,7 +38,7 @@ dokončanju dokumentacije in uporabniških navodil.
 | BUG-01 | Sporočila o napakah se izpišejo brez oblikovanja (Django oznaka `error` ni Bootstrap razred `danger`) | srednja | `MESSAGE_TAGS = {ERROR: "danger"}` v `settings.py`; dodan regresijski test | odpravljeno |
 | BUG-02 | Tabele se na ozkih zaslonih (telefon) prelivajo čez rob strani | nizka | Ovoj `.table-responsive` okoli vseh tabel s seznami | odpravljeno |
 
-> Povezava do GitHub Issues: _<vstavi povezavo na `Issues` v repozitoriju>_
+> Povezava do GitHub Issues: https://github.com/MitjaJancic/solski_sistem/issues
 
 **Stabilnost:** po odpravi zgornjih napak aplikacija deluje stabilno, brez
 kritičnih napak; vsi avtomatizirani testi so uspešni.

@@ -18,4 +18,4 @@
 **Popoldanska posodobitev:** po namestitvi Docker Desktop sem dejansko pognal `docker compose up -d --build` — vsi štirje vsebniki (baza, aplikacija, adminer, proxy) so se zagnali in delujejo; `entrypoint.sh` je pravilno počakal na bazo in pognal migracije. Poganjal sem `seed_podatki` na resnični MariaDB bazi (10 predmetov, 20 učiteljev, 100 učencev) in preveril, da je aplikacija dosegljiva na https://localhost (skozi Nginx, samopodpisano potrdilo) ter Adminer na http://localhost:8081.
 
 **Kaj mi ni uspelo in zakaj:**
-- GitHub repozitorij je javen (public), mentor še ni dodan kot sodelavec, ker njegovo uporabniško ime še ni znano — dodam ga takoj, ko bo določen
+- GitHub repozitorij je javen (public), mentor Matic Holobar dodan kot sodelavec takoj po uskladitvi uporabniškega imena.

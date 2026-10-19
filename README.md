@@ -5,7 +5,7 @@ Spletna aplikacija za podporo šolskemu delu na daljavo — zaključni projekt.
 ## Skupina
 - **Mitja Jančič** ([@MitjaJancic](https://github.com/MitjaJancic)) — vzdrževalec informacijskega sistema (IS) + razvijalec aplikacije
 - **Nal Dobravc** ([@naldobravc](https://github.com/naldobravc)) — razvijalec aplikacije
-- **mentor** — bo dodan kasneje
+- **Matic Holobar** — mentor (učitelj)
 
 ## Tehnologije
 - **Backend:** Python + Django 5.1
@@ -105,4 +105,5 @@ Ključni dokumenti:
 - [dokumentacija/uporabniska-navodila.md](dokumentacija/uporabniska-navodila.md) — navodila za vse tri vloge
 - [dokumentacija/streznik.md](dokumentacija/streznik.md) — namestitev, javna domena, varnostne kopije
 
-**Delujoča aplikacija (javna domena):** _<vstavi URL>_
+**Repozitorij projekta:** https://github.com/MitjaJancic/solski_sistem
+**Delujoča aplikacija (javna domena / tunel):** _<vstavi URL domene ali Cloudflare tunela>_
