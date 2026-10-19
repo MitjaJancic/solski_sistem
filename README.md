@@ -51,6 +51,7 @@ docker compose exec aplikacija python manage.py seed_uporabniki   # demo računi
 
 - aplikacija: https://localhost (samopodpisano potrdilo — brskalnik bo opozoril, kar je v razvoju pričakovano)
 - administracija baze (Adminer): http://localhost:8081
+- javni HTTPS dostop (brezplačna javna domena za zagovor): zaženite `powershell -File scripts/pokazi-javni-url.ps1` (ali `sh scripts/pokazi-javni-url.sh`)
 
 ### Demo računi (za predstavitev/testiranje)
 

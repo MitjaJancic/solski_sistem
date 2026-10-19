@@ -18,3 +18,10 @@ services:
       - baza
     ports:
       - "8081:8080"
+
+  tunel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --url https://proxy:443 --no-tls-verify
+    depends_on:
+      - proxy

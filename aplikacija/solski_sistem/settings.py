@@ -18,13 +18,21 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.trycloudflare.com").split(",")
     if host.strip()
 ]
+if ".trycloudflare.com" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(".trycloudflare.com")
 
 # Ko gre zahteva skozi obrnjeni posrednik (nginx) s HTTPS, zaupaj X-Forwarded-Proto.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host not in ("localhost", "127.0.0.1")]
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host}" if not host.startswith(".") else f"https://*{host}"
+    for host in ALLOWED_HOSTS
+    if host not in ("localhost", "127.0.0.1")
+]
+if "https://*.trycloudflare.com" not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append("https://*.trycloudflare.com")
 
 # Dodatno varovanje v produkciji (DEBUG=0). Preusmeritev na HTTPS opravlja že
 # nginx, zato SECURE_SSL_REDIRECT pustimo izklopljen; piškotke pa označimo kot

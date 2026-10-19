@@ -93,6 +93,20 @@ Konfiguracija: [`nginx/nginx.conf`](../nginx/nginx.conf).
   4. samodejno podaljševanje: `certbot renew` (cron/systemd timer) +
      ponovni zagon vsebnika `proxy`.
 
+### 4.1. Hitra brezplačna javna domena za predstavitev/zagovor (Cloudflare Tunnel)
+
+Za potrebe predstavitve in preizkusa na daljavo (brez lastnega javnega IP-ja ali zakupa strežnika) je v okolje vključen vsebnik `tunel` (**Cloudflare Tunnel**):
+- Vsebnik `cloudflare/cloudflared` v `docker-compose.override.yml` samodejno vzpostavi varen odhodni tunel do Cloudflare omrežja.
+- Brezplačno dodeli javni HTTPS naslov z veljavnim certifikatom (npr. `https://xxxx.trycloudflare.com`), ki deluje na katerikoli napravi.
+- Trenutni javni naslov izpiše skripta:
+  ```powershell
+  powershell -File scripts/pokazi-javni-url.ps1
+  ```
+  oz. na Linuxu:
+  ```bash
+  sh scripts/pokazi-javni-url.sh
+  ```
+
 ## 5. Zaščita naloženih datotek (gradiva in oddaje)
 
 Naložene datoteke se hranijo v `MEDIA_ROOT` (`aplikacija/media/`, ni v Gitu) in
