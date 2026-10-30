@@ -1,21 +1,41 @@
 # Dnevna poročila – Mitja Jančič (vzdrževalec IS + razvijalec)
 
-## 2026-09-28
+## 2026-09-15
 
 **Kaj sem delal:**
-- pripravil strukturo repozitorija (`dokumentacija/`, `porocila/`, `aplikacija/`, `nginx/`, `scripts/`)
-- izbral tehnološki sklad: Django 5.1 + MariaDB 11 + Docker Compose + Nginx (utemeljitev v [specifikaciji](../../dokumentacija/specifikacija.md))
-- napisal `docker-compose.yml` (baza, aplikacija, adminer, proxy) in `.env.example`
-- napisal specifikacijo sistema (vsi trije pogledi) in ER diagram (5 tabel: Predmet, Ucitelj, Ucenec, UciteljPredmet, UcenecPredmet)
-- izdelal žične modele (wireframe) za administratorski, učiteljski in učenčev pogled
-- postavil Django aplikacijo `administracija`: modeli, admin.py, obrazci, CRUD poglede in predloge za predmete/učitelje/učence
-- napisal `seed_podatki` ukaz za testne podatke (10 predmetov, 20 učiteljev, 100 učencev) in ga lokalno preizkusil (SQLite, brez Dockerja, ker Docker Desktop na tem računalniku še ni nameščen)
-- pripravil Nginx konfiguracijo kot obrnjeni posrednik + skripto za generiranje samopodpisanega TLS potrdila in ga generiral
-- začel dokumentacijo strežnika ([`streznik.md`](../../dokumentacija/streznik.md))
+- uvodni usklajevalni sestanek z Nalom in pregled dodeljenih vlog (vzdrževalec IS / razvijalec)
+- vzpostavitev Git repozitorija na GitHubu (`MitjaJancic/solski_sistem`) in priprava osnovne strukture map (`aplikacija/`, `dokumentacija/`, `porocila/`, `nginx/`, `scripts/`)
+- zasnova začetne konfiguracije `docker-compose.yml` (storitve za MariaDB 11, Django aplikacijo in spletni strežnik Nginx)
+- priprava predloge za okoljske spremenljivke `.env.example`
 
-**Kaj sem dokončal:** ogrodje projekta, specifikacija, ER diagram, wireframi, CRUD administratorja, docker-compose in nginx konfiguracija; ustvaril GitHub repozitorij ([MitjaJancic/solski_sistem](https://github.com/MitjaJancic/solski_sistem)), povezal veje `main`/`develop`/`mitja`/`nal` in povabil Nala kot sodelavca.
-
-**Popoldanska posodobitev:** po namestitvi Docker Desktop sem dejansko pognal `docker compose up -d --build` — vsi štirje vsebniki (baza, aplikacija, adminer, proxy) so se zagnali in delujejo; `entrypoint.sh` je pravilno počakal na bazo in pognal migracije. Poganjal sem `seed_podatki` na resnični MariaDB bazi (10 predmetov, 20 učiteljev, 100 učencev) in preveril, da je aplikacija dosegljiva na https://localhost (skozi Nginx, samopodpisano potrdilo) ter Adminer na http://localhost:8081.
+**Kaj sem dokončal:**
+- GitHub repozitorij, mapa projekta z osnovnimi datotekami in `.env.example`
 
 **Kaj mi ni uspelo in zakaj:**
-- GitHub repozitorij je javen (public), mentor Matic Holobar dodan kot sodelavec takoj po uskladitvi uporabniškega imena.
+- zagon vsebnikov z Dockerjem še ni bil mogoč, ker Docker Desktop na računalniku še ni bil posodobljen in nameščen.
+
+## 2026-09-17
+
+**Kaj sem delal:**
+- priprava Nginx konfiguracijske datoteke (`nginx/nginx.conf`) kot obrnjenega posrednika (reverse proxy) pred Django vsebnikom
+- izdelava pomožne skripte za generiranje samopodpisanega certifikata za razvojno okolje (`scripts/generiraj-certifikat.sh`)
+- začetek pisanja strežniške dokumentacije (`dokumentacija/streznik.md`) z opisom zahtevanih komponent in namestitve
+
+**Kaj sem dokončal:**
+- Nginx konfiguracija za posredovanje zahtevkov in skripta za generiranje TLS certifikata; ogrodje dokumentacije strežnika
+
+**Kaj mi ni uspelo in zakaj:**
+- dodajanje mentorja Matica Holobarja na GitHubu je bilo začasno zadržano, dokler nismo pridobili točnega uporabniškega imena.
+
+## 2026-09-18
+
+**Kaj sem delal:**
+- pregled Nalove specifikacije zahtev in predloga ER diagrama s stališča infrastrukture in tipov podatkov v MariaDB
+- uskladitev podatkovnega modela (uporaba ustreznih tujih ključev in unikatnih indeksov)
+- priprava in oddaja zbirnega tedenskega poročila za 1. teden
+
+**Kaj sem dokončal:**
+- potrjena specifikacija in ER načrt, usklajen časovni načrt za 2. teden
+
+**Kaj mi ni uspelo in zakaj:**
+- vse načrtovane naloge za 1. teden so bile uspešno izvedene.

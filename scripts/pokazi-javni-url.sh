@@ -1,6 +1,6 @@
 #!/bin/sh
-# Skripta poišče in izpiše trenutni javni HTTPS naslov Cloudflare tunela
-URL=$(docker compose logs tunel 2>&1 | grep -oE "https://[a-zA-Z0-9-]+\.trycloudflare\.com" | head -n 1)
+# Skripta poišče in izpiše ZADNJI veljavni javni HTTPS naslov Cloudflare tunela
+URL=$(docker compose logs tunel 2>&1 | grep -oE "https://[a-zA-Z0-9-]+\.trycloudflare\.com" | tail -n 1)
 if [ -n "$URL" ]; then
     echo ""
     echo "=========================================================="

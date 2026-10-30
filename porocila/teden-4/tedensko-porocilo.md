@@ -46,7 +46,7 @@ prijavo, registracijo in avtorizacijo ter pogleda učitelja in učenca.
 podaljševanje Let's Encrypt potrdila s Certbotom) so opisani v
 [`dokumentacija/streznik.md`](../../dokumentacija/streznik.md), 4. poglavje.
 
-> Povezava do delujoče javne domene (URL): _<vpiši sem, ko je domena postavljena>_
+> Povezava do delujoče javne domene (URL): https://photos-sensitive-scheduled-enough.trycloudflare.com (Cloudflare Tunnel)
 
 **Kako je bilo preizkušeno:** samodejni testi (`portal/tests.py`, 13 testov)
 z Django test client in SQLite bazo v pomnilniku pokrivajo: preusmeritev/403 za
