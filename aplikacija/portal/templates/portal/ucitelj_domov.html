@@ -1,44 +1,155 @@
 {% extends "base.html" %}
 {% block naslov %}Pregled učitelja – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <h1 class="mb-0">Pregled – {{ ucitelj.ime }} {{ ucitelj.priimek }}</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
-      <a href="{% url 'naloga_nova' %}" class="btn btn-success">Nova naloga</a>
-      <a href="{% url 'gradivo_nalozi' %}" class="btn btn-outline-primary">Naloži gradivo</a>
+      <h1 class="h2 mb-1">Pozdravljeni, {{ ucitelj.ime }} {{ ucitelj.priimek }}</h1>
+      <p class="text-muted small mb-0">Učiteljski portal &middot; pregled nalog, ocenjevanje oddaj in učna gradiva.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'naloga_nova' %}" class="btn btn-success">+ Nova naloga</a>
+      <a href="{% url 'gradivo_nalozi' %}" class="btn btn-outline-primary">+ Naloži gradivo</a>
     </div>
   </div>
 
+  <!-- Statistika učitelja -->
   <div class="row g-3 mb-4">
-    <div class="col-6 col-lg-4"><div class="card text-center h-100"><div class="card-body">
-      <div class="display-6">{{ statistika.stevilo_predmetov }}</div>
-      <div class="text-muted small">predmetov</div></div></div></div>
-    <div class="col-6 col-lg-4"><div class="card text-center h-100"><div class="card-body">
-      <div class="display-6">{{ statistika.stevilo_nalog }}</div>
-      <div class="text-muted small">nalog</div></div></div></div>
-    <div class="col-12 col-lg-4"><div class="card text-center h-100 {% if statistika.neocenjene_oddaje %}border-warning{% endif %}"><div class="card-body">
-      <div class="display-6">{{ statistika.neocenjene_oddaje }}</div>
-      <div class="text-muted small">neocenjenih oddaj</div></div></div></div>
+    <div class="col-6 col-lg-4">
+      <div class="card text-center h-100 shadow-sm border-start border-4 border-primary">
+        <div class="card-body p-3">
+          <div class="display-6 fw-bold text-primary">{{ statistika.stevilo_predmetov }}</div>
+          <div class="text-muted small fw-medium">Dodeljenih predmetov</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-4">
+      <div class="card text-center h-100 shadow-sm border-start border-4 border-info">
+        <div class="card-body p-3">
+          <div class="display-6 fw-bold text-info">{{ statistika.stevilo_nalog }}</div>
+          <div class="text-muted small fw-medium">Aktivnih nalog</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4">
+      <div class="card text-center h-100 shadow-sm border-start border-4 {% if statistika.neocenjene_oddaje %}border-warning bg-warning-subtle{% else %}border-success{% endif %}">
+        <div class="card-body p-3">
+          <div class="display-6 fw-bold {% if statistika.neocenjene_oddaje %}text-warning-emphasis{% else %}text-success{% endif %}">
+            {{ statistika.neocenjene_oddaje }}
+          </div>
+          <div class="text-muted small fw-medium">Oddaj čaka na oceno</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <h2 class="h4">Moje naloge</h2>
-  <div class="table-responsive">
-    <table class="table table-hover bg-body align-middle">
-      <thead><tr><th>Predmet</th><th>Naloga</th><th>Rok</th><th>Oddaj</th><th>Za oceniti</th><th class="text-end"></th></tr></thead>
-      <tbody>
-        {% for naloga in naloge %}
-          <tr>
-            <td>{{ naloga.predmet.sifra }}</td>
-            <td>{{ naloga.naslov }}</td>
-            <td>{{ naloga.rok|date:"d.m.Y H:i" }}</td>
-            <td>{{ naloga.st_oddaj }}</td>
-            <td>{% if naloga.st_neocenjenih %}<span class="badge bg-warning text-dark">{{ naloga.st_neocenjenih }}</span>{% else %}0{% endif %}</td>
-            <td class="text-end"><a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Odpri</a></td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="6" class="text-center text-muted">Ni nalog. <a href="{% url 'naloga_nova' %}">Ustvari prvo.</a></td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="row g-4 mb-4">
+    <!-- Moje naloge -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-body d-flex justify-content-between align-items-center">
+          <span class="fw-bold">Moje naloge pri predmetih</span>
+          <a href="{% url 'ucitelj_naloge' %}" class="small text-decoration-none">Vse naloge &rarr;</a>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light small">
+                <tr>
+                  <th>Predmet</th>
+                  <th>Naloga</th>
+                  <th>Rok oddaje</th>
+                  <th>Oddaj</th>
+                  <th>Za oceniti</th>
+                  <th class="text-end">Akcija</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for naloga in naloge %}
+                  <tr>
+                    <td><span class="badge bg-secondary">{{ naloga.predmet.sifra }}</span></td>
+                    <td><strong>{{ naloga.naslov }}</strong></td>
+                    <td class="small {% if naloga.je_potekla %}text-danger fw-semibold{% endif %}">
+                      {{ naloga.rok|date:"d.m.Y H:i" }}
+                      {% if naloga.je_potekla %}<span class="badge bg-danger small">poteklo</span>{% endif %}
+                    </td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">{{ naloga.st_oddaj }}</span></td>
+                    <td>
+                      {% if naloga.st_neocenjenih %}
+                        <span class="badge bg-warning text-dark">{{ naloga.st_neocenjenih }} čaka</span>
+                      {% else %}
+                        <span class="badge bg-success">Ocenjeno</span>
+                      {% endif %}
+                    </td>
+                    <td class="text-end">
+                      <a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Odpri</a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr><td colspan="6" class="text-center text-muted p-3">Trenutno nimate ustvarjenih nalog. <a href="{% url 'naloga_nova' %}">Ustvarite prvo nalogo.</a></td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zadnje oddaje učencev -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-body d-flex justify-content-between align-items-center">
+          <span class="fw-bold">Zadnje oddaje učencev</span>
+          <span class="badge bg-secondary">Zadnjih {{ zadnje_oddaje|length }}</span>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            {% for oddaja in zadnje_oddaje %}
+              <div class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <div>
+                  <div class="fw-semibold">{{ oddaja.ucenec.priimek }} {{ oddaja.ucenec.ime }} <small class="text-muted">({{ oddaja.ucenec.email }})</small></div>
+                  <div class="small text-muted">{{ oddaja.naloga.naslov }} &middot; {{ oddaja.oddano|date:"d.m. H:i" }}</div>
+                  {% if oddaja.prepozno %}
+                    <span class="badge bg-danger small mt-1">Oddano po roku</span>
+                  {% endif %}
+                </div>
+                <div class="text-end">
+                  {% if oddaja.ocena %}
+                    <span class="badge bg-success mb-1 d-block">Ocena: {{ oddaja.ocena }}</span>
+                    <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-outline-secondary py-0">Popravi</a>
+                  {% else %}
+                    <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-warning">Oceni</a>
+                  {% endif %}
+                </div>
+              </div>
+            {% empty %}
+              <div class="p-3 text-muted text-center">Ni oddanih nalog učencev.</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Moji predmeti -->
+  <h2 class="h5 mb-3 fw-bold">Moji predmeti</h2>
+  <div class="row g-3">
+    {% for predmet in predmeti %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h5 class="card-title fw-bold mb-1">{{ predmet.ime }}</h5>
+                <p class="text-muted small mb-2"><span class="badge bg-secondary">{{ predmet.sifra }}</span> &middot; {{ predmet.ucenci.count }} vpisanih učencev</p>
+              </div>
+            </div>
+            <p class="card-text small text-muted">{{ predmet.opis|truncatechars:80|default:"Brez opisa." }}</p>
+          </div>
+          <div class="card-footer bg-transparent border-0 d-flex gap-2">
+            <a href="{% url 'ucitelj_predmet' predmet.pk %}" class="btn btn-sm btn-primary flex-grow-1">Učilnica predmeta</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
   </div>
 {% endblock %}

@@ -43,6 +43,11 @@ def zacetna(request):
             "stevilo_predmetov": Predmet.objects.count(),
             "stevilo_uciteljev": Ucitelj.objects.count(),
             "stevilo_ucencev": Ucenec.objects.count(),
+            "stevilo_nalog": Naloga.objects.count(),
+            "stevilo_oddaj": Oddaja.objects.count(),
+            "stevilo_gradiv": Gradivo.objects.count(),
+            "zadnje_oddaje": Oddaja.objects.select_related("ucenec", "naloga", "naloga__predmet").order_by("-oddano")[:6],
+            "zadnja_gradiva": Gradivo.objects.select_related("predmet", "nalozil").order_by("-ustvarjeno")[:6],
         }
         return render(request, "administracija/zacetna.html", kontekst)
     if je_ucitelj(uporabnik):
@@ -101,6 +106,7 @@ def ucenec_domov(request):
         .select_related("predmet")[:5]
     )
     oddaje = Oddaja.objects.filter(ucenec=ucenec)
+    zadnje_ocene = oddaje.filter(ocena__isnull=False).select_related("naloga", "naloga__predmet").order_by("-ocenjeno", "-oddano")[:5]
     statistika = {
         "stevilo_predmetov": predmeti.count(),
         "stevilo_oddaj": oddaje.count(),
@@ -110,7 +116,13 @@ def ucenec_domov(request):
     return render(
         request,
         "portal/ucenec_domov.html",
-        {"ucenec": ucenec, "predmeti": predmeti, "prihajajoce": prihajajoce, "statistika": statistika},
+        {
+            "ucenec": ucenec,
+            "predmeti": predmeti,
+            "prihajajoce": prihajajoce,
+            "zadnje_ocene": zadnje_ocene,
+            "statistika": statistika,
+        },
     )
 
 
@@ -238,6 +250,9 @@ def ucitelj_domov(request):
             st_neocenjenih=Count("oddaje", filter=Q(oddaje__ocena__isnull=True), distinct=True),
         )
     )
+    zadnje_oddaje = Oddaja.objects.filter(
+        naloga__predmet__ucitelji=ucitelj
+    ).select_related("ucenec", "naloga", "naloga__predmet").order_by("-oddano")[:6]
     statistika = {
         "stevilo_predmetov": predmeti.count(),
         "stevilo_nalog": naloge.count(),
@@ -248,7 +263,13 @@ def ucitelj_domov(request):
     return render(
         request,
         "portal/ucitelj_domov.html",
-        {"ucitelj": ucitelj, "predmeti": predmeti, "naloge": naloge, "statistika": statistika},
+        {
+            "ucitelj": ucitelj,
+            "predmeti": predmeti,
+            "naloge": naloge,
+            "zadnje_oddaje": zadnje_oddaje,
+            "statistika": statistika,
+        },
     )
 
 

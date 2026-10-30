@@ -1,11 +1,26 @@
 {% extends "base.html" %}
-{% block naslov %}Registracija učenca – Šolski IS{% endblock %}
+{% block naslov %}Registracija učenca – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <h1 class="mb-4">Registracija učenca</h1>
-  <form method="post" novalidate class="col-lg-6">
-    {% csrf_token %}
-    {% include "portal/_polja.html" %}
-    <button type="submit" class="btn btn-primary">Registriraj se</button>
-    <a href="{% url 'prijava' %}" class="btn btn-secondary">Že imam račun</a>
-  </form>
+  <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-body p-4 p-md-5">
+          <h2 class="card-title h3 mb-2">Registracija učenca</h2>
+          <p class="text-muted small mb-4">Ustvarite nov učenčev račun za dostop do šolskih gradiv in oddajo nalog.</p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% include "portal/_polja.html" %}
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-primary btn-lg">Registriraj se</button>
+            </div>
+            <div class="text-center mt-3">
+              <span class="text-muted small">Že imate račun?</span>
+              <a href="{% url 'prijava' %}" class="small text-decoration-none ms-1">Prijava</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

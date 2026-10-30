@@ -1,24 +1,101 @@
 {% extends "base.html" %}
-{% block naslov %}Šolski IS{% endblock %}
+{% block naslov %}Šolski IS+ — Spletna aplikacija za podporo šolskemu delu{% endblock %}
 {% block vsebina %}
-  <div class="p-5 mb-4 bg-light rounded-3">
-    <h1 class="display-6">Šolski informacijski sistem</h1>
-    <p class="lead">Podpora šolskemu delu na daljavo — gradiva, oddaja nalog in upravljanje predmetov.</p>
-    <a href="{% url 'prijava' %}" class="btn btn-primary btn-lg">Prijava</a>
-    <a href="{% url 'registracija' %}" class="btn btn-outline-primary btn-lg">Registracija učenca</a>
+  <div class="p-5 mb-4 bg-body-tertiary rounded-3 border shadow-sm">
+    <div class="container-fluid py-3">
+      <h1 class="display-5 fw-bold">Šolski informacijski sistem<span class="text-info">+</span></h1>
+      <p class="col-md-9 fs-5 text-muted">
+        Celovita rešitev za šolsko delo na daljavo: varno nalaganje učnih gradiv,
+        oddaja nalog z roki in opozorili ob zamudah ter ocenjevanje oddaj s povratnimi informacijami.
+      </p>
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <a href="{% url 'prijava' %}" class="btn btn-primary btn-lg px-4">Prijava v sistem</a>
+        <a href="{% url 'registracija' %}" class="btn btn-outline-primary btn-lg px-4">Registracija učenca</a>
+      </div>
+    </div>
   </div>
-  <div class="row g-3">
-    <div class="col-md-4"><div class="card"><div class="card-body">
-      <h5 class="card-title">Učenec</h5>
-      <p class="card-text">Registriraj se, izberi predmete, prebiraj gradiva in oddaj naloge.</p>
-    </div></div></div>
-    <div class="col-md-4"><div class="card"><div class="card-body">
-      <h5 class="card-title">Učitelj</h5>
-      <p class="card-text">Naloži gradiva za svoje predmete in preglej oddane naloge učencev.</p>
-    </div></div></div>
-    <div class="col-md-4"><div class="card"><div class="card-body">
-      <h5 class="card-title">Administrator</h5>
-      <p class="card-text">Upravljaj predmete, učitelje in učence ter njihove povezave.</p>
-    </div></div></div>
+
+  <h2 class="h4 mb-3">Trije prilagojeni uporabniški pogledi</h2>
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-top border-4 border-primary">
+        <div class="card-body">
+          <div class="fs-1 mb-2">🎓</div>
+          <h5 class="card-title fw-bold">Učenec</h5>
+          <p class="card-text text-muted">
+            Vpis v predmete, pregled in varen prenos gradiv, oddaja nalog z avtomatskim poimenovanjem
+            »Priimek Ime – Naslov naloge«, potrditev povozitve ter spremljanje ocen in obvestil.
+          </p>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <a href="{% url 'prijava' %}" class="btn btn-sm btn-outline-primary w-100" onclick="localStorage.setItem('demo_user', 'ucenec1')">Vstop za učence</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-top border-4 border-success">
+        <div class="card-body">
+          <div class="fs-1 mb-2">👨‍🏫</div>
+          <h5 class="card-title fw-bold">Učitelj</h5>
+          <p class="card-text text-muted">
+            Nadzorna plošča z dodeljenimi predmeti, nalaganje in brisanje učnih gradiv,
+            ustvarjanje nalog z roki, pregled oddaj učencev, ocenjevanje z ocenami 1–5 ter izvoz v CSV.
+          </p>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <a href="{% url 'prijava' %}" class="btn btn-sm btn-outline-success w-100" onclick="localStorage.setItem('demo_user', 'ucitelj1')">Vstop za učitelje</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-top border-4 border-danger">
+        <div class="card-body">
+          <div class="fs-1 mb-2">🛡️</div>
+          <h5 class="card-title fw-bold">Administrator</h5>
+          <p class="card-text text-muted">
+            Vpis, urejanje in brisanje predmetov, učiteljev in učencev (več kot 100 zapisov),
+            dinamično iskanje in filtriranje podatkov ter upravljanje mnogoličnih M:N relacij.
+          </p>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <a href="{% url 'prijava' %}" class="btn btn-sm btn-outline-danger w-100" onclick="localStorage.setItem('demo_user', 'admin')">Vstop za administratorja</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card bg-body-tertiary border shadow-sm">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h5 class="card-title mb-0 fw-bold">⚡ Pripravljeni demo računi za testiranje sistema</h5>
+        <span class="badge bg-secondary">Vsa demo gesla: ...123!</span>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="p-3 border rounded bg-body">
+            <span class="badge bg-danger mb-1">Administrator</span>
+            <div><strong>admin</strong> / <code>Admin123!</code></div>
+            <div class="small text-muted mt-1">Nadzor nad celotno šolo in bazami podatkov.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 border rounded bg-body">
+            <span class="badge bg-primary mb-1">Učitelj</span>
+            <div><strong>ucitelj1</strong> / <code>Ucitelj123!</code></div>
+            <div class="small text-muted mt-1">Janez Novak (poučuje Matematiko in Fiziko).</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 border rounded bg-body">
+            <span class="badge bg-success mb-1">Učenec</span>
+            <div><strong>ucenec1</strong> / <code>Ucenec123!</code></div>
+            <div class="small text-muted mt-1">Luka Kovač (3.A, vpisan v več predmetov).</div>
+          </div>
+        </div>
+      </div>
+      <div class="text-end mt-3">
+        <a href="{% url 'prijava' %}" class="btn btn-primary">Pojdi na prijavo &rarr;</a>
+      </div>
+    </div>
   </div>
 {% endblock %}

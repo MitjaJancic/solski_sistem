@@ -10,7 +10,9 @@
     (function () {
       try {
         var t = localStorage.getItem("tema");
-        if (t) document.documentElement.setAttribute("data-bs-theme", t);
+        if (t === "dark" || t === "light") {
+          document.documentElement.setAttribute("data-bs-theme", t);
+        }
       } catch (e) {}
     })();
   </script>
@@ -27,6 +29,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           {% if user.is_authenticated and user.profil.je_admin or user.is_superuser %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'zacetna' %}">Nadzorna plošča</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'predmet_seznam' %}">Predmeti</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'ucitelj_seznam' %}">Učitelji</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'ucenec_seznam' %}">Učenci</a></li>
@@ -44,7 +47,10 @@
         <ul class="navbar-nav align-items-lg-center">
           <li class="nav-item">
             <button id="preklopTeme" class="btn btn-sm btn-outline-light me-lg-2" type="button"
-                    title="Preklopi temo" aria-label="Preklopi temo">◐</button>
+                    title="Preklopi temni / svetli način" aria-label="Preklopi temo">
+              <span id="ikonaTeme">🌙</span>
+              <span id="besediloTeme" class="small">Temni način</span>
+            </button>
           </li>
           {% if user.is_authenticated %}
             <li class="nav-item">
@@ -85,19 +91,41 @@
   </main>
 
   <footer class="bg-dark text-light py-3 mt-auto" data-bs-theme="dark">
-    <div class="container d-flex flex-wrap justify-content-between small">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center small">
       <span>Šolski IS+ — učni potek: naloge, oddaje in ocenjevanje</span>
-      <span class="text-secondary">Zaključni projekt · {% now "Y" %}</span>
+      <span class="text-secondary">Informacijski sistem za delo na daljavo</span>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById("preklopTeme").addEventListener("click", function () {
-      var h = document.documentElement;
-      var nova = h.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
-      h.setAttribute("data-bs-theme", nova);
-      try { localStorage.setItem("tema", nova); } catch (e) {}
+    function posodobiGumbTeme(tema) {
+      var ikona = document.getElementById("ikonaTeme");
+      var besedilo = document.getElementById("besediloTeme");
+      if (!ikona) return;
+      if (tema === "dark") {
+        ikona.textContent = "☀️";
+        if (besedilo) besedilo.textContent = "Svetli način";
+      } else {
+        ikona.textContent = "🌙";
+        if (besedilo) besedilo.textContent = "Temni način";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var tema = document.documentElement.getAttribute("data-bs-theme") || "light";
+      posodobiGumbTeme(tema);
+
+      var gumb = document.getElementById("preklopTeme");
+      if (gumb) {
+        gumb.addEventListener("click", function () {
+          var h = document.documentElement;
+          var nova = h.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+          h.setAttribute("data-bs-theme", nova);
+          posodobiGumbTeme(nova);
+          try { localStorage.setItem("tema", nova); } catch (e) {}
+        });
+      }
     });
   </script>
 </body>
