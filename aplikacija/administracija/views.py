@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -18,6 +19,18 @@ class PredmetListView(AdminZahtevanMixin, ListView):
     template_name = "administracija/predmet_seznam.html"
     context_object_name = "predmeti"
     paginate_by = 20
+
+    def get_queryset(self):
+        qs = Predmet.objects.all()
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            qs = qs.filter(Q(ime__icontains=q) | Q(sifra__icontains=q))
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["q"] = self.request.GET.get("q", "").strip()
+        return ctx
 
 
 class PredmetCreateView(AdminZahtevanMixin, SuccessMessageMixin, CreateView):
@@ -57,7 +70,16 @@ class UciteljListView(AdminZahtevanMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Ucitelj.objects.prefetch_related("predmeti")
+        qs = Ucitelj.objects.prefetch_related("predmeti")
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            qs = qs.filter(Q(ime__icontains=q) | Q(priimek__icontains=q) | Q(email__icontains=q))
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["q"] = self.request.GET.get("q", "").strip()
+        return ctx
 
 
 class UciteljCreateView(AdminZahtevanMixin, SuccessMessageMixin, CreateView):
@@ -97,7 +119,16 @@ class UcenecListView(AdminZahtevanMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Ucenec.objects.prefetch_related("predmeti")
+        qs = Ucenec.objects.prefetch_related("predmeti")
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            qs = qs.filter(Q(ime__icontains=q) | Q(priimek__icontains=q) | Q(email__icontains=q))
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["q"] = self.request.GET.get("q", "").strip()
+        return ctx
 
 
 class UcenecCreateView(AdminZahtevanMixin, SuccessMessageMixin, CreateView):

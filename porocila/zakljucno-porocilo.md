@@ -3,7 +3,7 @@
 **Projekt:** Šolski IS — spletna aplikacija za podporo šolskemu delu na daljavo
 **Skupina:** Mitja Jančič (vzdrževalec IS + razvijalec), Nal Dobravc (razvijalec), Matic Holobar (mentor)
 **Povezava do repozitorija:** https://github.com/MitjaJancic/solski_sistem
-**Povezava do delujoče aplikacije:** _<vstavi URL javne domene ali Cloudflare tunela>_
+**Povezava do delujoče aplikacije:** https://photos-sensitive-scheduled-enough.trycloudflare.com (Cloudflare Tunnel HTTPS, preveri s skripto `scripts/pokazi-javni-url.ps1`)
 **Končna različica:** oznaka (tag) `v1.0`
 
 ## 1. Povzetek
