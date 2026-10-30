@@ -1,7 +1,8 @@
-# Skripta poišče in izpiše trenutni javni HTTPS naslov Cloudflare tunela
+# Skripta poišče in izpiše ZADNJI veljavni javni HTTPS naslov Cloudflare tunela
 $logs = docker compose logs tunel 2>&1 | Out-String
-if ($logs -match "https://[a-zA-Z0-9-]+\.trycloudflare\.com") {
-    $url = $matches[0]
+$allMatches = [regex]::Matches($logs, "https://[a-zA-Z0-9-]+\.trycloudflare\.com")
+if ($allMatches.Count -gt 0) {
+    $url = $allMatches[$allMatches.Count - 1].Value
     Write-Host ""
     Write-Host "==========================================================" -ForegroundColor Green
     Write-Host "  JAVNA DOMENA DELUJE (Cloudflare Tunnel):" -ForegroundColor Green

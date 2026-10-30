@@ -82,6 +82,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "portal.context.obvestila",
             ],
         },
     },
@@ -97,6 +98,13 @@ if os.environ.get("DJANGO_TEST_SQLITE") == "1":
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": ":memory:",
+        }
+    }
+elif os.environ.get("DJANGO_SQLITE_FILE"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.environ["DJANGO_SQLITE_FILE"],
         }
     }
 else:

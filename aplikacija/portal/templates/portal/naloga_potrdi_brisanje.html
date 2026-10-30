@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block naslov %}Potrdi brisanje naloge{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">Potrdi brisanje</h1>
+  <p>Ali res želiš izbrisati nalogo <strong>{{ naloga.naslov }}</strong>
+     ({{ naloga.predmet.sifra }})? Izbrisane bodo tudi vse oddaje te naloge.
+     Tega dejanja ni mogoče razveljaviti.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Izbriši</button>
+    <a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}

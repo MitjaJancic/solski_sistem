@@ -1,21 +1,22 @@
 {% extends "base.html" %}
-{% block naslov %}Moji predmeti – Šolski IS{% endblock %}
+{% block naslov %}Moji predmeti – Šolski IS+{% endblock %}
 {% block vsebina %}
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Predmeti, ki jih poučujem</h1>
-    <a href="{% url 'gradivo_nalozi' %}" class="btn btn-success">Naloži gradivo</a>
+    <div>
+      <a href="{% url 'naloga_nova' %}" class="btn btn-success">Nova naloga</a>
+      <a href="{% url 'gradivo_nalozi' %}" class="btn btn-outline-primary">Naloži gradivo</a>
+    </div>
   </div>
   <div class="row g-3">
     {% for predmet in predmeti %}
       <div class="col-md-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">{{ predmet.ime }}</h5>
-            <p class="card-text text-muted">{{ predmet.sifra }}</p>
-            <p class="card-text">Gradiva: {{ predmet.gradiva.count }} · Oddaje: {{ predmet.oddaje.count }}</p>
-            <a href="{% url 'ucitelj_predmet' predmet.pk %}" class="btn btn-sm btn-primary">Odpri</a>
-          </div>
-        </div>
+        <div class="card h-100"><div class="card-body">
+          <h5 class="card-title">{{ predmet.ime }}</h5>
+          <p class="card-text text-muted">{{ predmet.sifra }}</p>
+          <p class="card-text">Gradiva: {{ predmet.gradiva.count }} · Naloge: {{ predmet.naloge.count }}</p>
+          <a href="{% url 'ucitelj_predmet' predmet.pk %}" class="btn btn-sm btn-primary">Odpri</a>
+        </div></div>
       </div>
     {% empty %}
       <p class="text-muted">Ne poučuješ še nobenega predmeta (dodeli jih administrator).</p>

@@ -4,18 +4,16 @@ from django.contrib.auth.models import User
 
 from administracija.models import Predmet, Ucenec
 
-from .models import Gradivo, Oddaja
+from .models import Gradivo, Naloga, Oddaja
 
 
 def _bootstrap(form):
     for polje in form.fields.values():
         widget = polje.widget
-        if isinstance(widget, (forms.SelectMultiple, forms.CheckboxSelectMultiple)):
+        if isinstance(widget, (forms.SelectMultiple, forms.CheckboxSelectMultiple, forms.CheckboxInput)):
             continue
         if isinstance(widget, forms.Select):
             widget.attrs.setdefault("class", "form-select")
-        elif isinstance(widget, forms.FileInput):
-            widget.attrs.setdefault("class", "form-control")
         else:
             widget.attrs.setdefault("class", "form-control")
 
@@ -44,8 +42,6 @@ class RegistracijaUcencaForm(UserCreationForm):
 
 
 class ProfilUcencaForm(forms.ModelForm):
-    """Urejanje lastnih osebnih podatkov učenca."""
-
     class Meta:
         model = Ucenec
         fields = ["ime", "priimek", "email"]
@@ -56,8 +52,6 @@ class ProfilUcencaForm(forms.ModelForm):
 
 
 class MojiPredmetiForm(forms.Form):
-    """Učenec izbere/popravi seznam predmetov, ki jih obiskuje."""
-
     predmeti = forms.ModelMultipleChoiceField(
         queryset=Predmet.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -73,9 +67,6 @@ class MojiPredmetiForm(forms.Form):
 
 
 class GradivoForm(forms.ModelForm):
-    """Nalaganje gradiva; izbor predmeta je omejen na predmete, ki jih učitelj
-    dejansko poučuje (queryset nastavi pogled)."""
-
     class Meta:
         model = Gradivo
         fields = ["predmet", "naslov", "datoteka"]
@@ -87,10 +78,30 @@ class GradivoForm(forms.ModelForm):
         _bootstrap(self)
 
 
+class NalogaForm(forms.ModelForm):
+    """NADGRADNJA: učitelj ustvari/uredi nalogo z rokom za svoj predmet."""
+
+    class Meta:
+        model = Naloga
+        fields = ["predmet", "naslov", "opis", "rok"]
+        widgets = {
+            "opis": forms.Textarea(attrs={"rows": 3}),
+            "rok": forms.DateTimeInput(
+                attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
+            ),
+        }
+
+    def __init__(self, *args, dovoljeni_predmeti=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["rok"].input_formats = ["%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"]
+        if dovoljeni_predmeti is not None:
+            self.fields["predmet"].queryset = dovoljeni_predmeti
+        _bootstrap(self)
+
+
 class OddajaForm(forms.ModelForm):
-    """Oddaja naloge; izbor predmeta je omejen na predmete, ki jih učenec
-    obiskuje (queryset nastavi pogled). Polje `potrdi_povozitev` uporabnik
-    označi, kadar želi povoziti obstoječo oddajo iste naloge."""
+    """Oddaja rešitve naloge (naloga in učenec se določita v pogledu).
+    `potrdi_povozitev` uporabnik označi za povozitev obstoječe oddaje."""
 
     potrdi_povozitev = forms.BooleanField(
         required=False,
@@ -99,10 +110,25 @@ class OddajaForm(forms.ModelForm):
 
     class Meta:
         model = Oddaja
-        fields = ["predmet", "naslov", "datoteka"]
+        fields = ["datoteka"]
 
-    def __init__(self, *args, dovoljeni_predmeti=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if dovoljeni_predmeti is not None:
-            self.fields["predmet"].queryset = dovoljeni_predmeti
+        _bootstrap(self)
+
+
+class OcenaForm(forms.ModelForm):
+    """NADGRADNJA: učitelj oceni oddajo in doda povratno informacijo."""
+
+    class Meta:
+        model = Oddaja
+        fields = ["ocena", "komentar"]
+        widgets = {
+            "ocena": forms.Select(choices=[(i, i) for i in range(1, 6)]),
+            "komentar": forms.Textarea(attrs={"rows": 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["ocena"].required = True
         _bootstrap(self)

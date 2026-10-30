@@ -1,28 +1,29 @@
 {% extends "base.html" %}
-{% block naslov %}Moje oddaje – Šolski IS{% endblock %}
+{% block naslov %}Moje oddaje – Šolski IS+{% endblock %}
 {% block vsebina %}
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Moje oddane naloge</h1>
-    <a href="{% url 'oddaja_nova' %}" class="btn btn-success">Oddaj nalogo</a>
+    <a href="{% url 'ucenec_naloge' %}" class="btn btn-primary">Vse naloge</a>
   </div>
   <div class="table-responsive">
-
-    <table class="table table-striped bg-white">
-    <thead><tr><th>Predmet</th><th>Naslov naloge</th><th>Datoteka</th><th>Zadnja oddaja</th><th class="text-end"></th></tr></thead>
-    <tbody>
-      {% for oddaja in oddaje %}
-        <tr>
-          <td>{{ oddaja.predmet.sifra }}</td>
-          <td>{{ oddaja.naslov }}</td>
-          <td>{{ oddaja.ime_datoteke }}</td>
-          <td>{{ oddaja.oddano|date:"d.m.Y H:i" }}</td>
-          <td class="text-end"><a href="{% url 'oddaja_prenos' oddaja.pk %}" class="btn btn-sm btn-outline-primary">Prenesi</a></td>
-        </tr>
-      {% empty %}
-        <tr><td colspan="5" class="text-center text-muted">Ni oddanih nalog.</td></tr>
-      {% endfor %}
-    </tbody>
+    <table class="table table-striped bg-body align-middle">
+      <thead>
+        <tr><th>Predmet</th><th>Naloga</th><th>Datoteka</th><th>Oddano</th><th>Ocena</th><th class="text-end"></th></tr>
+      </thead>
+      <tbody>
+        {% for oddaja in oddaje %}
+          <tr>
+            <td>{{ oddaja.naloga.predmet.sifra }}</td>
+            <td><a href="{% url 'ucenec_naloga' oddaja.naloga.pk %}">{{ oddaja.naloga.naslov }}</a></td>
+            <td>{{ oddaja.ime_datoteke }}</td>
+            <td>{{ oddaja.oddano|date:"d.m.Y H:i" }}{% if oddaja.prepozno %} <span class="badge bg-danger">prepozno</span>{% endif %}</td>
+            <td>{% if oddaja.je_ocenjena %}<span class="badge bg-success">{{ oddaja.ocena }}</span>{% else %}<span class="text-muted">–</span>{% endif %}</td>
+            <td class="text-end"><a href="{% url 'oddaja_prenos' oddaja.pk %}" class="btn btn-sm btn-outline-primary">Prenesi</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="text-center text-muted">Ni oddanih nalog.</td></tr>
+        {% endfor %}
+      </tbody>
     </table>
-
   </div>
 {% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block naslov %}Ocenjevanje – Šolski IS+{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-3">Ocenjevanje oddaje</h1>
+  <p class="text-muted">
+    {{ oddaja.ucenec.priimek }} {{ oddaja.ucenec.ime }} ·
+    naloga <strong>{{ oddaja.naloga.naslov }}</strong> ({{ oddaja.naloga.predmet.sifra }})
+  </p>
+  <p>Datoteka: <a href="{% url 'oddaja_prenos' oddaja.pk %}">{{ oddaja.ime_datoteke }}</a>
+     {% if oddaja.prepozno %}<span class="badge bg-danger">prepozno</span>{% endif %}</p>
+
+  <form method="post" novalidate class="col-lg-6">
+    {% csrf_token %}
+    {% include "portal/_polja.html" %}
+    <button type="submit" class="btn btn-success">Shrani oceno</button>
+    <a href="{% url 'ucitelj_naloga' oddaja.naloga_id %}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}
