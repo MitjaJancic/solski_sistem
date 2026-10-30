@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block naslov %}Obvestila – Šolski IS+{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-3">Obvestila</h1>
+  <div class="list-group">
+    {% for o in obvestila %}
+      <a href="{{ o.povezava|default:'#' }}"
+         class="list-group-item list-group-item-action {% if not o.prebrano %}list-group-item-primary{% endif %}">
+        <div class="d-flex justify-content-between">
+          <span>{{ o.besedilo }}</span>
+          <small class="text-muted">{{ o.ustvarjeno|date:"d.m.Y H:i" }}</small>
+        </div>
+      </a>
+    {% empty %}
+      <div class="list-group-item text-muted">Ni obvestil.</div>
+    {% endfor %}
+  </div>
+{% endblock %}

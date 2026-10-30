@@ -1,55 +1,53 @@
 {% extends "base.html" %}
-{% block naslov %}{{ predmet.ime }} – Šolski IS{% endblock %}
+{% block naslov %}{{ predmet.ime }} – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>{{ predmet.ime }} <small class="text-muted">({{ predmet.sifra }})</small></h1>
-    <a href="{% url 'gradivo_nalozi' %}" class="btn btn-success">Naloži gradivo</a>
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h1 class="mb-0">{{ predmet.ime }} <small class="text-muted">({{ predmet.sifra }})</small></h1>
+    <div>
+      <a href="{% url 'naloga_nova' %}" class="btn btn-success">Nova naloga</a>
+      <a href="{% url 'gradivo_nalozi' %}" class="btn btn-outline-primary">Naloži gradivo</a>
+    </div>
   </div>
 
-  <h2 class="h4 mt-3">Gradiva</h2>
+  <h2 class="h4 mt-3">Naloge</h2>
   <div class="table-responsive">
-
-    <table class="table table-striped bg-white">
-    <thead><tr><th>Naslov</th><th>Datoteka</th><th>Naloženo</th><th class="text-end">Dejanja</th></tr></thead>
-    <tbody>
-      {% for gradivo in gradiva %}
-        <tr>
-          <td>{{ gradivo.naslov }}</td>
-          <td>{{ gradivo.ime_datoteke }}</td>
-          <td>{{ gradivo.ustvarjeno|date:"d.m.Y H:i" }}</td>
-          <td class="text-end">
-            <a href="{% url 'gradivo_prenos' gradivo.pk %}" class="btn btn-sm btn-outline-primary">Prenesi</a>
-            <a href="{% url 'gradivo_izbrisi' gradivo.pk %}" class="btn btn-sm btn-outline-danger">Izbriši</a>
-          </td>
-        </tr>
-      {% empty %}
-        <tr><td colspan="4" class="text-center text-muted">Ni naloženih gradiv.</td></tr>
-      {% endfor %}
-    </tbody>
+    <table class="table table-striped bg-body align-middle">
+      <thead><tr><th>Naslov</th><th>Rok</th><th>Oddaje</th><th class="text-end"></th></tr></thead>
+      <tbody>
+        {% for naloga in naloge %}
+          <tr>
+            <td>{{ naloga.naslov }}</td>
+            <td>{{ naloga.rok|date:"d.m.Y H:i" }}</td>
+            <td>{{ naloga.oddaje.count }}</td>
+            <td class="text-end"><a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Odpri</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="text-center text-muted">Ni nalog.</td></tr>
+        {% endfor %}
+      </tbody>
     </table>
-
   </div>
 
-  <h2 class="h4 mt-4">Oddane naloge učencev</h2>
+  <h2 class="h4 mt-4">Gradiva</h2>
   <div class="table-responsive">
-
-    <table class="table table-striped bg-white">
-    <thead><tr><th>Učenec</th><th>Naslov naloge</th><th>Datoteka</th><th>Oddano</th><th class="text-end"></th></tr></thead>
-    <tbody>
-      {% for oddaja in oddaje %}
-        <tr>
-          <td>{{ oddaja.ucenec.priimek }} {{ oddaja.ucenec.ime }}</td>
-          <td>{{ oddaja.naslov }}</td>
-          <td>{{ oddaja.ime_datoteke }}</td>
-          <td>{{ oddaja.oddano|date:"d.m.Y H:i" }}</td>
-          <td class="text-end"><a href="{% url 'oddaja_prenos' oddaja.pk %}" class="btn btn-sm btn-primary">Prenesi</a></td>
-        </tr>
-      {% empty %}
-        <tr><td colspan="5" class="text-center text-muted">Ni oddanih nalog.</td></tr>
-      {% endfor %}
-    </tbody>
+    <table class="table table-striped bg-body align-middle">
+      <thead><tr><th>Naslov</th><th>Datoteka</th><th>Naloženo</th><th class="text-end">Dejanja</th></tr></thead>
+      <tbody>
+        {% for gradivo in gradiva %}
+          <tr>
+            <td>{{ gradivo.naslov }}</td>
+            <td>{{ gradivo.ime_datoteke }}</td>
+            <td>{{ gradivo.ustvarjeno|date:"d.m.Y H:i" }}</td>
+            <td class="text-end">
+              <a href="{% url 'gradivo_prenos' gradivo.pk %}" class="btn btn-sm btn-outline-primary">Prenesi</a>
+              <a href="{% url 'gradivo_izbrisi' gradivo.pk %}" class="btn btn-sm btn-outline-danger">Izbriši</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="text-center text-muted">Ni naloženih gradiv.</td></tr>
+        {% endfor %}
+      </tbody>
     </table>
-
   </div>
   <a href="{% url 'ucitelj_predmeti' %}" class="btn btn-secondary">Nazaj</a>
 {% endblock %}

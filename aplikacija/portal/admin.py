@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Gradivo, Oddaja, Profil
+from .models import Gradivo, Naloga, Obvestilo, Oddaja, Profil
 
 
 @admin.register(Profil)
@@ -17,8 +17,21 @@ class GradivoAdmin(admin.ModelAdmin):
     search_fields = ("naslov",)
 
 
+@admin.register(Naloga)
+class NalogaAdmin(admin.ModelAdmin):
+    list_display = ("naslov", "predmet", "rok", "ustvaril", "ustvarjeno")
+    list_filter = ("predmet",)
+    search_fields = ("naslov",)
+
+
 @admin.register(Oddaja)
 class OddajaAdmin(admin.ModelAdmin):
-    list_display = ("naslov", "predmet", "ucenec", "oddano")
-    list_filter = ("predmet",)
-    search_fields = ("naslov", "ucenec__priimek")
+    list_display = ("naloga", "ucenec", "oddano", "prepozno", "ocena", "ocenjeno")
+    list_filter = ("naloga__predmet", "prepozno")
+    search_fields = ("naloga__naslov", "ucenec__priimek")
+
+
+@admin.register(Obvestilo)
+class ObvestiloAdmin(admin.ModelAdmin):
+    list_display = ("prejemnik", "besedilo", "prebrano", "ustvarjeno")
+    list_filter = ("prebrano",)

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block naslov %}{{ naloga.naslov }} – Šolski IS+{% endblock %}
+{% block vsebina %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'ucenec_naloge' %}">Naloge</a></li>
+      <li class="breadcrumb-item active">{{ naloga.naslov }}</li>
+    </ol>
+  </nav>
+
+  <h1 class="mb-1">{{ naloga.naslov }}</h1>
+  <p class="text-muted">{{ naloga.predmet.ime }} ({{ naloga.predmet.sifra }}) ·
+    rok: <strong>{{ naloga.rok|date:"d.m.Y H:i" }}</strong>
+    {% if naloga.rok < zdaj %}<span class="badge bg-secondary">rok potekel</span>{% endif %}
+  </p>
+  {% if naloga.opis %}<div class="card mb-4"><div class="card-body">{{ naloga.opis|linebreaksbr }}</div></div>{% endif %}
+
+  {% if oddaja %}
+    <div class="card mb-4 border-info">
+      <div class="card-header">Tvoja oddaja</div>
+      <div class="card-body">
+        <p class="mb-1">Datoteka: <a href="{% url 'oddaja_prenos' oddaja.pk %}">{{ oddaja.ime_datoteke }}</a></p>
+        <p class="mb-1 text-muted">Oddano: {{ oddaja.oddano|date:"d.m.Y H:i" }}
+          {% if oddaja.prepozno %}<span class="badge bg-danger">prepozno</span>{% endif %}</p>
+        {% if oddaja.je_ocenjena %}
+          <hr>
+          <p class="mb-1"><strong>Ocena:</strong> <span class="badge bg-success fs-6">{{ oddaja.ocena }}</span></p>
+          {% if oddaja.komentar %}<p class="mb-0"><strong>Povratna informacija:</strong><br>{{ oddaja.komentar|linebreaksbr }}</p>{% endif %}
+        {% else %}
+          <p class="mb-0 text-muted">Še ni ocenjeno.</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <h2 class="h5">{% if oddaja %}Ponovna oddaja{% else %}Oddaja rešitve{% endif %}</h2>
+  <p class="text-muted small">Datoteka se shrani kot »Priimek Ime – {{ naloga.naslov }}«.
+    {% if oddaja %}Nova oddaja povozi prejšnjo šele po potrditvi.{% endif %}</p>
+  <form method="post" enctype="multipart/form-data" novalidate class="col-lg-6">
+    {% csrf_token %}
+    {% include "portal/_polja.html" %}
+    <button type="submit" class="btn btn-primary">Oddaj</button>
+  </form>
+{% endblock %}
