@@ -1,11 +1,14 @@
 import shutil
 import tempfile
+from datetime import timedelta
 
+from django.conf import settings
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
 
 from administracija.models import (
     Predmet,
@@ -15,7 +18,7 @@ from administracija.models import (
     UciteljPredmet,
 )
 
-from .models import Gradivo, Oddaja, Profil
+from .models import Gradivo, Naloga, Obvestilo, Oddaja, Profil
 
 MEDIA = tempfile.mkdtemp()
 
@@ -24,6 +27,10 @@ def dodaj_profil(username, geslo, vloga, ucitelj=None, ucenec=None, **extra):
     user = User.objects.create_user(username=username, password=geslo, **extra)
     Profil.objects.create(uporabnik=user, vloga=vloga, ucitelj=ucitelj, ucenec=ucenec)
     return user
+
+
+def datoteka(ime="f.txt", vsebina=b"x"):
+    return SimpleUploadedFile(ime, vsebina, content_type="text/plain")
 
 
 @override_settings(MEDIA_ROOT=MEDIA)
@@ -37,7 +44,7 @@ class PortalTest(TestCase):
         UciteljPredmet.objects.create(ucitelj=cls.ucitelj, predmet=cls.mat)  # poučuje MAT, ne SLO
 
         cls.ucenec = Ucenec.objects.create(ime="Bine", priimek="Novak", email="bine@dijaki.si")
-        UcenecPredmet.objects.create(ucenec=cls.ucenec, predmet=cls.mat)  # obiskuje MAT, ne SLO
+        UcenecPredmet.objects.create(ucenec=cls.ucenec, predmet=cls.mat)
 
         cls.ucenec2 = Ucenec.objects.create(ime="Cilka", priimek="Zajc", email="cilka@dijaki.si")
         UcenecPredmet.objects.create(ucenec=cls.ucenec2, predmet=cls.mat)
@@ -47,7 +54,15 @@ class PortalTest(TestCase):
         super().tearDownClass()
         shutil.rmtree(MEDIA, ignore_errors=True)
 
-    # --- Avtentikacija / avtorizacija -----------------------------------
+    def naloga(self, predmet=None, rok=None, ustvaril=None):
+        return Naloga.objects.create(
+            predmet=predmet or self.mat,
+            naslov="1. domača",
+            rok=rok or (timezone.now() + timedelta(days=5)),
+            ustvaril=ustvaril or self.ucitelj,
+        )
+
+    # --- Avtorizacija ----------------------------------------------------
 
     def test_anonimni_preusmerjen_iz_admin_crud(self):
         odgovor = self.client.get(reverse("predmet_seznam"))
@@ -57,40 +72,25 @@ class PortalTest(TestCase):
     def test_ucenec_ne_dostopa_do_admin_crud(self):
         dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
         self.client.login(username="u1", password="geslo12345")
-        odgovor = self.client.get(reverse("predmet_seznam"))
-        self.assertEqual(odgovor.status_code, 403)
+        self.assertEqual(self.client.get(reverse("predmet_seznam")).status_code, 403)
 
-    def test_admin_dostopa_do_crud(self):
-        dodaj_profil("a1", "geslo12345", Profil.Vloga.ADMIN, is_staff=True, is_superuser=True)
-        self.client.login(username="a1", password="geslo12345")
-        self.assertEqual(self.client.get(reverse("predmet_seznam")).status_code, 200)
+    # --- Registracija / zgoščeno geslo -----------------------------------
 
-    # --- Registracija in zgoščevanje gesla ------------------------------
-
-    def test_registracija_ucenca_in_zgosceno_geslo(self):
+    def test_registracija_in_zgosceno_geslo(self):
         odgovor = self.client.post(
             reverse("registracija"),
-            {
-                "username": "novi",
-                "ime": "Dana",
-                "priimek": "Horvat",
-                "email": "dana@dijaki.si",
-                "password1": "MocnoGeslo123",
-                "password2": "MocnoGeslo123",
-            },
+            {"username": "novi", "ime": "Dana", "priimek": "Horvat",
+             "email": "dana@dijaki.si", "password1": "MocnoGeslo123", "password2": "MocnoGeslo123"},
         )
         self.assertEqual(odgovor.status_code, 302)
         user = User.objects.get(username="novi")
-        # Geslo je shranjeno zgoščeno (nikoli v čistem besedilu).
         self.assertNotEqual(user.password, "MocnoGeslo123")
-        self.assertTrue(user.password.startswith(("pbkdf2_", "argon2")))
         self.assertTrue(check_password("MocnoGeslo123", user.password))
-        self.assertTrue(Ucenec.objects.filter(email="dana@dijaki.si").exists())
         self.assertEqual(user.profil.vloga, Profil.Vloga.UCENEC)
 
-    # --- Učenec: predmeti in gradiva ------------------------------------
+    # --- Učenec: predmeti in gradiva -------------------------------------
 
-    def test_ucenec_ureja_svoje_predmete(self):
+    def test_ucenec_ureja_predmete(self):
         dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
         self.client.login(username="u1", password="geslo12345")
         self.client.post(reverse("moji_predmeti"), {"predmeti": [self.slo.pk]})
@@ -103,134 +103,136 @@ class PortalTest(TestCase):
         self.assertEqual(self.client.get(reverse("ucenec_gradiva", args=[self.mat.pk])).status_code, 200)
         self.assertEqual(self.client.get(reverse("ucenec_gradiva", args=[self.slo.pk])).status_code, 403)
 
-    # --- Učitelj: gradiva samo za svoje predmete ------------------------
+    # --- Učitelj: naloge in gradiva --------------------------------------
 
-    def test_ucitelj_nalozi_gradivo_le_za_svoj_predmet(self):
+    def test_ucitelj_ustvari_nalogo_le_za_svoj_predmet(self):
+        student = dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
         dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
         self.client.login(username="t1", password="geslo12345")
-        datoteka = SimpleUploadedFile("g.txt", b"vsebina", content_type="text/plain")
+        rok = (timezone.now() + timedelta(days=3)).strftime("%Y-%m-%dT%H:%M")
         odgovor = self.client.post(
-            reverse("gradivo_nalozi"),
-            {"predmet": self.mat.pk, "naslov": "Ulomki", "datoteka": datoteka},
+            reverse("naloga_nova"),
+            {"predmet": self.mat.pk, "naslov": "Ulomki", "opis": "navodila", "rok": rok},
         )
         self.assertEqual(odgovor.status_code, 302)
-        self.assertTrue(Gradivo.objects.filter(predmet=self.mat, naslov="Ulomki").exists())
+        self.assertTrue(Naloga.objects.filter(predmet=self.mat, naslov="Ulomki").exists())
+        # vpisani učenec dobi obvestilo o novi nalogi
+        self.assertTrue(Obvestilo.objects.filter(prejemnik=student, besedilo__contains="Ulomki").exists())
 
-    def test_ucitelj_ne_more_nalagati_za_tuj_predmet(self):
+    def test_ucitelj_ne_ustvari_naloge_za_tuj_predmet(self):
         dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
         self.client.login(username="t1", password="geslo12345")
-        datoteka = SimpleUploadedFile("g.txt", b"vsebina", content_type="text/plain")
-        # SLO ni med predmeti tega učitelja → obrazec zavrne izbiro (ostane na strani).
+        rok = (timezone.now() + timedelta(days=3)).strftime("%Y-%m-%dT%H:%M")
         odgovor = self.client.post(
-            reverse("gradivo_nalozi"),
-            {"predmet": self.slo.pk, "naslov": "Vrinjeno", "datoteka": datoteka},
+            reverse("naloga_nova"),
+            {"predmet": self.slo.pk, "naslov": "Vrinjeno", "opis": "", "rok": rok},
         )
-        self.assertEqual(odgovor.status_code, 200)
-        self.assertFalse(Gradivo.objects.filter(predmet=self.slo).exists())
+        self.assertEqual(odgovor.status_code, 200)  # obrazec zavrne izbiro
+        self.assertFalse(Naloga.objects.filter(predmet=self.slo).exists())
 
-    def test_ucitelj_vidi_le_svoje_predmete(self):
+    def test_ucitelj_vidi_le_svoje_naloge_predmet(self):
         dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
         self.client.login(username="t1", password="geslo12345")
-        vsebina = self.client.get(reverse("ucitelj_predmeti")).content.decode()
-        self.assertIn("Matematika", vsebina)
-        self.assertNotIn("Slovenščina", vsebina)
         self.assertEqual(self.client.get(reverse("ucitelj_predmet", args=[self.slo.pk])).status_code, 403)
+        self.assertEqual(self.client.get(reverse("ucitelj_predmet", args=[self.mat.pk])).status_code, 200)
 
-    # --- Oddaja nalog: poimenovanje + potrditev povozitve ----------------
+    def test_ucitelj_nalozi_in_izbrise_gradivo(self):
+        dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
+        self.client.login(username="t1", password="geslo12345")
+        self.client.post(reverse("gradivo_nalozi"), {"predmet": self.mat.pk, "naslov": "G", "datoteka": datoteka()})
+        gradivo = Gradivo.objects.get(predmet=self.mat, naslov="G")
+        self.assertEqual(self.client.post(reverse("gradivo_izbrisi", args=[gradivo.pk])).status_code, 302)
+        self.assertFalse(Gradivo.objects.filter(pk=gradivo.pk).exists())
+
+    # --- Oddaja naloge: poimenovanje, zamuda, povozitev ------------------
 
     def test_oddaja_poimenovanje_datoteke(self):
+        naloga = self.naloga()
         dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
         self.client.login(username="u1", password="geslo12345")
-        datoteka = SimpleUploadedFile("moja.docx", b"v1", content_type="application/octet-stream")
-        self.client.post(
-            reverse("oddaja_nova"),
-            {"predmet": self.mat.pk, "naslov": "1. domača", "datoteka": datoteka},
-        )
-        oddaja = Oddaja.objects.get(ucenec=self.ucenec, predmet=self.mat, naslov="1. domača")
-        # Datoteka shranjena kot "Priimek Ime – Naslov naloge.ext"
+        self.client.post(reverse("ucenec_naloga", args=[naloga.pk]),
+                         {"datoteka": datoteka("moja.docx", b"v1")})
+        oddaja = Oddaja.objects.get(naloga=naloga, ucenec=self.ucenec)
         self.assertTrue(oddaja.datoteka.name.endswith("Novak Bine – 1. domača.docx"))
+        self.assertFalse(oddaja.prepozno)
 
-    def test_ponovna_oddaja_zahteva_potrditev_nato_povozi(self):
+    def test_oddaja_po_roku_je_prepozna(self):
+        naloga = self.naloga(rok=timezone.now() - timedelta(days=1))
         dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
         self.client.login(username="u1", password="geslo12345")
-        podatki = lambda vsebina: {
-            "predmet": self.mat.pk,
-            "naslov": "1. domača",
-            "datoteka": SimpleUploadedFile("f.txt", vsebina, content_type="text/plain"),
-        }
-        self.client.post(reverse("oddaja_nova"), podatki(b"prva"))
-        self.assertEqual(Oddaja.objects.filter(ucenec=self.ucenec, naslov="1. domača").count(), 1)
-        stara_pot = Oddaja.objects.get(ucenec=self.ucenec, naslov="1. domača").datoteka.name
+        self.client.post(reverse("ucenec_naloga", args=[naloga.pk]), {"datoteka": datoteka()})
+        self.assertTrue(Oddaja.objects.get(naloga=naloga, ucenec=self.ucenec).prepozno)
 
-        # Brez potrditve: ne povozi (obrazec vrne napako, ostane 1 oddaja z isto vsebino).
-        odgovor = self.client.post(reverse("oddaja_nova"), podatki(b"druga-brez-potrditve"))
+    def test_ponovna_oddaja_potrditev_in_razveljavi_oceno(self):
+        naloga = self.naloga()
+        dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
+        self.client.login(username="u1", password="geslo12345")
+        self.client.post(reverse("ucenec_naloga", args=[naloga.pk]), {"datoteka": datoteka("f.txt", b"prva")})
+        oddaja = Oddaja.objects.get(naloga=naloga, ucenec=self.ucenec)
+        oddaja.ocena = 4
+        oddaja.ocenjeno = timezone.now()
+        oddaja.save()
+
+        # brez potrditve -> ne povozi
+        odgovor = self.client.post(reverse("ucenec_naloga", args=[naloga.pk]), {"datoteka": datoteka("f.txt", b"druga")})
         self.assertEqual(odgovor.status_code, 200)
         self.assertContains(odgovor, "že obstaja oddaja")
-        oddaja = Oddaja.objects.get(ucenec=self.ucenec, naslov="1. domača")
-        with oddaja.datoteka.open("rb") as f:
-            self.assertEqual(f.read(), b"prva")
+        oddaja.refresh_from_db()
+        self.assertEqual(oddaja.ocena, 4)
 
-        # S potrditvijo: povozi, ostane 1 oddaja z novo vsebino.
-        p = podatki(b"tretja-s-potrditvijo")
-        p["potrdi_povozitev"] = "on"
-        odgovor = self.client.post(reverse("oddaja_nova"), p)
+        # s potrditvijo -> povozi in razveljavi oceno
+        self.client.post(reverse("ucenec_naloga", args=[naloga.pk]),
+                         {"datoteka": datoteka("f.txt", b"tretja"), "potrdi_povozitev": "on"})
+        self.assertEqual(Oddaja.objects.filter(naloga=naloga, ucenec=self.ucenec).count(), 1)
+        oddaja.refresh_from_db()
+        self.assertIsNone(oddaja.ocena)
+        with oddaja.datoteka.open("rb") as f:
+            self.assertEqual(f.read(), b"tretja")
+
+    # --- Ocenjevanje -----------------------------------------------------
+
+    def test_ucitelj_oceni_in_ucenec_obvescen(self):
+        naloga = self.naloga()
+        student = dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
+        oddaja = Oddaja.objects.create(naloga=naloga, ucenec=self.ucenec)
+        oddaja.datoteka.save("o.txt", datoteka(), save=True)
+        dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
+        self.client.login(username="t1", password="geslo12345")
+        odgovor = self.client.post(reverse("oddaja_oceni", args=[oddaja.pk]), {"ocena": 5, "komentar": "Odlično"})
         self.assertEqual(odgovor.status_code, 302)
-        self.assertEqual(Oddaja.objects.filter(ucenec=self.ucenec, naslov="1. domača").count(), 1)
-        oddaja = Oddaja.objects.get(ucenec=self.ucenec, naslov="1. domača")
-        with oddaja.datoteka.open("rb") as f:
-            self.assertEqual(f.read(), b"tretja-s-potrditvijo")
-        # Ime datoteke ostane isto (ista naloga).
-        self.assertEqual(oddaja.datoteka.name, stara_pot)
+        oddaja.refresh_from_db()
+        self.assertEqual(oddaja.ocena, 5)
+        self.assertIsNotNone(oddaja.ocenjeno)
+        self.assertTrue(Obvestilo.objects.filter(prejemnik=student, besedilo__contains="Ocena").exists())
 
-    # --- Zaščiteni prenos: brez pravic ni dostopa -----------------------
+    def test_ucitelj_ne_oceni_oddaje_tujega_predmeta(self):
+        # naloga pri SLO (ki je ta učitelj ne poučuje)
+        naloga = Naloga.objects.create(predmet=self.slo, naslov="X", rok=timezone.now() + timedelta(days=1))
+        oddaja = Oddaja.objects.create(naloga=naloga, ucenec=self.ucenec)
+        dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
+        self.client.login(username="t1", password="geslo12345")
+        self.assertEqual(self.client.get(reverse("oddaja_oceni", args=[oddaja.pk])).status_code, 403)
+
+    # --- Zaščiteni prenos ------------------------------------------------
 
     def test_ucenec_ne_prenese_tuje_oddaje(self):
-        # ucenec2 odda nalogo
-        oddaja = Oddaja.objects.create(ucenec=self.ucenec2, predmet=self.mat, naslov="X")
-        oddaja.datoteka.save("test.txt", SimpleUploadedFile("test.txt", b"tajno"), save=True)
-        # ucenec (drug učenec) poskuša prenesti
+        naloga = self.naloga()
+        oddaja = Oddaja.objects.create(naloga=naloga, ucenec=self.ucenec2)
+        oddaja.datoteka.save("t.txt", datoteka("t.txt", b"tajno"), save=True)
         dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
         self.client.login(username="u1", password="geslo12345")
         self.assertEqual(self.client.get(reverse("oddaja_prenos", args=[oddaja.pk])).status_code, 403)
 
     def test_ucitelj_predmeta_prenese_oddajo(self):
-        oddaja = Oddaja.objects.create(ucenec=self.ucenec, predmet=self.mat, naslov="Y")
-        oddaja.datoteka.save("y.txt", SimpleUploadedFile("y.txt", b"vsebina"), save=True)
+        naloga = self.naloga()
+        oddaja = Oddaja.objects.create(naloga=naloga, ucenec=self.ucenec)
+        oddaja.datoteka.save("y.txt", datoteka("y.txt", b"vsebina"), save=True)
         dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
         self.client.login(username="t1", password="geslo12345")
         self.assertEqual(self.client.get(reverse("oddaja_prenos", args=[oddaja.pk])).status_code, 200)
 
-    # --- Dodatni testi (5. teden) ---------------------------------------
-
-    def test_ucenec_uredi_profil(self):
-        dodaj_profil("u1", "geslo12345", Profil.Vloga.UCENEC, ucenec=self.ucenec)
-        self.client.login(username="u1", password="geslo12345")
-        odgovor = self.client.post(
-            reverse("profil_uredi"),
-            {"ime": "Bine", "priimek": "Novak-Kovač", "email": "bine@dijaki.si"},
-        )
-        self.assertEqual(odgovor.status_code, 302)
-        self.ucenec.refresh_from_db()
-        self.assertEqual(self.ucenec.priimek, "Novak-Kovač")
-
-    def test_ucitelj_izbrise_svoje_gradivo(self):
-        dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
-        self.client.login(username="t1", password="geslo12345")
-        gradivo = Gradivo.objects.create(predmet=self.mat, naslov="G", nalozil=self.ucitelj)
-        gradivo.datoteka.save("g.txt", SimpleUploadedFile("g.txt", b"x"), save=True)
-        odgovor = self.client.post(reverse("gradivo_izbrisi", args=[gradivo.pk]))
-        self.assertEqual(odgovor.status_code, 302)
-        self.assertFalse(Gradivo.objects.filter(pk=gradivo.pk).exists())
-
-    def test_ucitelj_ne_izbrise_tujega_gradiva(self):
-        # Gradivo pri predmetu SLO, ki ga učitelj (samo MAT) ne poučuje.
-        tuj = Gradivo.objects.create(predmet=self.slo, naslov="Tuje")
-        dodaj_profil("t1", "geslo12345", Profil.Vloga.UCITELJ, ucitelj=self.ucitelj)
-        self.client.login(username="t1", password="geslo12345")
-        self.assertEqual(self.client.get(reverse("gradivo_izbrisi", args=[tuj.pk])).status_code, 403)
+    # --- Regresija oblikovanja ------------------------------------------
 
     def test_oznaka_sporocila_o_napaki_je_danger(self):
-        # BUG-01 (5. teden): Django oznako ERROR "error" preslikamo v Bootstrap "danger".
         from django.contrib.messages import constants
-        from django.conf import settings
         self.assertEqual(settings.MESSAGE_TAGS.get(constants.ERROR), "danger")

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block naslov %}{{ naslov }} – Šolski IS+{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-4">{{ naslov }}</h1>
+  <form method="post" novalidate class="col-lg-6">
+    {% csrf_token %}
+    {% include "portal/_polja.html" %}
+    <button type="submit" class="btn btn-primary">Shrani</button>
+    <a href="{% url 'ucitelj_naloge' %}" class="btn btn-secondary">Prekliči</a>
+  </form>
+{% endblock %}

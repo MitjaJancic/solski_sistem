@@ -12,12 +12,15 @@ Ustvari:
     - 3 učitelje:       ucitelj1..3 / Ucitelj123!  (povezani s prvimi 3 učitelji)
     - 3 učence:         ucenec1..3 / Ucenec123!    (povezani s prvimi 3 učenci)
 """
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils import timezone
 
 from administracija.models import Ucenec, Ucitelj
-from portal.models import Profil
+from portal.models import Naloga, Profil
 
 GESLO_ADMIN = "Admin123!"
 GESLO_UCITELJ = "Ucitelj123!"
@@ -67,3 +70,21 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Učenec: ucenec{i} / {GESLO_UCENEC} -> {ucenec}"))
 
         self.stdout.write(self.style.SUCCESS("Demo računi uspešno ustvarjeni."))
+
+        # NADGRADNJA: nekaj demo nalog za predmete prvega učitelja (če obstaja).
+        prvi_ucitelj = Ucitelj.objects.first()
+        if prvi_ucitelj:
+            ustvarjenih = 0
+            for predmet in prvi_ucitelj.predmeti.all()[:2]:
+                _, nova = Naloga.objects.get_or_create(
+                    predmet=predmet,
+                    naslov=f"Domača naloga 1 ({predmet.sifra})",
+                    defaults={
+                        "opis": "Demo naloga, ustvarjena s seed_uporabniki.",
+                        "rok": timezone.now() + timedelta(days=7),
+                        "ustvaril": prvi_ucitelj,
+                    },
+                )
+                ustvarjenih += 1 if nova else 0
+            if ustvarjenih:
+                self.stdout.write(self.style.SUCCESS(f"Ustvarjenih {ustvarjenih} demo nalog."))

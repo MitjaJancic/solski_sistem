@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block naslov %}Naloge – Šolski IS+{% endblock %}
+{% block vsebina %}
+  <h1 class="mb-3">Naloge</h1>
+  <div class="table-responsive">
+    <table class="table table-hover bg-body align-middle">
+      <thead>
+        <tr><th>Predmet</th><th>Naloga</th><th>Rok</th><th>Status</th><th class="text-end"></th></tr>
+      </thead>
+      <tbody>
+        {% for naloga in naloge %}
+          <tr>
+            <td>{{ naloga.predmet.sifra }}</td>
+            <td>{{ naloga.naslov }}</td>
+            <td>{{ naloga.rok|date:"d.m.Y H:i" }}</td>
+            <td>
+              {% if naloga.moja_oddaja %}
+                {% if naloga.moja_oddaja.je_ocenjena %}
+                  <span class="badge bg-success">ocena {{ naloga.moja_oddaja.ocena }}</span>
+                {% else %}
+                  <span class="badge bg-info text-dark">oddano</span>
+                {% endif %}
+                {% if naloga.moja_oddaja.prepozno %}<span class="badge bg-danger">prepozno</span>{% endif %}
+              {% elif naloga.rok < zdaj %}
+                <span class="badge bg-secondary">rok potekel</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">odprto</span>
+              {% endif %}
+            </td>
+            <td class="text-end"><a href="{% url 'ucenec_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Odpri</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="text-center text-muted">Ni nalog pri tvojih predmetih.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
