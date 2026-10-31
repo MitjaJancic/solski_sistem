@@ -137,7 +137,7 @@ DJANGO_TEST_SQLITE=1 python manage.py test
 
 - projekt izpolnjuje vse zahteve navodil (3. in 4. poglavje)
 - repozitorij: https://github.com/MitjaJancic/solski_sistem
-- delujoča aplikacija na javni domeni: https://photos-sensitive-scheduled-enough.trycloudflare.com (Cloudflare Tunnel)
+- delujoča aplikacija na javni domeni: https://lens-computing-marina-chemical.trycloudflare.com (Cloudflare Tunnel)
 - končna različica označena z oznako `v1.0`
 
 ### Hvala za pozornost — vprašanja?
