@@ -1,11 +1,35 @@
 {% extends "base.html" %}
 {% block naslov %}{{ naslov }} – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <h1 class="mb-4">{{ naslov }}</h1>
-  <form method="post" novalidate class="col-lg-6">
-    {% csrf_token %}
-    {% include "portal/_polja.html" %}
-    <button type="submit" class="btn btn-primary">Shrani</button>
-    <a href="{% url 'ucitelj_naloge' %}" class="btn btn-secondary">Prekliči</a>
-  </form>
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-body py-3 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-journal-plus text-primary me-2 fs-5"></i>
+            <h1 class="h5 fw-bold mb-0">{{ naslov }}</h1>
+          </div>
+          <span class="badge bg-secondary-subtle text-secondary-emphasis border">Učitelj</span>
+        </div>
+        <div class="card-body p-4">
+          <p class="text-muted small mb-3">
+            Določite predmet, naslov, podrobna navodila in rok za oddajo naloge.
+          </p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% include "portal/_polja.html" %}
+            <div class="d-flex gap-2 mt-4">
+              <button type="submit" class="btn btn-primary d-inline-flex align-items-center shadow-sm">
+                <i class="bi bi-check2-circle me-1"></i>Shrani nalogo
+              </button>
+              <a href="{% url 'ucitelj_naloge' %}" class="btn btn-outline-secondary d-inline-flex align-items-center">
+                <i class="bi bi-x-circle me-1"></i>Prekliči
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

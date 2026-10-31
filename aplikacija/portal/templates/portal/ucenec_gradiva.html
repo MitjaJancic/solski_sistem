@@ -1,25 +1,62 @@
 {% extends "base.html" %}
-{% block naslov %}Gradiva – {{ predmet.ime }}{% endblock %}
+{% block naslov %}Gradiva – {{ predmet.ime }} – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <h1 class="mb-4">Gradiva – {{ predmet.ime }} <small class="text-muted">({{ predmet.sifra }})</small></h1>
-  <div class="table-responsive">
-
-    <table class="table table-striped bg-body">
-    <thead><tr><th>Naslov</th><th>Datoteka</th><th>Naloženo</th><th class="text-end"></th></tr></thead>
-    <tbody>
-      {% for gradivo in gradiva %}
-        <tr>
-          <td>{{ gradivo.naslov }}</td>
-          <td>{{ gradivo.ime_datoteke }}</td>
-          <td>{{ gradivo.ustvarjeno|date:"d.m.Y H:i" }}</td>
-          <td class="text-end"><a href="{% url 'gradivo_prenos' gradivo.pk %}" class="btn btn-sm btn-primary">Prenesi</a></td>
-        </tr>
-      {% empty %}
-        <tr><td colspan="4" class="text-center text-muted">Za ta predmet še ni gradiv.</td></tr>
-      {% endfor %}
-    </tbody>
-    </table>
-
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h1 class="h2 mb-0">{{ predmet.ime }}</h1>
+        <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ predmet.sifra }}</span>
+      </div>
+      <p class="text-muted small mb-0">Učna gradiva in datoteke, ki so jih objavili učitelji predmeta.</p>
+    </div>
+    <a href="{% url 'ucenec_domov' %}" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center">
+      <i class="bi bi-arrow-left me-1"></i>Nazaj na pregled
+    </a>
   </div>
-  <a href="{% url 'ucenec_domov' %}" class="btn btn-secondary">Nazaj</a>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-body d-flex justify-content-between align-items-center py-3">
+      <span class="fw-bold d-flex align-items-center">
+        <i class="bi bi-folder2-open text-primary me-2 fs-5"></i>Seznam gradiv
+      </span>
+      <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">{{ gradiva.count }} datotek</span>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="small text-muted">
+            <tr>
+              <th>Naslov gradiva</th>
+              <th>Ime datoteke</th>
+              <th>Datum objave</th>
+              <th class="text-end">Prenos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for gradivo in gradiva %}
+              <tr>
+                <td class="fw-medium">
+                  <i class="bi bi-file-earmark-pdf text-danger me-2 fs-5"></i>{{ gradivo.naslov }}
+                </td>
+                <td><code class="small">{{ gradivo.ime_datoteke }}</code></td>
+                <td class="small text-muted">{{ gradivo.ustvarjeno|date:"d.m.Y H:i" }}</td>
+                <td class="text-end">
+                  <a href="{% url 'gradivo_prenos' gradivo.pk %}" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                    <i class="bi bi-download me-1"></i>Prenesi
+                  </a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="text-center text-muted p-4">
+                  <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                  Za ta predmet učitelji še niso naložili gradiv.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 {% endblock %}

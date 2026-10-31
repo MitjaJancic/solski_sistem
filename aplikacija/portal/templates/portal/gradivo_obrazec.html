@@ -1,12 +1,35 @@
 {% extends "base.html" %}
-{% block naslov %}Naloži gradivo – Šolski IS{% endblock %}
+{% block naslov %}Naloži gradivo – Učitelj – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <h1 class="mb-4">Naloži gradivo</h1>
-  <p class="text-muted">Izbrati je mogoče le predmete, ki jih poučuješ.</p>
-  <form method="post" enctype="multipart/form-data" novalidate class="col-lg-6">
-    {% csrf_token %}
-    {% include "portal/_polja.html" %}
-    <button type="submit" class="btn btn-primary">Naloži</button>
-    <a href="{% url 'ucitelj_predmeti' %}" class="btn btn-secondary">Prekliči</a>
-  </form>
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-body py-3 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-cloud-arrow-up text-primary me-2 fs-5"></i>
+            <h1 class="h5 fw-bold mb-0">Nalaganje učnega gradiva</h1>
+          </div>
+          <span class="badge bg-secondary-subtle text-secondary-emphasis border">Gradivo</span>
+        </div>
+        <div class="card-body p-4">
+          <p class="text-muted small mb-3">
+            Izberite predmet, ki ga poučujete, vnesite naslov ter naložite ustrezno učno gradivo za učence.
+          </p>
+
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {% include "portal/_polja.html" %}
+            <div class="d-flex gap-2 mt-4">
+              <button type="submit" class="btn btn-primary d-inline-flex align-items-center shadow-sm">
+                <i class="bi bi-upload me-1"></i>Naloži gradivo
+              </button>
+              <a href="{% url 'ucitelj_predmeti' %}" class="btn btn-outline-secondary d-inline-flex align-items-center">
+                <i class="bi bi-x-circle me-1"></i>Prekliči
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

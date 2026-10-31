@@ -1,26 +1,62 @@
 {% extends "base.html" %}
-{% block naslov %}Naloge – Šolski IS+{% endblock %}
+{% block naslov %}Moje naloge – Učitelj – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Moje naloge</h1>
-    <a href="{% url 'naloga_nova' %}" class="btn btn-success">Nova naloga</a>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h1 class="h2 mb-1">Moje naloge</h1>
+      <p class="text-muted small mb-0">Pregled vseh ustvarjenih nalog pri predmetih, ki jih poučujete.</p>
+    </div>
+    <a href="{% url 'naloga_nova' %}" class="btn btn-success d-inline-flex align-items-center shadow-sm">
+      <i class="bi bi-plus-circle me-1"></i>Nova naloga
+    </a>
   </div>
-  <div class="table-responsive">
-    <table class="table table-hover bg-body align-middle">
-      <thead><tr><th>Predmet</th><th>Naloga</th><th>Rok</th><th>Oddaj</th><th class="text-end"></th></tr></thead>
-      <tbody>
-        {% for naloga in naloge %}
-          <tr>
-            <td>{{ naloga.predmet.sifra }}</td>
-            <td>{{ naloga.naslov }}</td>
-            <td>{{ naloga.rok|date:"d.m.Y H:i" }}{% if naloga.rok < zdaj %} <span class="badge bg-secondary">potekla</span>{% endif %}</td>
-            <td>{{ naloga.st_oddaj }}</td>
-            <td class="text-end"><a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Odpri</a></td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="5" class="text-center text-muted">Ni nalog.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="small text-muted">
+            <tr>
+              <th style="width: 110px;">Predmet</th>
+              <th>Naslov naloge</th>
+              <th>Rok oddaje</th>
+              <th>Število oddaj</th>
+              <th class="text-end">Dejanja</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for naloga in naloge %}
+              <tr>
+                <td><span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ naloga.predmet.sifra }}</span></td>
+                <td class="fw-medium">{{ naloga.naslov }}</td>
+                <td class="small {% if naloga.rok < zdaj %}text-danger fw-semibold{% endif %}">
+                  {{ naloga.rok|date:"d.m.Y H:i" }}
+                  {% if naloga.rok < zdaj %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle small ms-1">potekel</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
+                    <i class="bi bi-file-earmark-check me-1"></i>{{ naloga.st_oddaj }} oddaj
+                  </span>
+                </td>
+                <td class="text-end">
+                  <a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                    <i class="bi bi-box-arrow-up-right me-1"></i>Odpri pregled
+                  </a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="text-center text-muted p-4">
+                  <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                  Nimate še ustvarjenih nalog. Kliknite »Nova naloga« za objavo prve naloge.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 {% endblock %}

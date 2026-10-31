@@ -1,18 +1,48 @@
 {% extends "base.html" %}
-{% block naslov %}Obvestila – Šolski IS+{% endblock %}
+{% block naslov %}Center za obvestila – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <h1 class="mb-3">Obvestila</h1>
-  <div class="list-group">
-    {% for o in obvestila %}
-      <a href="{{ o.povezava|default:'#' }}"
-         class="list-group-item list-group-item-action {% if not o.prebrano %}list-group-item-primary{% endif %}">
-        <div class="d-flex justify-content-between">
-          <span>{{ o.besedilo }}</span>
-          <small class="text-muted">{{ o.ustvarjeno|date:"d.m.Y H:i" }}</small>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+          <h1 class="h2 mb-1 d-flex align-items-center">
+            <i class="bi bi-bell text-primary me-2"></i>Center za obvestila
+          </h1>
+          <p class="text-muted small mb-0">Obvestila o ocenah, oddajah in šolskih aktivnostih.</p>
         </div>
-      </a>
-    {% empty %}
-      <div class="list-group-item text-muted">Ni obvestil.</div>
-    {% endfor %}
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center">
+          <i class="bi bi-arrow-left me-1"></i>Nazaj
+        </a>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            {% for o in obvestila %}
+              <a href="{{ o.povezava|default:'#' }}"
+                 class="list-group-item list-group-item-action p-3 {% if not o.prebrano %}list-group-item-primary{% endif %}">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                  <div class="d-flex align-items-start gap-2">
+                    <i class="bi {% if not o.prebrano %}bi-envelope-exclamation-fill text-primary{% else %}bi-envelope-check text-muted{% endif %} fs-5 mt-1"></i>
+                    <div>
+                      <div class="{% if not o.prebrano %}fw-semibold text-primary-emphasis{% endif %}">{{ o.besedilo }}</div>
+                      <small class="text-muted">{{ o.ustvarjeno|date:"d.m.Y ob H:i" }}</small>
+                    </div>
+                  </div>
+                  {% if not o.prebrano %}
+                    <span class="badge bg-primary rounded-pill">Novo</span>
+                  {% endif %}
+                </div>
+              </a>
+            {% empty %}
+              <div class="p-5 text-center text-muted">
+                <i class="bi bi-bell-slash fs-2 d-block mb-2 text-muted"></i>
+                <p class="mb-0">Trenutno nimate novih obvestil.</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}

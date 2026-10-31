@@ -1,38 +1,85 @@
 {% extends "base.html" %}
-{% block naslov %}Naloge – Šolski IS+{% endblock %}
+{% block naslov %}Naloge – Učenec – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <h1 class="mb-3">Naloge</h1>
-  <div class="table-responsive">
-    <table class="table table-hover bg-body align-middle">
-      <thead>
-        <tr><th>Predmet</th><th>Naloga</th><th>Rok</th><th>Status</th><th class="text-end"></th></tr>
-      </thead>
-      <tbody>
-        {% for naloga in naloge %}
-          <tr>
-            <td>{{ naloga.predmet.sifra }}</td>
-            <td>{{ naloga.naslov }}</td>
-            <td>{{ naloga.rok|date:"d.m.Y H:i" }}</td>
-            <td>
-              {% if naloga.moja_oddaja %}
-                {% if naloga.moja_oddaja.je_ocenjena %}
-                  <span class="badge bg-success">ocena {{ naloga.moja_oddaja.ocena }}</span>
-                {% else %}
-                  <span class="badge bg-info text-dark">oddano</span>
-                {% endif %}
-                {% if naloga.moja_oddaja.prepozno %}<span class="badge bg-danger">prepozno</span>{% endif %}
-              {% elif naloga.rok < zdaj %}
-                <span class="badge bg-secondary">rok potekel</span>
-              {% else %}
-                <span class="badge bg-warning text-dark">odprto</span>
-              {% endif %}
-            </td>
-            <td class="text-end"><a href="{% url 'ucenec_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Odpri</a></td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="5" class="text-center text-muted">Ni nalog pri tvojih predmetih.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h1 class="h2 mb-1">Naloge pri mojih predmetih</h1>
+      <p class="text-muted small mb-0">Pregled vseh odprtih in oddanih nalog z roki in prejetimi ocenami.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'moje_oddaje' %}" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center shadow-sm">
+        <i class="bi bi-file-earmark-check me-1"></i>Moje oddaje
+      </a>
+      <a href="{% url 'ucenec_domov' %}" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center">
+        <i class="bi bi-arrow-left me-1"></i>Pregled
+      </a>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="small text-muted">
+            <tr>
+              <th style="width: 100px;">Predmet</th>
+              <th>Naloga</th>
+              <th>Rok oddaje</th>
+              <th>Status</th>
+              <th class="text-end">Dejanje</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for naloga in naloge %}
+              <tr>
+                <td><span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ naloga.predmet.sifra }}</span></td>
+                <td class="fw-medium">{{ naloga.naslov }}</td>
+                <td class="small {% if naloga.rok < zdaj and not naloga.moja_oddaja %}text-danger fw-semibold{% endif %}">
+                  {{ naloga.rok|date:"d.m.Y H:i" }}
+                </td>
+                <td>
+                  {% if naloga.moja_oddaja %}
+                    {% if naloga.moja_oddaja.je_ocenjena %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle">
+                        <i class="bi bi-check-circle me-1"></i>Ocena {{ naloga.moja_oddaja.ocena }}
+                      </span>
+                    {% else %}
+                      <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
+                        <i class="bi bi-clock me-1"></i>Oddano (čaka na oceno)
+                      </span>
+                    {% endif %}
+                    {% if naloga.moja_oddaja.prepozno %}
+                      <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-1">zamuda</span>
+                    {% endif %}
+                  {% elif naloga.rok < zdaj %}
+                    <span class="badge bg-secondary-subtle text-secondary-emphasis border">Rok potekel</span>
+                  {% else %}
+                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">
+                      <i class="bi bi-exclamation-circle me-1"></i>Odprto za oddajo
+                    </span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <a href="{% url 'ucenec_naloga' naloga.pk %}" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                    {% if naloga.moja_oddaja %}
+                      <i class="bi bi-eye me-1"></i>Pregled
+                    {% else %}
+                      <i class="bi bi-upload me-1"></i>Oddaj
+                    {% endif %}
+                  </a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="text-center text-muted p-4">
+                  <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                  Trenutno ni nalog pri vaših vpisanih predmetih.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 {% endblock %}

@@ -1,38 +1,50 @@
 {% extends "base.html" %}
 {% block naslov %}Pregled učitelja – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-      <h1 class="h2 mb-1">Pozdravljeni, {{ ucitelj.ime }} {{ ucitelj.priimek }}</h1>
-      <p class="text-muted small mb-0">Učiteljski portal &middot; pregled nalog, ocenjevanje oddaj in učna gradiva.</p>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h1 class="h2 mb-0">Pozdravljeni, {{ ucitelj.ime }} {{ ucitelj.priimek }}</h1>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Učitelj</span>
+      </div>
+      <p class="text-muted small mb-0">Učiteljski portal &middot; upravljanje nalog, pregled in ocenjevanje oddaj ter učna gradiva.</p>
     </div>
     <div class="d-flex gap-2">
-      <a href="{% url 'naloga_nova' %}" class="btn btn-success">+ Nova naloga</a>
-      <a href="{% url 'gradivo_nalozi' %}" class="btn btn-outline-primary">+ Naloži gradivo</a>
+      <a href="{% url 'naloga_nova' %}" class="btn btn-success d-inline-flex align-items-center shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i>Nova naloga
+      </a>
+      <a href="{% url 'gradivo_nalozi' %}" class="btn btn-outline-primary d-inline-flex align-items-center shadow-sm">
+        <i class="bi bi-cloud-arrow-up me-1"></i>Naloži gradivo
+      </a>
     </div>
   </div>
 
   <!-- Statistika učitelja -->
   <div class="row g-3 mb-4">
     <div class="col-6 col-lg-4">
-      <div class="card text-center h-100 shadow-sm border-start border-4 border-primary">
+      <div class="card text-center h-100 shadow-sm border-start border-4 border-primary card-hover">
         <div class="card-body p-3">
+          <div class="text-primary mb-1"><i class="bi bi-journal-bookmark fs-3"></i></div>
           <div class="display-6 fw-bold text-primary">{{ statistika.stevilo_predmetov }}</div>
           <div class="text-muted small fw-medium">Dodeljenih predmetov</div>
         </div>
       </div>
     </div>
     <div class="col-6 col-lg-4">
-      <div class="card text-center h-100 shadow-sm border-start border-4 border-info">
+      <div class="card text-center h-100 shadow-sm border-start border-4 border-info card-hover">
         <div class="card-body p-3">
+          <div class="text-info mb-1"><i class="bi bi-journal-check fs-3"></i></div>
           <div class="display-6 fw-bold text-info">{{ statistika.stevilo_nalog }}</div>
           <div class="text-muted small fw-medium">Aktivnih nalog</div>
         </div>
       </div>
     </div>
     <div class="col-12 col-lg-4">
-      <div class="card text-center h-100 shadow-sm border-start border-4 {% if statistika.neocenjene_oddaje %}border-warning bg-warning-subtle{% else %}border-success{% endif %}">
+      <div class="card text-center h-100 shadow-sm border-start border-4 {% if statistika.neocenjene_oddaje %}border-warning bg-warning-subtle{% else %}border-success{% endif %} card-hover">
         <div class="card-body p-3">
+          <div class="{% if statistika.neocenjene_oddaje %}text-warning-emphasis{% else %}text-success{% endif %} mb-1">
+            <i class="bi bi-pencil-square fs-3"></i>
+          </div>
           <div class="display-6 fw-bold {% if statistika.neocenjene_oddaje %}text-warning-emphasis{% else %}text-success{% endif %}">
             {{ statistika.neocenjene_oddaje }}
           </div>
@@ -46,46 +58,58 @@
     <!-- Moje naloge -->
     <div class="col-lg-7">
       <div class="card shadow-sm h-100">
-        <div class="card-header bg-body d-flex justify-content-between align-items-center">
-          <span class="fw-bold">Moje naloge pri predmetih</span>
-          <a href="{% url 'ucitelj_naloge' %}" class="small text-decoration-none">Vse naloge &rarr;</a>
+        <div class="card-header bg-body d-flex justify-content-between align-items-center py-3">
+          <span class="fw-bold d-flex align-items-center">
+            <i class="bi bi-journal-text text-primary me-2 fs-5"></i>Moje naloge pri predmetih
+          </span>
+          <a href="{% url 'ucitelj_naloge' %}" class="small text-decoration-none d-inline-flex align-items-center">
+            <span>Vse naloge</span>
+            <i class="bi bi-arrow-right ms-1"></i>
+          </a>
         </div>
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead class="table-light small">
+            <table class="table table-hover mb-0 align-middle">
+              <thead class="small text-muted">
                 <tr>
-                  <th>Predmet</th>
+                  <th style="width: 100px;">Predmet</th>
                   <th>Naloga</th>
                   <th>Rok oddaje</th>
                   <th>Oddaj</th>
-                  <th>Za oceniti</th>
+                  <th>Status</th>
                   <th class="text-end">Akcija</th>
                 </tr>
               </thead>
               <tbody>
                 {% for naloga in naloge %}
                   <tr>
-                    <td><span class="badge bg-secondary">{{ naloga.predmet.sifra }}</span></td>
-                    <td><strong>{{ naloga.naslov }}</strong></td>
+                    <td><span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ naloga.predmet.sifra }}</span></td>
+                    <td class="fw-medium">{{ naloga.naslov }}</td>
                     <td class="small {% if naloga.je_potekla %}text-danger fw-semibold{% endif %}">
                       {{ naloga.rok|date:"d.m.Y H:i" }}
-                      {% if naloga.je_potekla %}<span class="badge bg-danger small">poteklo</span>{% endif %}
+                      {% if naloga.je_potekla %}<span class="badge bg-danger small ms-1">poteklo</span>{% endif %}
                     </td>
                     <td><span class="badge bg-secondary-subtle text-secondary">{{ naloga.st_oddaj }}</span></td>
                     <td>
                       {% if naloga.st_neocenjenih %}
                         <span class="badge bg-warning text-dark">{{ naloga.st_neocenjenih }} čaka</span>
                       {% else %}
-                        <span class="badge bg-success">Ocenjeno</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">Vse ocenjeno</span>
                       {% endif %}
                     </td>
                     <td class="text-end">
-                      <a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Odpri</a>
+                      <a href="{% url 'ucitelj_naloga' naloga.pk %}" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                        <i class="bi bi-box-arrow-up-right me-1"></i>Odpri
+                      </a>
                     </td>
                   </tr>
                 {% empty %}
-                  <tr><td colspan="6" class="text-center text-muted p-3">Trenutno nimate ustvarjenih nalog. <a href="{% url 'naloga_nova' %}">Ustvarite prvo nalogo.</a></td></tr>
+                  <tr>
+                    <td colspan="6" class="text-center text-muted p-4">
+                      <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                      Trenutno nimate ustvarjenih nalog. <a href="{% url 'naloga_nova' %}">Ustvarite prvo nalogo.</a>
+                    </td>
+                  </tr>
                 {% endfor %}
               </tbody>
             </table>
@@ -97,32 +121,43 @@
     <!-- Zadnje oddaje učencev -->
     <div class="col-lg-5">
       <div class="card shadow-sm h-100">
-        <div class="card-header bg-body d-flex justify-content-between align-items-center">
-          <span class="fw-bold">Zadnje oddaje učencev</span>
-          <span class="badge bg-secondary">Zadnjih {{ zadnje_oddaje|length }}</span>
+        <div class="card-header bg-body d-flex justify-content-between align-items-center py-3">
+          <span class="fw-bold d-flex align-items-center">
+            <i class="bi bi-file-earmark-arrow-up text-info me-2 fs-5"></i>Zadnje oddaje učencev
+          </span>
+          <span class="badge bg-secondary-subtle text-secondary-emphasis border">Zadnjih {{ zadnje_oddaje|length }}</span>
         </div>
         <div class="card-body p-0">
           <div class="list-group list-group-flush">
             {% for oddaja in zadnje_oddaje %}
               <div class="list-group-item d-flex justify-content-between align-items-center p-3">
                 <div>
-                  <div class="fw-semibold">{{ oddaja.ucenec.priimek }} {{ oddaja.ucenec.ime }} <small class="text-muted">({{ oddaja.ucenec.email }})</small></div>
+                  <div class="fw-semibold">{{ oddaja.ucenec.priimek }} {{ oddaja.ucenec.ime }} <small class="text-muted">({{ oddaja.ucenec.razred|default:"Dijak" }})</small></div>
                   <div class="small text-muted">{{ oddaja.naloga.naslov }} &middot; {{ oddaja.oddano|date:"d.m. H:i" }}</div>
                   {% if oddaja.prepozno %}
-                    <span class="badge bg-danger small mt-1">Oddano po roku</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle small mt-1">
+                      <i class="bi bi-exclamation-circle me-1"></i>Oddano po roku
+                    </span>
                   {% endif %}
                 </div>
                 <div class="text-end">
                   {% if oddaja.ocena %}
                     <span class="badge bg-success mb-1 d-block">Ocena: {{ oddaja.ocena }}</span>
-                    <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-outline-secondary py-0">Popravi</a>
+                    <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-outline-secondary py-0 d-inline-flex align-items-center">
+                      <i class="bi bi-pencil me-1"></i>Popravi
+                    </a>
                   {% else %}
-                    <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-warning">Oceni</a>
+                    <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-warning d-inline-flex align-items-center shadow-sm">
+                      <i class="bi bi-check2-circle me-1"></i>Oceni
+                    </a>
                   {% endif %}
                 </div>
               </div>
             {% empty %}
-              <div class="p-3 text-muted text-center">Ni oddanih nalog učencev.</div>
+              <div class="p-4 text-muted text-center">
+                <i class="bi bi-folder2-open fs-2 d-block mb-2 text-muted"></i>
+                Ni oddanih nalog učencev.
+              </div>
             {% endfor %}
           </div>
         </div>
@@ -131,24 +166,40 @@
   </div>
 
   <!-- Moji predmeti -->
-  <h2 class="h5 mb-3 fw-bold">Moji predmeti</h2>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h5 mb-0 fw-bold d-flex align-items-center">
+      <i class="bi bi-easel text-success me-2"></i>Predmeti, ki jih poučujem ({{ predmeti.count }})
+    </h2>
+    <a href="{% url 'ucitelj_predmeti' %}" class="small text-decoration-none d-inline-flex align-items-center">
+      <span>Vsi predmeti</span>
+      <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
   <div class="row g-3">
     {% for predmet in predmeti %}
       <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm card-hover border-top border-3 border-primary">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start">
-              <div>
-                <h5 class="card-title fw-bold mb-1">{{ predmet.ime }}</h5>
-                <p class="text-muted small mb-2"><span class="badge bg-secondary">{{ predmet.sifra }}</span> &middot; {{ predmet.ucenci.count }} vpisanih učencev</p>
-              </div>
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title fw-bold mb-0">{{ predmet.ime }}</h5>
+              <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ predmet.sifra }}</span>
             </div>
-            <p class="card-text small text-muted">{{ predmet.opis|truncatechars:80|default:"Brez opisa." }}</p>
+            <p class="text-muted small mb-2">
+              <i class="bi bi-people me-1"></i>{{ predmet.ucenci.count }} vpisanih učencev &middot;
+              <i class="bi bi-file-earmark-text me-1"></i>{{ predmet.gradiva.count }} gradiv
+            </p>
+            <p class="card-text small text-muted">{{ predmet.opis|truncatechars:90|default:"Brez podrobnejšega opisa." }}</p>
           </div>
-          <div class="card-footer bg-transparent border-0 d-flex gap-2">
-            <a href="{% url 'ucitelj_predmet' predmet.pk %}" class="btn btn-sm btn-primary flex-grow-1">Učilnica predmeta</a>
+          <div class="card-footer bg-transparent border-0 pt-0">
+            <a href="{% url 'ucitelj_predmet' predmet.pk %}" class="btn btn-sm btn-outline-primary w-100 d-inline-flex align-items-center justify-content-center">
+              <i class="bi bi-door-open me-1"></i>Učilnica predmeta
+            </a>
           </div>
         </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info">Trenutno nimate dodeljenih predmetov. Administrator vam lahko dodeli predmete v administraciji.</div>
       </div>
     {% endfor %}
   </div>

@@ -1,44 +1,111 @@
 {% extends "base.html" %}
 {% block naslov %}{{ naloga.naslov }} – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'ucenec_naloge' %}">Naloge</a></li>
-      <li class="breadcrumb-item active">{{ naloga.naslov }}</li>
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'ucenec_domov' %}" class="text-decoration-none">Domov</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'ucenec_naloge' %}" class="text-decoration-none">Naloge</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ naloga.naslov }}</li>
     </ol>
   </nav>
 
-  <h1 class="mb-1">{{ naloga.naslov }}</h1>
-  <p class="text-muted">{{ naloga.predmet.ime }} ({{ naloga.predmet.sifra }}) ·
-    rok: <strong>{{ naloga.rok|date:"d.m.Y H:i" }}</strong>
-    {% if naloga.rok < zdaj %}<span class="badge bg-secondary">rok potekel</span>{% endif %}
-  </p>
-  {% if naloga.opis %}<div class="card mb-4"><div class="card-body">{{ naloga.opis|linebreaksbr }}</div></div>{% endif %}
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-body py-3 d-flex justify-content-between align-items-center">
+          <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ naloga.predmet.sifra }} &middot; {{ naloga.predmet.ime }}</span>
+          <span class="small {% if naloga.rok < zdaj %}text-danger fw-semibold{% else %}text-muted{% endif %}">
+            <i class="bi bi-calendar-event me-1"></i>Rok: {{ naloga.rok|date:"d.m.Y H:i" }}
+          </span>
+        </div>
+        <div class="card-body p-4">
+          <h1 class="h3 fw-bold mb-3">{{ naloga.naslov }}</h1>
+          <div class="lead fs-6 mb-0">
+            {{ naloga.opis|linebreaksbr|default:"Naloga nima dodatnih navodil." }}
+          </div>
+        </div>
+      </div>
 
-  {% if oddaja %}
-    <div class="card mb-4 border-info">
-      <div class="card-header">Tvoja oddaja</div>
-      <div class="card-body">
-        <p class="mb-1">Datoteka: <a href="{% url 'oddaja_prenos' oddaja.pk %}">{{ oddaja.ime_datoteke }}</a></p>
-        <p class="mb-1 text-muted">Oddano: {{ oddaja.oddano|date:"d.m.Y H:i" }}
-          {% if oddaja.prepozno %}<span class="badge bg-danger">prepozno</span>{% endif %}</p>
-        {% if oddaja.je_ocenjena %}
-          <hr>
-          <p class="mb-1"><strong>Ocena:</strong> <span class="badge bg-success fs-6">{{ oddaja.ocena }}</span></p>
-          {% if oddaja.komentar %}<p class="mb-0"><strong>Povratna informacija:</strong><br>{{ oddaja.komentar|linebreaksbr }}</p>{% endif %}
-        {% else %}
-          <p class="mb-0 text-muted">Še ni ocenjeno.</p>
-        {% endif %}
+      {% if oddaja %}
+        <div class="card shadow-sm border-info mb-4">
+          <div class="card-header bg-info-subtle text-info-emphasis py-3 d-flex justify-content-between align-items-center">
+            <span class="fw-bold d-flex align-items-center">
+              <i class="bi bi-file-earmark-check me-2 fs-5"></i>Vaša trenutna oddaja
+            </span>
+            {% if oddaja.prepozno %}
+              <span class="badge bg-danger">Oddano po roku</span>
+            {% else %}
+              <span class="badge bg-success">Pravočasno oddano</span>
+            {% endif %}
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <div>
+                <div class="small text-muted">Naložena datoteka:</div>
+                <strong class="font-monospace fs-6 text-primary">{{ oddaja.ime_datoteke }}</strong>
+              </div>
+              <a href="{% url 'oddaja_prenos' oddaja.pk %}" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center">
+                <i class="bi bi-download me-1"></i>Prenesi mojo datoteko
+              </a>
+            </div>
+            <p class="small text-muted mb-3">Datum oddaje: {{ oddaja.oddano|date:"d.m.Y H:i:s" }}</p>
+
+            <div class="p-3 rounded border {% if oddaja.je_ocenjena %}bg-success-subtle border-success-subtle{% else %}bg-body-tertiary border-secondary-subtle{% endif %}">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <strong class="d-flex align-items-center">
+                  <i class="bi bi-clipboard-check me-2"></i>Status ocenjevanja:
+                </strong>
+                {% if oddaja.je_ocenjena %}
+                  <span class="badge bg-success fs-6">Ocena: {{ oddaja.ocena }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">V pregledu pri učitelju</span>
+                {% endif %}
+              </div>
+              {% if oddaja.komentar %}
+                <div class="mt-2 pt-2 border-top border-secondary border-opacity-25 small">
+                  <strong>Povratna informacija učitelja:</strong>
+                  <p class="mb-0 mt-1 fst-italic">»{{ oddaja.komentar }}«</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card shadow-sm sticky-top" style="top: 1.5rem;">
+        <div class="card-header bg-body py-3">
+          <h2 class="h5 fw-bold mb-0 d-flex align-items-center">
+            <i class="bi bi-cloud-arrow-up text-primary me-2 fs-5"></i>
+            {% if oddaja %}Ponovna oddaja rešitve{% else %}Oddaja naloge{% endif %}
+          </h2>
+        </div>
+        <div class="card-body p-4">
+          <div class="alert alert-info small py-2 px-3 mb-3">
+            <i class="bi bi-info-circle me-1"></i>
+            Datoteka bo na strežniku samodejno poimenovana v skladu z navodili:
+            <code>Priimek Ime – {{ naloga.naslov }}.končnica</code>
+          </div>
+
+          {% if oddaja %}
+            <div class="alert alert-warning small py-2 px-3 mb-3">
+              <i class="bi bi-exclamation-triangle me-1"></i>
+              <strong>Opozorilo:</strong> Ponovna oddaja bo nadomestila prejšnjo datoteko šele po vaši potrditvi.
+            </div>
+          {% endif %}
+
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {% include "portal/_polja.html" %}
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary d-inline-flex align-items-center justify-content-center shadow-sm">
+                <i class="bi bi-upload me-2"></i>{% if oddaja %}Povozi in oddaj novo verzijo{% else %}Oddaj rešitev{% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  {% endif %}
-
-  <h2 class="h5">{% if oddaja %}Ponovna oddaja{% else %}Oddaja rešitve{% endif %}</h2>
-  <p class="text-muted small">Datoteka se shrani kot »Priimek Ime – {{ naloga.naslov }}«.
-    {% if oddaja %}Nova oddaja povozi prejšnjo šele po potrditvi.{% endif %}</p>
-  <form method="post" enctype="multipart/form-data" novalidate class="col-lg-6">
-    {% csrf_token %}
-    {% include "portal/_polja.html" %}
-    <button type="submit" class="btn btn-primary">Oddaj</button>
-  </form>
+  </div>
 {% endblock %}

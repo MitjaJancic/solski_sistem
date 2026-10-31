@@ -1,64 +1,95 @@
 {% extends "base.html" %}
 {% block naslov %}Šolski IS+ — Spletna aplikacija za podporo šolskemu delu{% endblock %}
 {% block vsebina %}
-  <div class="p-5 mb-4 bg-body-tertiary rounded-3 border shadow-sm">
-    <div class="container-fluid py-3">
-      <h1 class="display-5 fw-bold">Šolski informacijski sistem<span class="text-info">+</span></h1>
-      <p class="col-md-9 fs-5 text-muted">
-        Celovita rešitev za šolsko delo na daljavo: varno nalaganje učnih gradiv,
-        oddaja nalog z roki in opozorili ob zamudah ter ocenjevanje oddaj s povratnimi informacijami.
+  <div class="p-5 mb-5 bg-body-tertiary rounded-4 border shadow-sm position-relative overflow-hidden">
+    <div class="container-fluid py-2">
+      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-3 rounded-pill bg-primary-subtle border border-primary-subtle text-primary small fw-semibold">
+        <i class="bi bi-patch-check-fill"></i>
+        <span>Sistem za delo na daljavo</span>
+      </div>
+      <h1 class="display-5 fw-bold mb-3">Šolski informacijski sistem<span class="text-info">+</span></h1>
+      <p class="col-md-9 fs-5 text-muted mb-4">
+        Celovita rešitev za sodobno šolsko delo: varno nalaganje učnih gradiv,
+        oddaja nalog z roki in opozorili ob zamudah ter ocenjevanje oddaj s podrobnimi strokovnimi povratnimi informacijami.
       </p>
-      <div class="d-flex flex-wrap gap-2 mt-4">
-        <a href="{% url 'prijava' %}" class="btn btn-primary btn-lg px-4">Prijava v sistem</a>
-        <a href="{% url 'registracija' %}" class="btn btn-outline-primary btn-lg px-4">Registracija učenca</a>
+      <div class="d-flex flex-wrap gap-3">
+        <a href="{% url 'prijava' %}" class="btn btn-primary btn-lg px-4 shadow-sm d-inline-flex align-items-center">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Prijava v sistem
+        </a>
+        <a href="{% url 'registracija' %}" class="btn btn-outline-primary btn-lg px-4 d-inline-flex align-items-center">
+          <i class="bi bi-person-plus me-2"></i>Registracija učenca
+        </a>
       </div>
     </div>
   </div>
 
-  <h2 class="h4 mb-3">Trije prilagojeni uporabniški pogledi</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="h4 mb-1 fw-bold">Trije prilagojeni uporabniški pogledi</h2>
+      <p class="text-muted small mb-0">Avtorizacijski sistem zagotavlja specifične funkcije za vsako raven uporabnika.</p>
+    </div>
+  </div>
+
   <div class="row g-4 mb-4">
     <div class="col-md-4">
-      <div class="card h-100 shadow-sm border-top border-4 border-primary">
-        <div class="card-body">
-          <div class="fs-1 mb-2">🎓</div>
-          <h5 class="card-title fw-bold">Učenec</h5>
-          <p class="card-text text-muted">
-            Vpis v predmete, pregled in varen prenos gradiv, oddaja nalog z avtomatskim poimenovanjem
-            »Priimek Ime – Naslov naloge«, potrditev povozitve ter spremljanje ocen in obvestil.
+      <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary rounded-3">
+        <div class="card-body p-4">
+          <div class="p-3 bg-primary-subtle text-primary rounded-3 d-inline-flex mb-3">
+            <i class="bi bi-mortarboard fs-2"></i>
+          </div>
+          <h5 class="card-title fw-bold mb-2">Učenec</h5>
+          <p class="card-text text-muted small lh-base">
+            Samostojen vpis v predmete, pregled in varen prenos gradiv, oddaja nalog z avtomatskim poimenovanjem
+            »Priimek Ime – Naslov naloge«, potrditev povozitve prejšnje oddaje ter spremljanje ocen in obvestil.
           </p>
         </div>
-        <div class="card-footer bg-transparent border-0 pt-0">
-          <a href="{% url 'prijava' %}" class="btn btn-sm btn-outline-primary w-100">Vstop za učence</a>
+        <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
+          <a href="{% url 'prijava' %}" class="btn btn-outline-primary w-100 d-inline-flex align-items-center justify-content-center">
+            <span>Vstop za učence</span>
+            <i class="bi bi-arrow-right ms-2"></i>
+          </a>
         </div>
       </div>
     </div>
+
     <div class="col-md-4">
-      <div class="card h-100 shadow-sm border-top border-4 border-success">
-        <div class="card-body">
-          <div class="fs-1 mb-2">👨‍🏫</div>
-          <h5 class="card-title fw-bold">Učitelj</h5>
-          <p class="card-text text-muted">
-            Nadzorna plošča z dodeljenimi predmeti, nalaganje in brisanje učnih gradiv,
-            ustvarjanje nalog z roki, pregled oddaj učencev, ocenjevanje z ocenami 1–5 ter izvoz v CSV.
+      <div class="card h-100 shadow-sm border-0 border-top border-4 border-success rounded-3">
+        <div class="card-body p-4">
+          <div class="p-3 bg-success-subtle text-success rounded-3 d-inline-flex mb-3">
+            <i class="bi bi-person-workspace fs-2"></i>
+          </div>
+          <h5 class="card-title fw-bold mb-2">Učitelj</h5>
+          <p class="card-text text-muted small lh-base">
+            Nadzorna plošča z dodeljenimi predmeti, varno nalaganje in brisanje učnih gradiv,
+            ustvarjanje nalog z roki, pregled oddaj učencev, ocenjevanje z ocenami 1–5 ter izvoz redovalnice v format CSV.
           </p>
         </div>
-        <div class="card-footer bg-transparent border-0 pt-0">
-          <a href="{% url 'prijava' %}" class="btn btn-sm btn-outline-success w-100">Vstop za učitelje</a>
+        <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
+          <a href="{% url 'prijava' %}" class="btn btn-outline-success w-100 d-inline-flex align-items-center justify-content-center">
+            <span>Vstop za učitelje</span>
+            <i class="bi bi-arrow-right ms-2"></i>
+          </a>
         </div>
       </div>
     </div>
+
     <div class="col-md-4">
-      <div class="card h-100 shadow-sm border-top border-4 border-danger">
-        <div class="card-body">
-          <div class="fs-1 mb-2">🛡️</div>
-          <h5 class="card-title fw-bold">Administrator</h5>
-          <p class="card-text text-muted">
-            Vpis, urejanje in brisanje predmetov, učiteljev in učencev (več kot 100 zapisov),
-            dinamično iskanje in filtriranje podatkov ter upravljanje mnogoličnih M:N relacij.
+      <div class="card h-100 shadow-sm border-0 border-top border-4 border-danger rounded-3">
+        <div class="card-body p-4">
+          <div class="p-3 bg-danger-subtle text-danger rounded-3 d-inline-flex mb-3">
+            <i class="bi bi-shield-check fs-2"></i>
+          </div>
+          <h5 class="card-title fw-bold mb-2">Administrator</h5>
+          <p class="card-text text-muted small lh-base">
+            Vpis, urejanje in brisanje predmetov (10), učiteljev (20) in učencev (120),
+            dinamično iskanje in filtriranje podatkov ter upravljanje mnogoličnih M:N relacij med entitetami.
           </p>
         </div>
-        <div class="card-footer bg-transparent border-0 pt-0">
-          <a href="{% url 'prijava' %}" class="btn btn-sm btn-outline-danger w-100">Vstop za administratorja</a>
+        <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
+          <a href="{% url 'prijava' %}" class="btn btn-outline-danger w-100 d-inline-flex align-items-center justify-content-center">
+            <span>Vstop za administratorja</span>
+            <i class="bi bi-arrow-right ms-2"></i>
+          </a>
         </div>
       </div>
     </div>

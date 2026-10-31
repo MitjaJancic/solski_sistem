@@ -6,7 +6,7 @@
 - Naloge z različnimi roki pri različnih učiteljih
 - Oddaje nalog (format datoteke »Priimek Ime – Naslov naloge.pdf«)
 - Ocenjene oddaje (ocene 1–5 s komentarji), zamujene oddaje (prepozno) ter oddaje v pregledu
-- Center za obvestila (značka 🔔 za učence in učitelje)
+- Center za obvestila (značka z obvestili za učence in učitelje)
 
 Uporaba:
     python manage.py seed_podatki
@@ -435,13 +435,13 @@ class Command(BaseCommand):
             prejemnik=u_mitja,
             besedilo="Mentor Matic Holobar (M.Holobar) je vaš projekt pri Informatiki ocenil z oceno 5. Čestitke!",
             povezava="/portal/ucenec/naloge/",
-            prebrano=False,  # Neprebrano -> 🔔!
+            prebrano=False,  # Neprebrano opozorilo
         )
         Obvestilo.objects.create(
             prejemnik=u_mitja,
             besedilo="Profesor Boris Jankovič (B.Jankovic) je vaše poročilo pri Kemiji ocenil z oceno 5.",
             povezava="/portal/ucenec/naloge/",
-            prebrano=False,  # Neprebrano -> 🔔!
+            prebrano=False,  # Neprebrano opozorilo
         )
         Obvestilo.objects.create(
             prejemnik=u_mitja,
@@ -457,13 +457,13 @@ class Command(BaseCommand):
             prejemnik=u_nal,
             besedilo="Mentor Matic Holobar (M.Holobar) je vaš projekt pri Informatiki ocenil z oceno 5. Odlično delo!",
             povezava="/portal/ucenec/naloge/",
-            prebrano=False,  # Neprebrano -> 🔔!
+            prebrano=False,  # Neprebrano opozorilo
         )
         Obvestilo.objects.create(
             prejemnik=u_nal,
             besedilo="Profesorica Maja Horvat (M.Horvat) je vaš esej pri Slovenščini ocenila z oceno 5.",
             povezava="/portal/ucenec/naloge/",
-            prebrano=False,  # Neprebrano -> 🔔!
+            prebrano=False,  # Neprebrano opozorilo
         )
         Obvestilo.objects.create(
             prejemnik=u_nal,
@@ -479,7 +479,7 @@ class Command(BaseCommand):
             prejemnik=u_holobar,
             besedilo="Nova oddaja naloge: Luka Kovač (4.A) je oddal projekt 'Načrtovanje podatkovne baze'.",
             povezava=f"/portal/ucitelj/naloga/{naloga_inf_projekt.pk}/",
-            prebrano=False,  # Neprebrano -> 🔔!
+            prebrano=False,  # Neprebrano opozorilo
         )
 
         # Boris Jankovič (B.Jankovic)
@@ -489,7 +489,7 @@ class Command(BaseCommand):
             prejemnik=u_jankovic,
             besedilo="Nova oddaja naloge: Luka Kovač (4.A) je oddal poročilo 'Titracija klorovodikove kisline'.",
             povezava=f"/portal/ucitelj/naloga/{naloga_kem_titracija.pk}/",
-            prebrano=False,  # Neprebrano -> 🔔!
+            prebrano=False,  # Neprebrano opozorilo
         )
 
         # Janez Novak (J.Novak)
@@ -499,7 +499,7 @@ class Command(BaseCommand):
             prejemnik=u_novak,
             besedilo="Nova oddaja naloge: Mitja Jančič (4.A) je oddal poročilo pri Fiziki.",
             povezava=f"/portal/ucitelj/naloga/{naloga_fiz_porocilo.pk}/",
-            prebrano=False,  # Neprebrano -> 🔔!
+            prebrano=False,  # Neprebrano opozorilo
         )
 
         self.stdout.write(self.style.SUCCESS("Center za obvestila uspešno posodobljen."))

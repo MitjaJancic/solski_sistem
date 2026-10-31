@@ -1,42 +1,55 @@
 {% extends "base.html" %}
-{% block naslov %}Predmeti – Šolski IS{% endblock %}
+{% block naslov %}Predmeti – Šolski IS+{% endblock %}
 {% block vsebina %}
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-    <h1>Predmeti</h1>
+    <div>
+      <h1 class="h2 mb-1">Predmeti</h1>
+      <p class="text-muted small mb-0">Upravljanje učnih predmetov in šolskega kataloga.</p>
+    </div>
     <div class="d-flex gap-2">
       <form method="get" class="d-flex gap-1">
         <input type="search" name="q" value="{{ q|default:'' }}" class="form-control form-control-sm" placeholder="Išči po šifri ali imenu..." style="width: 230px;">
-        <button type="submit" class="btn btn-sm btn-outline-secondary">Išči</button>
+        <button type="submit" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center">
+          <i class="bi bi-search me-1"></i>Išči
+        </button>
         {% if q %}
-          <a href="{% url 'predmet_seznam' %}" class="btn btn-sm btn-outline-danger" title="Počisti iskanje">✕</a>
+          <a href="{% url 'predmet_seznam' %}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center" title="Počisti iskanje">
+            <i class="bi bi-x-circle"></i>
+          </a>
         {% endif %}
       </form>
-      <a href="{% url 'predmet_dodaj' %}" class="btn btn-success btn-sm">+ Nov predmet</a>
+      <a href="{% url 'predmet_dodaj' %}" class="btn btn-success btn-sm d-inline-flex align-items-center">
+        <i class="bi bi-plus-lg me-1"></i>Nov predmet
+      </a>
     </div>
   </div>
   <div class="table-responsive">
-    <table class="table table-striped table-hover bg-body">
+    <table class="table table-striped table-hover bg-body align-middle">
     <thead>
       <tr>
-        <th>Šifra</th>
-        <th>Ime</th>
-        <th>Učitelji</th>
+        <th style="width: 120px;">Šifra</th>
+        <th>Ime predmeta</th>
+        <th>Št. učiteljev</th>
         <th class="text-end">Dejanja</th>
       </tr>
     </thead>
     <tbody>
       {% for predmet in predmeti %}
         <tr>
-          <td>{{ predmet.sifra }}</td>
-          <td>{{ predmet.ime }}</td>
-          <td>{{ predmet.ucitelji.count }}</td>
+          <td><span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ predmet.sifra }}</span></td>
+          <td class="fw-medium">{{ predmet.ime }}</td>
+          <td><span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">{{ predmet.ucitelji.count }} učiteljev</span></td>
           <td class="text-end">
-            <a href="{% url 'predmet_uredi' predmet.pk %}" class="btn btn-sm btn-outline-primary">Uredi</a>
-            <a href="{% url 'predmet_izbrisi' predmet.pk %}" class="btn btn-sm btn-outline-danger">Izbriši</a>
+            <a href="{% url 'predmet_uredi' predmet.pk %}" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center">
+              <i class="bi bi-pencil me-1"></i>Uredi
+            </a>
+            <a href="{% url 'predmet_izbrisi' predmet.pk %}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center">
+              <i class="bi bi-trash me-1"></i>Izbriši
+            </a>
           </td>
         </tr>
       {% empty %}
-        <tr><td colspan="4" class="text-center text-muted">{% if q %}Ni najdenih predmetov za poizvedbo »{{ q }}«.{% else %}Ni vnesenih predmetov.{% endif %}</td></tr>
+        <tr><td colspan="4" class="text-center text-muted py-4">{% if q %}Ni najdenih predmetov za poizvedbo »{{ q }}«.{% else %}Ni vnesenih predmetov.{% endif %}</td></tr>
       {% endfor %}
     </tbody>
     </table>

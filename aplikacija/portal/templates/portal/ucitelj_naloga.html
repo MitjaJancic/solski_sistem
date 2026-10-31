@@ -4,36 +4,48 @@
   <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
     <h1 class="mb-0">{{ naloga.naslov }}</h1>
     <div class="d-flex gap-2">
-      <a href="{% url 'ucitelj_naloga_izvoz_csv' naloga.pk %}" class="btn btn-sm btn-outline-success">📥 Izvozi oddaje (CSV)</a>
-      <a href="{% url 'naloga_uredi' naloga.pk %}" class="btn btn-sm btn-outline-primary">Uredi</a>
-      <a href="{% url 'naloga_izbrisi' naloga.pk %}" class="btn btn-sm btn-outline-danger">Izbriši</a>
+      <a href="{% url 'ucitelj_naloga_izvoz_csv' naloga.pk %}" class="btn btn-sm btn-outline-success d-inline-flex align-items-center">
+        <i class="bi bi-download me-1"></i>Izvozi oddaje (CSV)
+      </a>
+      <a href="{% url 'naloga_uredi' naloga.pk %}" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center">
+        <i class="bi bi-pencil me-1"></i>Uredi
+      </a>
+      <a href="{% url 'naloga_izbrisi' naloga.pk %}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center">
+        <i class="bi bi-trash me-1"></i>Izbriši
+      </a>
     </div>
   </div>
-  <p class="text-muted">{{ naloga.predmet.ime }} ({{ naloga.predmet.sifra }}) ·
+  <p class="text-muted">{{ naloga.predmet.ime }} ({{ naloga.predmet.sifra }}) &middot;
     rok {{ naloga.rok|date:"d.m.Y H:i" }}{% if naloga.rok < zdaj %} <span class="badge bg-secondary">potekla</span>{% endif %}</p>
-  {% if naloga.opis %}<div class="card mb-4"><div class="card-body">{{ naloga.opis|linebreaksbr }}</div></div>{% endif %}
+  {% if naloga.opis %}<div class="card mb-4 shadow-sm"><div class="card-body">{{ naloga.opis|linebreaksbr }}</div></div>{% endif %}
 
-  <h2 class="h4">Oddaje učencev</h2>
+  <h2 class="h4 mb-3">Oddaje učencev</h2>
   <div class="table-responsive">
-    <table class="table table-striped bg-body align-middle">
+    <table class="table table-striped table-hover bg-body align-middle">
       <thead><tr><th>Učenec</th><th>Datoteka</th><th>Oddano</th><th>Ocena</th><th class="text-end">Dejanja</th></tr></thead>
       <tbody>
         {% for oddaja in oddaje %}
           <tr>
-            <td>{{ oddaja.ucenec.priimek }} {{ oddaja.ucenec.ime }}</td>
-            <td>{{ oddaja.ime_datoteke }}</td>
+            <td class="fw-medium">{{ oddaja.ucenec.priimek }} {{ oddaja.ucenec.ime }}</td>
+            <td><i class="bi bi-file-earmark-pdf text-danger me-1"></i>{{ oddaja.ime_datoteke }}</td>
             <td>{{ oddaja.oddano|date:"d.m.Y H:i" }}{% if oddaja.prepozno %} <span class="badge bg-danger">prepozno</span>{% endif %}</td>
-            <td>{% if oddaja.je_ocenjena %}<span class="badge bg-success">{{ oddaja.ocena }}</span>{% else %}<span class="text-muted">–</span>{% endif %}</td>
+            <td>{% if oddaja.je_ocenjena %}<span class="badge bg-success fs-6">{{ oddaja.ocena }}</span>{% else %}<span class="text-muted">–</span>{% endif %}</td>
             <td class="text-end">
-              <a href="{% url 'oddaja_prenos' oddaja.pk %}" class="btn btn-sm btn-outline-primary">Prenesi</a>
-              <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-success">{% if oddaja.je_ocenjena %}Uredi oceno{% else %}Oceni{% endif %}</a>
+              <a href="{% url 'oddaja_prenos' oddaja.pk %}" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center">
+                <i class="bi bi-download me-1"></i>Prenesi
+              </a>
+              <a href="{% url 'oddaja_oceni' oddaja.pk %}" class="btn btn-sm btn-success d-inline-flex align-items-center">
+                <i class="bi bi-check-lg me-1"></i>{% if oddaja.je_ocenjena %}Uredi oceno{% else %}Oceni{% endif %}
+              </a>
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="5" class="text-center text-muted">Še ni oddaj.</td></tr>
+          <tr><td colspan="5" class="text-center text-muted py-4">Še ni oddaj pri tej nalogi.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-  <a href="{% url 'ucitelj_naloge' %}" class="btn btn-secondary">Nazaj</a>
+  <a href="{% url 'ucitelj_naloge' %}" class="btn btn-secondary d-inline-flex align-items-center">
+    <i class="bi bi-arrow-left me-1"></i>Nazaj na seznam nalog
+  </a>
 {% endblock %}

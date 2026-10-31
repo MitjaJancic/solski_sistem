@@ -1,23 +1,54 @@
 {% extends "base.html" %}
-{% block naslov %}Moji predmeti – Šolski IS{% endblock %}
+{% block naslov %}Moji predmeti – Šolski IS+{% endblock %}
 {% block vsebina %}
-  <h1 class="mb-4">Izberi predmete, ki jih obiskuješ</h1>
-  <form method="post" novalidate class="col-lg-8">
-    {% csrf_token %}
-    {% if form.predmeti.errors %}
-      <div class="alert alert-danger">{{ form.predmeti.errors }}</div>
-    {% endif %}
-    <div class="row row-cols-1 row-cols-md-2 g-2 mb-3">
-      {% for izbira in form.predmeti %}
-        <div class="col">
-          <div class="form-check">
-            {{ izbira.tag }}
-            <label class="form-check-label" for="{{ izbira.id_for_label }}">{{ izbira.choice_label }}</label>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-body py-3 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-bookmark-check text-primary me-2 fs-5"></i>
+            <h1 class="h5 fw-bold mb-0">Izbira predmetov</h1>
           </div>
+          <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">Vsaj 1 predmet</span>
         </div>
-      {% endfor %}
+        <div class="card-body p-4">
+          <p class="text-muted small mb-4">
+            Označite predmete, ki jih obiskujete v tem šolskem letu. Kot učenec boste imeli dostop do gradiv in nalog pri vseh izbranih predmetih.
+          </p>
+
+          {% if form.predmeti.errors %}
+            <div class="alert alert-danger d-flex align-items-center mb-3">
+              <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+              <div>{{ form.predmeti.errors }}</div>
+            </div>
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+              {% for izbira in form.predmeti %}
+                <div class="col">
+                  <div class="border rounded p-3 h-100 bg-body-tertiary form-check d-flex align-items-center gap-2">
+                    {{ izbira.tag }}
+                    <label class="form-check-label fw-medium ms-1 cursor-pointer flex-grow-1" for="{{ izbira.id_for_label }}">
+                      {{ izbira.choice_label }}
+                    </label>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary d-inline-flex align-items-center shadow-sm">
+                <i class="bi bi-check2-circle me-1"></i>Shrani izbiro
+              </button>
+              <a href="{% url 'ucenec_domov' %}" class="btn btn-outline-secondary d-inline-flex align-items-center">
+                <i class="bi bi-x-circle me-1"></i>Prekliči
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Shrani</button>
-    <a href="{% url 'ucenec_domov' %}" class="btn btn-secondary">Prekliči</a>
-  </form>
+  </div>
 {% endblock %}

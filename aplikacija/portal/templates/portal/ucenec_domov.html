@@ -4,12 +4,21 @@
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
       <h1 class="h2 mb-1">Pozdravljen/a, {{ ucenec.ime }} {{ ucenec.priimek }}</h1>
-      <p class="text-muted small mb-0">E-pošta: <strong>{{ ucenec.email }}</strong> &middot; Učenec ID: <code>#{{ ucenec.id }}</code></p>
+      <p class="text-muted small mb-0">
+        <span class="badge bg-primary-subtle text-primary border me-2">{{ ucenec.razred|default:"Dijak" }}</span>
+        E-pošta: <strong>{{ ucenec.email }}</strong> &middot; Uporabnik: <code>{{ request.user.username }}</code>
+      </p>
     </div>
     <div class="d-flex gap-2">
-      <a href="{% url 'profil_uredi' %}" class="btn btn-sm btn-outline-secondary">Uredi profil</a>
-      <a href="{% url 'ucenec_naloge' %}" class="btn btn-sm btn-primary">Vse naloge</a>
-      <a href="{% url 'moje_oddaje' %}" class="btn btn-sm btn-outline-primary">Moje oddaje</a>
+      <a href="{% url 'profil_uredi' %}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center">
+        <i class="bi bi-pencil-square me-1"></i>Uredi profil
+      </a>
+      <a href="{% url 'ucenec_naloge' %}" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+        <i class="bi bi-journal-text me-1"></i>Vse naloge
+      </a>
+      <a href="{% url 'moje_oddaje' %}" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center">
+        <i class="bi bi-file-earmark-check me-1"></i>Moje oddaje
+      </a>
     </div>
   </div>
 
@@ -41,10 +50,8 @@
     </div>
     <div class="col-6 col-lg-3">
       <div class="card text-center h-100 shadow-sm border-start border-4 border-warning">
-        <div class="card-body p-3">
-          <div class="display-6 fw-bold text-warning">{{ statistika.povprecje|default:"–"|floatformat:2 }}</div>
-          <div class="text-muted small fw-medium">Povprečna ocena</div>
-        </div>
+        <div class="display-6 fw-bold text-warning">{{ statistika.povprecje|default:"–"|floatformat:2 }}</div>
+        <div class="text-muted small fw-medium">Povprečna ocena</div>
       </div>
     </div>
   </div>
@@ -54,7 +61,9 @@
     <div class="col-lg-6">
       <div class="card shadow-sm h-100">
         <div class="card-header bg-body d-flex justify-content-between align-items-center">
-          <span class="fw-bold">Odprte naloge za oddajo</span>
+          <span class="fw-bold d-flex align-items-center">
+            <i class="bi bi-clock-history me-2 text-primary"></i>Odprte naloge za oddajo
+          </span>
           <a href="{% url 'ucenec_naloge' %}" class="small text-decoration-none">Vse naloge &rarr;</a>
         </div>
         <div class="card-body p-0">
@@ -70,11 +79,13 @@
                     Rok: <strong>{{ naloga.rok|date:"d.m.Y H:i" }}</strong>
                   </div>
                 </div>
-                <a href="{% url 'ucenec_naloga' naloga.pk %}" class="btn btn-sm btn-primary">Oddaj nalogo</a>
+                <a href="{% url 'ucenec_naloga' naloga.pk %}" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                  <i class="bi bi-upload me-1"></i>Oddaj nalogo
+                </a>
               </div>
             {% empty %}
               <div class="p-4 text-center text-muted">
-                <div class="fs-3 mb-2">🎉</div>
+                <div class="text-success mb-2"><i class="bi bi-check-circle fs-2"></i></div>
                 <p class="mb-0">Vse trenutne naloge so že oddane. Odlično delo!</p>
               </div>
             {% endfor %}
@@ -87,7 +98,9 @@
     <div class="col-lg-6">
       <div class="card shadow-sm h-100">
         <div class="card-header bg-body d-flex justify-content-between align-items-center">
-          <span class="fw-bold">Moje prejete ocene in komentarji</span>
+          <span class="fw-bold d-flex align-items-center">
+            <i class="bi bi-star me-2 text-warning"></i>Moje prejete ocene in komentarji
+          </span>
           <a href="{% url 'moje_oddaje' %}" class="small text-decoration-none">Moje oddaje &rarr;</a>
         </div>
         <div class="card-body p-0">
@@ -111,9 +124,9 @@
                 <div class="d-flex justify-content-between align-items-center small text-muted">
                   <span>Oddano: {{ oddaja.oddano|date:"d.m.Y" }}</span>
                   {% if oddaja.prepozno %}
-                    <span class="text-danger">Oddano z zamudo</span>
+                    <span class="text-danger fw-medium"><i class="bi bi-exclamation-triangle me-1"></i>Oddano z zamudo</span>
                   {% else %}
-                    <span class="text-success">Pravočasna oddaja</span>
+                    <span class="text-success"><i class="bi bi-check2 me-1"></i>Pravočasna oddaja</span>
                   {% endif %}
                 </div>
               </div>
@@ -131,31 +144,37 @@
   <!-- Moji vpisani predmeti -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="h5 mb-0 fw-bold">Moji vpisani predmeti ({{ predmeti.count }})</h2>
-    <a href="{% url 'moji_predmeti' %}" class="btn btn-sm btn-outline-secondary">Spremeni izbiro predmetov</a>
+    <a href="{% url 'moji_predmeti' %}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center">
+      <i class="bi bi-sliders me-1"></i>Spremeni izbiro predmetov
+    </a>
   </div>
   <div class="row g-3">
     {% for predmet in predmeti %}
       <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm border-0 border-top border-3 border-primary-subtle">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-start">
               <div>
                 <h5 class="card-title fw-bold mb-1">{{ predmet.ime }}</h5>
                 <p class="text-muted small mb-2"><span class="badge bg-secondary">{{ predmet.sifra }}</span></p>
               </div>
-              <span class="badge bg-info text-dark">{{ predmet.gradiva.count }} gradiv</span>
+              <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">{{ predmet.gradiva.count }} gradiv</span>
             </div>
             <p class="card-text small text-muted">{{ predmet.opis|truncatechars:90|default:"Brez opisa." }}</p>
           </div>
-          <div class="card-footer bg-transparent border-0">
-            <a href="{% url 'ucenec_gradiva' predmet.pk %}" class="btn btn-sm btn-outline-primary w-100">Učna gradiva predmeta &rarr;</a>
+          <div class="card-footer bg-transparent border-0 pt-0">
+            <a href="{% url 'ucenec_gradiva' predmet.pk %}" class="btn btn-sm btn-outline-primary w-100 d-inline-flex align-items-center justify-content-center">
+              <span>Učna gradiva predmeta</span>
+              <i class="bi bi-arrow-right ms-2"></i>
+            </a>
           </div>
         </div>
       </div>
     {% empty %}
       <div class="col-12">
-        <div class="alert alert-warning">
-          Nimate še izbranega nobenega predmeta. <a href="{% url 'moji_predmeti' %}" class="alert-link">Izberite predmete zdaj.</a>
+        <div class="alert alert-warning d-flex align-items-center">
+          <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+          <div>Nimate še izbranega nobenega predmeta. <a href="{% url 'moji_predmeti' %}" class="alert-link">Izberite predmete zdaj.</a></div>
         </div>
       </div>
     {% endfor %}
