@@ -160,3 +160,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "prijava"
 LOGIN_REDIRECT_URL = "zacetna"
 LOGOUT_REDIRECT_URL = "zacetna"
+
+AUTHENTICATION_BACKENDS = [
+    "portal.auth.CaseAndDiacriticInsensitiveBackend",
+]

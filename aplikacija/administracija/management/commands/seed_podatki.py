@@ -5,6 +5,7 @@ from django.db import transaction
 
 from administracija.models import Predmet, Ucenec, UcenecPredmet, Ucitelj, UciteljPredmet
 
+# 10 predmetov (zahteva: najmanj 10)
 PREDMETI = [
     ("INF", "Informatika", "Programiranje, relacijske baze podatkov, omrežja in spletni sistemi."),
     ("MAT", "Matematika", "Algebra, funkcije, geometrija, računski postopki in verjetnost."),
@@ -18,18 +19,33 @@ PREDMETI = [
     ("SPO", "Šport", "Telesna vzgoja, motorične spretnosti, timski športi in zdrav življenjski slog."),
 ]
 
-# 5 učiteljev - vsak poučuje različne predmete brez prekrivanja
+# 20 učiteljev (zahteva: najmanj 20; nekateri predmeti več učiteljev, nekateri učitelji več predmetov)
 UCITELJI = [
-    ("Matic", "Holobar", "matic.holobar@solski-is.si", ["INF"]),
+    ("Matic", "Holobar", "matic.holobar@solski-is.si", ["INF", "MAT"]),
     ("Janez", "Novak", "janez.novak@solski-is.si", ["MAT", "FIZ"]),
     ("Maja", "Horvat", "maja.horvat@solski-is.si", ["SLO", "ZGO"]),
     ("Boris", "Jankovič", "boris.jankovic@solski-is.si", ["KEM", "BIO"]),
-    ("Ana", "Kovačič", "ana.kovacic@solski-is.si", ["ANG", "GEO", "SPO"]),
+    ("Ana", "Kovačič", "ana.kovacic@solski-is.si", ["ANG", "GEO"]),
+    ("Peter", "Krajnc", "peter.krajnc@solski-is.si", ["INF", "FIZ"]),
+    ("Luka", "Zupan", "luka.zupan@solski-is.si", ["MAT", "INF"]),
+    ("Mojca", "Potočnik", "mojca.potocnik@solski-is.si", ["SLO", "ANG"]),
+    ("Andrej", "Vidmar", "andrej.vidmar@solski-is.si", ["ZGO", "GEO"]),
+    ("Tanja", "Kos", "tanja.kos@solski-is.si", ["BIO", "KEM"]),
+    ("Robert", "Golob", "robert.golob@solski-is.si", ["FIZ", "MAT"]),
+    ("Irena", "Turk", "irena.turk@solski-is.si", ["SLO", "SPO"]),
+    ("Aleš", "Mlakar", "ales.mlakar@solski-is.si", ["SPO", "GEO"]),
+    ("Katarina", "Hrovat", "katarina.hrovat@solski-is.si", ["ANG", "ZGO"]),
+    ("Tomaž", "Kralj", "tomaz.kralj@solski-is.si", ["INF", "MAT"]),
+    ("Simona", "Leban", "simona.leban@solski-is.si", ["BIO", "KEM"]),
+    ("Gregor", "Rozman", "gregor.rozman@solski-is.si", ["FIZ", "INF"]),
+    ("Vesna", "Korošec", "vesna.korosec@solski-is.si", ["SLO", "ANG"]),
+    ("Bojan", "Rus", "bojan.rus@solski-is.si", ["SPO", "BIO"]),
+    ("Nataša", "Zorko", "natasa.zorko@solski-is.si", ["KEM", "GEO"]),
 ]
 
-# 3 razredi x 30 učencev = točno 90 učencev z resničnimi slovenskimi imeni
+# 120 učencev razporejenih v 4 razrede po 30 učencev (zahteva: najmanj 100)
 RAZREDI_UCENCI = {
-    "3.A": [
+    "4.A": [
         ("Mitja", "Jančič"),
         ("Nal", "Dobravc"),
         ("Luka", "Kovač"),
@@ -61,7 +77,7 @@ RAZREDI_UCENCI = {
         ("Vid", "Pečnik"),
         ("Hana", "Močnik"),
     ],
-    "2.A": [
+    "3.A": [
         ("Rok", "Jeras"),
         ("Ema", "Podgoršek"),
         ("Urban", "Lesjak"),
@@ -93,7 +109,7 @@ RAZREDI_UCENCI = {
         ("Peter", "Bele"),
         ("Nuša", "Logar"),
     ],
-    "1.A": [
+    "2.A": [
         ("Klemen", "Majcen"),
         ("Špela", "Humar"),
         ("Primož", "Jenko"),
@@ -108,30 +124,62 @@ RAZREDI_UCENCI = {
         ("Nastja", "Koželj"),
         ("Samo", "Češarek"),
         ("Ela", "Grobelnik"),
-        ("Marcel", "Knez"),
-        ("Tia", "Kladnik"),
+        ("Marcel", "Kladnik"),
+        ("Tia", "Robnik"),
         ("Goran", "Cestnik"),
-        ("Karin", "Robnik"),
-        ("Erik", "Verbič"),
-        ("Iza", "Selan"),
-        ("Andraž", "Cerar"),
-        ("Gaja", "Kren"),
-        ("Dejan", "Vrhovnik"),
-        ("Živa", "Oprešnik"),
-        ("Sandi", "Vidic"),
-        ("Sandra", "Pirc"),
-        ("Jernej", "Krajnc"),
-        ("Rebeka", "Medvešek"),
-        ("Boštjan", "Godec"),
-        ("Tamara", "Brečko"),
+        ("Karin", "Verbič"),
+        ("Erik", "Selan"),
+        ("Iza", "Cerar"),
+        ("Andraž", "Kren"),
+        ("Gaja", "Vrhovnik"),
+        ("Dejan", "Oprešnik"),
+        ("Živa", "Vidic"),
+        ("Sandi", "Pirc"),
+        ("Sandra", "Krajnc"),
+        ("Jernej", "Medvešek"),
+        ("Rebeka", "Godec"),
+        ("Boštjan", "Brečko"),
+        ("Tamara", "Kregar"),
+    ],
+    "1.A": [
+        ("Alen", "Potočnik"),
+        ("Barbara", "Vidmar"),
+        ("Ciril", "Kos"),
+        ("Darja", "Golob"),
+        ("Emil", "Turk"),
+        ("Franja", "Kralj"),
+        ("Gorazd", "Božič"),
+        ("Helena", "Korošec"),
+        ("Igor", "Zupan"),
+        ("Jasna", "Bizjak"),
+        ("Kristjan", "Horvat"),
+        ("Lucija", "Rus"),
+        ("Marko", "Rozman"),
+        ("Nada", "Kastelic"),
+        ("Ožbej", "Kotnik"),
+        ("Polona", "Sever"),
+        ("Rado", "Petek"),
+        ("Sonja", "Oblak"),
+        ("Tomi", "Uršič"),
+        ("Urška", "Jagodnik"),
+        ("Val", "Leban"),
+        ("Zarja", "Breznik"),
+        ("Anja", "Močnik"),
+        ("Boris", "Perko"),
+        ("Cene", "Pečnik"),
+        ("Daša", "Dolenc"),
+        ("Edvard", "Jeras"),
+        ("Flora", "Podgoršek"),
+        ("Gašper", "Lesjak"),
+        ("Heda", "Tratnik"),
     ],
 }
 
-# Predmetnik po letnikih (smiselna razporeditev)
 PREDMETNIK_PO_RAZREDIH = {
     "1.A": ["SLO", "MAT", "ANG", "INF", "BIO", "GEO", "SPO"],
     "2.A": ["SLO", "MAT", "ANG", "INF", "FIZ", "KEM", "ZGO", "SPO"],
     "3.A": ["SLO", "MAT", "ANG", "INF", "FIZ", "KEM", "BIO", "ZGO"],
+    "4.A": ["SLO", "MAT", "ANG", "INF", "FIZ", "KEM", "BIO", "ZGO"],
 }
 
 PREVOD_CRK = str.maketrans("čžšČŽŠ", "czsCZS")
@@ -150,8 +198,8 @@ def v_email(ime, priimek, domena, zasedeni):
 
 class Command(BaseCommand):
     help = (
-        "Vnese strukturirane testne podatke: 10 predmetov, natanko 5 učiteljev z različnimi predmeti, "
-        "3 razrede (1.A, 2.A, 3.A) z natanko 30 učenci vsak (skupaj 90 učencev) ter ustrezne relacije."
+        "Napolni bazo z natanko zahtevanimi podatki: 10 predmetov, 20 učiteljev (z večpredmetnimi "
+        "relacijami) in 120 učenci v 4 razredih (vsak z več predmeti)."
     )
 
     def add_arguments(self, parser):
@@ -172,7 +220,7 @@ class Command(BaseCommand):
             Ucitelj.objects.all().delete()
             Predmet.objects.all().delete()
 
-        # 1. Predmeti
+        # 1. 10 Predmetov
         predmeti = [
             Predmet.objects.create(sifra=sifra, ime=ime, opis=opis)
             for sifra, ime, opis in PREDMETI
@@ -180,7 +228,7 @@ class Command(BaseCommand):
         predmet_po_sifri = {p.sifra: p for p in predmeti}
         self.stdout.write(self.style.SUCCESS(f"Ustvarjenih {len(predmeti)} predmetov."))
 
-        # 2. Točno 5 učiteljev z različnimi predmeti
+        # 2. 20 Učiteljev z relacijami učitelj-predmet
         zasedeni_emaili = set()
         ucitelji = []
         for ime, priimek, email, dodeljeni_predmeti in UCITELJI:
@@ -193,13 +241,14 @@ class Command(BaseCommand):
             for sifra in dodeljeni_predmeti:
                 UciteljPredmet.objects.create(ucitelj=ucitelj, predmet=predmet_po_sifri[sifra])
             ucitelji.append(ucitelj)
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"Učitelj: {ucitelj.ime} {ucitelj.priimek} ({ucitelj.email}) -> predmeti: {', '.join(dodeljeni_predmeti)}"
-                )
-            )
 
-        # 3. Točno 3 razredi po 30 učencev (skupaj 90)
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Ustvarjenih {len(ucitelji)} učiteljev (vsak uči 2-3 predmete, vsak predmet ima več učiteljev)."
+            )
+        )
+
+        # 3. 120 Učencev (4 razredi po 30) z relacijami učenec-predmet (>1 predmet)
         skupaj_ucencev = 0
         skupaj_vpisov = 0
         for razred, ucenci_seznam in RAZREDI_UCENCI.items():
@@ -219,17 +268,16 @@ class Command(BaseCommand):
 
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Razred {razred}: ustvarjenih {len(ucenci_seznam)} učencev, vpisani v: {', '.join(predmeti_razreda)}"
+                    f"Razred {razred}: {len(ucenci_seznam)} učencev vpisanih v {len(predmeti_razreda)} predmetov."
                 )
             )
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"\nTestni podatki uspešno vneseni:\n"
-                f"- Predmetov: {len(predmeti)}\n"
-                f"- Učiteljev: {len(ucitelji)} (vsak uči različne predmete)\n"
-                f"- Razredov: {len(RAZREDI_UCENCI)} (1.A, 2.A, 3.A)\n"
-                f"- Učencev: {skupaj_ucencev} (30 na razred)\n"
-                f"- Vpisov v predmete: {skupaj_vpisov}"
+                f"\nTestni podatki administracije uspešno vneseni:\n"
+                f"- Predmetov: {len(predmeti)} (zahteva >= 10)\n"
+                f"- Učiteljev: {len(ucitelji)} (zahteva >= 20, z večpredmetnimi povezavami)\n"
+                f"- Učencev: {skupaj_ucencev} (zahteva >= 100, vsak obiskuje >1 predmet)\n"
+                f"- Skupaj vpisov v predmete: {skupaj_vpisov}"
             )
         )
