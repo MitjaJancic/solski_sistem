@@ -122,7 +122,12 @@ class UcenecListView(AdminZahtevanMixin, ListView):
         qs = Ucenec.objects.prefetch_related("predmeti")
         q = self.request.GET.get("q", "").strip()
         if q:
-            qs = qs.filter(Q(ime__icontains=q) | Q(priimek__icontains=q) | Q(email__icontains=q))
+            qs = qs.filter(
+                Q(ime__icontains=q) |
+                Q(priimek__icontains=q) |
+                Q(email__icontains=q) |
+                Q(razred__icontains=q)
+            )
         return qs
 
     def get_context_data(self, **kwargs):

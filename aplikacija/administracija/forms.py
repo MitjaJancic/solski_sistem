@@ -51,7 +51,7 @@ class UcenecForm(forms.ModelForm):
 
     class Meta:
         model = Ucenec
-        fields = ["ime", "priimek", "email", "predmeti"]
+        fields = ["ime", "priimek", "razred", "email", "predmeti"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

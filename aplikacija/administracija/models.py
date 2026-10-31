@@ -40,6 +40,7 @@ class Ucenec(models.Model):
     ime = models.CharField("ime", max_length=50)
     priimek = models.CharField("priimek", max_length=50)
     email = models.EmailField("e-pošta", unique=True)
+    razred = models.CharField("razred", max_length=10, blank=True, default="")
     predmeti = models.ManyToManyField(
         Predmet,
         through="UcenecPredmet",
@@ -51,10 +52,10 @@ class Ucenec(models.Model):
     class Meta:
         verbose_name = "učenec"
         verbose_name_plural = "učenci"
-        ordering = ["priimek", "ime"]
+        ordering = ["razred", "priimek", "ime"]
 
     def __str__(self):
-        return f"{self.priimek} {self.ime}"
+        return f"{self.priimek} {self.ime} ({self.razred})" if self.razred else f"{self.priimek} {self.ime}"
 
 
 class UciteljPredmet(models.Model):

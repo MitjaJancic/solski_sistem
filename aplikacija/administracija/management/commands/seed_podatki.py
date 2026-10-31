@@ -6,145 +6,135 @@ from django.db import transaction
 from administracija.models import Predmet, Ucenec, UcenecPredmet, Ucitelj, UciteljPredmet
 
 PREDMETI = [
-    ("MAT", "Matematika"),
-    ("SLO", "Slovenščina"),
-    ("ANG", "Angleščina"),
-    ("ZGO", "Zgodovina"),
-    ("GEO", "Geografija"),
-    ("BIO", "Biologija"),
-    ("KEM", "Kemija"),
-    ("FIZ", "Fizika"),
-    ("SPO", "Šport"),
-    ("INF", "Informatika"),
+    ("INF", "Informatika", "Programiranje, relacijske baze podatkov, omrežja in spletni sistemi."),
+    ("MAT", "Matematika", "Algebra, funkcije, geometrija, računski postopki in verjetnost."),
+    ("FIZ", "Fizika", "Mehanika, kinematika, gravitacija, elektromagnetizem in meritve."),
+    ("SLO", "Slovenščina", "Slovenski jezik, književnost, pravopis, eseji in interpretacija besedil."),
+    ("ZGO", "Zgodovina", "Slovenska in svetovna zgodovina od antike do sodobnosti."),
+    ("KEM", "Kemija", "Splošna, anorganska in organska kemija, stehiometrija in laboratorijske vaje."),
+    ("BIO", "Biologija", "Citologija, genetika, botanika, zoologija in ekologija."),
+    ("ANG", "Angleščina", "Angleški jezik, slovnica, besedišče, komunikacija in esejistika."),
+    ("GEO", "Geografija", "Fizična, družbena in regionalna geografija sveta in Slovenije."),
+    ("SPO", "Šport", "Telesna vzgoja, motorične spretnosti, timski športi in zdrav življenjski slog."),
 ]
 
-UCITELJI_IMENA = [
-    ("Matic", "Holobar"),
-    ("Janez", "Novak"),
-    ("Maja", "Horvat"),
-    ("Peter", "Krajnc"),
-    ("Ana", "Kovačič"),
-    ("Luka", "Zupan"),
-    ("Mojca", "Potočnik"),
-    ("Andrej", "Vidmar"),
-    ("Tanja", "Kos"),
-    ("Robert", "Golob"),
-    ("Irena", "Turk"),
-    ("Aleš", "Mlakar"),
-    ("Katarina", "Hrovat"),
-    ("Tomaž", "Kralj"),
-    ("Simona", "Leban"),
-    ("Gregor", "Rozman"),
-    ("Vesna", "Korošec"),
-    ("Bojan", "Rus"),
-    ("Nataša", "Zorko"),
-    ("Marko", "Kastelic"),
+# 5 učiteljev - vsak poučuje različne predmete brez prekrivanja
+UCITELJI = [
+    ("Matic", "Holobar", "matic.holobar@solski-is.si", ["INF"]),
+    ("Janez", "Novak", "janez.novak@solski-is.si", ["MAT", "FIZ"]),
+    ("Maja", "Horvat", "maja.horvat@solski-is.si", ["SLO", "ZGO"]),
+    ("Boris", "Jankovič", "boris.jankovic@solski-is.si", ["KEM", "BIO"]),
+    ("Ana", "Kovačič", "ana.kovacic@solski-is.si", ["ANG", "GEO", "SPO"]),
 ]
 
-UCENCI_IMENA = [
-    ("Mitja", "Jančič"),
-    ("Nal", "Dobravc"),
-    ("Luka", "Kovač"),
-    ("Ana", "Novak"),
-    ("Jan", "Zupančič"),
-    ("Sara", "Hrovat"),
-    ("Žiga", "Kralj"),
-    ("Maja", "Turk"),
-    ("Nejc", "Bizjak"),
-    ("Eva", "Mlakar"),
-    ("Anže", "Leban"),
-    ("Klara", "Rozman"),
-    ("Timotej", "Božič"),
-    ("Nika", "Korošec"),
-    ("David", "Rus"),
-    ("Lara", "Zorko"),
-    ("Matej", "Kastelic"),
-    ("Nina", "Oblak"),
-    ("Jaka", "Sever"),
-    ("Pia", "Knez"),
-    ("Matic", "Kotnik"),
-    ("Tjaša", "Breznik"),
-    ("Domen", "Petek"),
-    ("Lucija", "Kos"),
-    ("Filip", "Jagodnik"),
-    ("Zoja", "Uršič"),
-    ("Jakob", "Pavlič"),
-    ("Hana", "Zalar"),
-    ("Gal", "Vidic"),
-    ("Zala", "Pečnik"),
-    ("Rok", "Močnik"),
-    ("Maša", "Dolenc"),
-    ("Aljaž", "Erjavec"),
-    ("Teja", "Hočevar"),
-    ("Miha", "Jamnik"),
-    ("Tinkara", "Kovač"),
-    ("Lan", "Medved"),
-    ("Lea", "Pirc"),
-    ("Urban", "Šturm"),
-    ("Lana", "Žagar"),
-    ("Lovro", "Kalan"),
-    ("Ela", "Ravnikar"),
-    ("Tilen", "Čeh"),
-    ("Ema", "Debeljak"),
-    ("Gašper", "Kočevar"),
-    ("Julija", "Jerman"),
-    ("Vid", "Ribič"),
-    ("Neža", "Primožič"),
-    ("Blaž", "Rožič"),
-    ("Veronika", "Cvelbar"),
-    ("Aleksander", "Gregorič"),
-    ("Karin", "Suhadolc"),
-    ("Marcel", "Pintar"),
-    ("Patricija", "Kolar"),
-    ("Leon", "Gomboc"),
-    ("Danaja", "Marolt"),
-    ("Bor", "Vovk"),
-    ("Iris", "Trček"),
-    ("Nik", "Grošelj"),
-    ("Ajda", "Oprešnik"),
-    ("Martin", "Šuštar"),
-    ("Rebeka", "Tavčar"),
-    ("Erik", "Vindiš"),
-    ("Gaja", "Prah"),
-    ("Maj", "Jenko"),
-    ("Stella", "Zadravec"),
-    ("Val", "Cerar"),
-    ("Tara", "Černe"),
-    ("Liam", "Gradišar"),
-    ("Iza", "Kastelec"),
-    ("Maks", "Lipovec"),
-    ("Vita", "Ostanek"),
-    ("Oskar", "Bele"),
-    ("Zarja", "Perko"),
-    ("Rene", "Sitar"),
-    ("Brina", "Starič"),
-    ("Teo", "Štucin"),
-    ("Loti", "Tomšič"),
-    ("Jon", "Valentinčič"),
-    ("Lina", "Zadnik"),
-    ("Ian", "Žitnik"),
-    ("Mia", "Arko"),
-    ("Sven", "Dolenec"),
-    ("Tia", "Fras"),
-    ("Noel", "Gregorc"),
-    ("Alina", "Hribar"),
-    ("Lev", "Jerič"),
-    ("Mila", "Kopač"),
-    ("Tristan", "Lukić"),
-    ("Rubi", "Maver"),
-    ("Oliver", "Pevec"),
-    ("Ela", "Smole"),
-    ("Liam", "Šolar"),
-    ("Lili", "Tratnik"),
-    ("Noel", "Vovko"),
-    ("Zoja", "Zabukovec"),
-    ("Tim", "Železnik"),
-    ("Kaja", "Zupan"),
-    ("Jan", "Žibert"),
-    ("Hana", "Žnidaršič"),
-]
+# 3 razredi x 30 učencev = točno 90 učencev z resničnimi slovenskimi imeni
+RAZREDI_UCENCI = {
+    "3.A": [
+        ("Mitja", "Jančič"),
+        ("Nal", "Dobravc"),
+        ("Luka", "Kovač"),
+        ("Ana", "Novak"),
+        ("Jan", "Zupančič"),
+        ("Sara", "Hrovat"),
+        ("Žiga", "Kralj"),
+        ("Maja", "Turk"),
+        ("Nejc", "Bizjak"),
+        ("Eva", "Mlakar"),
+        ("Anže", "Leban"),
+        ("Klara", "Rozman"),
+        ("Timotej", "Božič"),
+        ("Nika", "Korošec"),
+        ("David", "Rus"),
+        ("Lara", "Zorko"),
+        ("Matej", "Kastelic"),
+        ("Nina", "Oblak"),
+        ("Jaka", "Sever"),
+        ("Pia", "Knez"),
+        ("Matic", "Kotnik"),
+        ("Tjaša", "Breznik"),
+        ("Domen", "Petek"),
+        ("Lucija", "Kos"),
+        ("Filip", "Jagodnik"),
+        ("Zoja", "Uršič"),
+        ("Miha", "Perko"),
+        ("Tina", "Dolenc"),
+        ("Vid", "Pečnik"),
+        ("Hana", "Močnik"),
+    ],
+    "2.A": [
+        ("Rok", "Jeras"),
+        ("Ema", "Podgoršek"),
+        ("Urban", "Lesjak"),
+        ("Lana", "Železnik"),
+        ("Blaž", "Tratnik"),
+        ("Zala", "Pavlič"),
+        ("Gašper", "Hočevar"),
+        ("Kaja", "Gale"),
+        ("Tilen", "Ribič"),
+        ("Lea", "Erjavec"),
+        ("Aljaž", "Jerman"),
+        ("Maša", "Jamnik"),
+        ("Jakob", "Kočevar"),
+        ("Mia", "Gregorič"),
+        ("Gal", "Černe"),
+        ("Ajda", "Čeh"),
+        ("Lovro", "Kolar"),
+        ("Laura", "Pintar"),
+        ("Simon", "Primožič"),
+        ("Teja", "Hribar"),
+        ("Bor", "Marolt"),
+        ("Patricija", "Kokalj"),
+        ("Mark", "Rožič"),
+        ("Neli", "Vovk"),
+        ("Tadej", "Šinkovec"),
+        ("Julija", "Kavčič"),
+        ("Gregor", "Tavčar"),
+        ("Veronika", "Čuk"),
+        ("Peter", "Bele"),
+        ("Nuša", "Logar"),
+    ],
+    "1.A": [
+        ("Klemen", "Majcen"),
+        ("Špela", "Humar"),
+        ("Primož", "Jenko"),
+        ("Danaja", "Kraljič"),
+        ("Denis", "Skok"),
+        ("Tinkara", "Blažič"),
+        ("Martin", "Jereb"),
+        ("Iris", "Zorman"),
+        ("Aleksander", "Kumperger"),
+        ("Brina", "Dolinar"),
+        ("Leon", "Završnik"),
+        ("Nastja", "Koželj"),
+        ("Samo", "Češarek"),
+        ("Ela", "Grobelnik"),
+        ("Marcel", "Knez"),
+        ("Tia", "Kladnik"),
+        ("Goran", "Cestnik"),
+        ("Karin", "Robnik"),
+        ("Erik", "Verbič"),
+        ("Iza", "Selan"),
+        ("Andraž", "Cerar"),
+        ("Gaja", "Kren"),
+        ("Dejan", "Vrhovnik"),
+        ("Živa", "Oprešnik"),
+        ("Sandi", "Vidic"),
+        ("Sandra", "Pirc"),
+        ("Jernej", "Krajnc"),
+        ("Rebeka", "Medvešek"),
+        ("Boštjan", "Godec"),
+        ("Tamara", "Brečko"),
+    ],
+}
 
-PREVOD_CRK = str.maketrans("čšžćđČŠŽĆĐ", "cszcdCSZCD")
+# Predmetnik po letnikih (smiselna razporeditev)
+PREDMETNIK_PO_RAZREDIH = {
+    "1.A": ["SLO", "MAT", "ANG", "INF", "BIO", "GEO", "SPO"],
+    "2.A": ["SLO", "MAT", "ANG", "INF", "FIZ", "KEM", "ZGO", "SPO"],
+    "3.A": ["SLO", "MAT", "ANG", "INF", "FIZ", "KEM", "BIO", "ZGO"],
+}
+
+PREVOD_CRK = str.maketrans("čžšČŽŠ", "czsCZS")
 
 
 def v_email(ime, priimek, domena, zasedeni):
@@ -159,7 +149,10 @@ def v_email(ime, priimek, domena, zasedeni):
 
 
 class Command(BaseCommand):
-    help = "Napolni bazo z dejanskimi testnimi podatki: 10 predmetov, 20 učiteljev, 100 učencev in njihove relacije."
+    help = (
+        "Vnese strukturirane testne podatke: 10 predmetov, natanko 5 učiteljev z različnimi predmeti, "
+        "3 razrede (1.A, 2.A, 3.A) z natanko 30 učenci vsak (skupaj 90 učencev) ter ustrezne relacije."
+    )
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -179,74 +172,64 @@ class Command(BaseCommand):
             Ucitelj.objects.all().delete()
             Predmet.objects.all().delete()
 
-        predmeti = [Predmet.objects.create(sifra=sifra, ime=ime) for sifra, ime in PREDMETI]
+        # 1. Predmeti
+        predmeti = [
+            Predmet.objects.create(sifra=sifra, ime=ime, opis=opis)
+            for sifra, ime, opis in PREDMETI
+        ]
         predmet_po_sifri = {p.sifra: p for p in predmeti}
         self.stdout.write(self.style.SUCCESS(f"Ustvarjenih {len(predmeti)} predmetov."))
 
+        # 2. Točno 5 učiteljev z različnimi predmeti
         zasedeni_emaili = set()
         ucitelji = []
-        for ime, priimek in UCITELJI_IMENA:
+        for ime, priimek, email, dodeljeni_predmeti in UCITELJI:
+            zasedeni_emaili.add(email)
             ucitelj = Ucitelj.objects.create(
                 ime=ime,
                 priimek=priimek,
-                email=v_email(ime, priimek, "solski-is.si", zasedeni_emaili),
+                email=email,
             )
+            for sifra in dodeljeni_predmeti:
+                UciteljPredmet.objects.create(ucitelj=ucitelj, predmet=predmet_po_sifri[sifra])
             ucitelji.append(ucitelj)
-
-        # Matic Holobar (mentor) poučuje Informatiko in Matematiko
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[0], predmet=predmet_po_sifri["INF"])
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[0], predmet=predmet_po_sifri["MAT"])
-
-        # Janez Novak poučuje Matematiko in Fiziko
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[1], predmet=predmet_po_sifri["MAT"])
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[1], predmet=predmet_po_sifri["FIZ"])
-
-        # Maja Horvat poučuje Slovenščino in Zgodovino
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[2], predmet=predmet_po_sifri["SLO"])
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[2], predmet=predmet_po_sifri["ZGO"])
-
-        # Peter Krajnc poučuje Informatiko in Fiziko
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[3], predmet=predmet_po_sifri["INF"])
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[3], predmet=predmet_po_sifri["FIZ"])
-
-        # Ana Kovačič poučuje Angleščino
-        UciteljPredmet.objects.get_or_create(ucitelj=ucitelji[4], predmet=predmet_po_sifri["ANG"])
-
-        # Preostali učitelji poučujejo 1-3 naključne predmete
-        for ucitelj in ucitelji[5:]:
-            izbrani = random.sample(predmeti, k=random.randint(1, 3))
-            for predmet in izbrani:
-                UciteljPredmet.objects.get_or_create(ucitelj=ucitelj, predmet=predmet)
-
-        # Zagotovimo, da ima vsak predmet vsaj enega učitelja
-        for predmet in predmeti:
-            if not UciteljPredmet.objects.filter(predmet=predmet).exists():
-                UciteljPredmet.objects.create(ucitelj=random.choice(ucitelji), predmet=predmet)
-
-        self.stdout.write(self.style.SUCCESS(f"Ustvarjenih {len(ucitelji)} učiteljev (prvi: {ucitelji[0]}) in njihove povezave."))
-
-        ucenci = []
-        for ime, priimek in UCENCI_IMENA:
-            ucenec = Ucenec.objects.create(
-                ime=ime,
-                priimek=priimek,
-                email=v_email(ime, priimek, "dijaki.solski-is.si", zasedeni_emaili),
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"Učitelj: {ucitelj.ime} {ucitelj.priimek} ({ucitelj.email}) -> predmeti: {', '.join(dodeljeni_predmeti)}"
+                )
             )
-            ucenci.append(ucenec)
 
-        # Mitja Jančič (učenec 1) obiskuje MAT, FIZ, SLO, INF, ANG
-        for s in ["MAT", "FIZ", "SLO", "INF", "ANG"]:
-            UcenecPredmet.objects.get_or_create(ucenec=ucenci[0], predmet=predmet_po_sifri[s])
+        # 3. Točno 3 razredi po 30 učencev (skupaj 90)
+        skupaj_ucencev = 0
+        skupaj_vpisov = 0
+        for razred, ucenci_seznam in RAZREDI_UCENCI.items():
+            predmeti_razreda = PREDMETNIK_PO_RAZREDIH[razred]
+            for ime, priimek in ucenci_seznam:
+                email = v_email(ime, priimek, "dijaki.solski-is.si", zasedeni_emaili)
+                ucenec = Ucenec.objects.create(
+                    ime=ime,
+                    priimek=priimek,
+                    email=email,
+                    razred=razred,
+                )
+                skupaj_ucencev += 1
+                for sifra in predmeti_razreda:
+                    UcenecPredmet.objects.create(ucenec=ucenec, predmet=predmet_po_sifri[sifra])
+                    skupaj_vpisov += 1
 
-        # Nal Dobravc (učenec 2) obiskuje MAT, SLO, INF, ZGO, SPO
-        for s in ["MAT", "SLO", "INF", "ZGO", "SPO"]:
-            UcenecPredmet.objects.get_or_create(ucenec=ucenci[1], predmet=predmet_po_sifri[s])
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"Razred {razred}: ustvarjenih {len(ucenci_seznam)} učencev, vpisani v: {', '.join(predmeti_razreda)}"
+                )
+            )
 
-        # Preostali učenci obiskujejo med 2 in 5 predmetov (zahteva: vsak >1 predmet)
-        for ucenec in ucenci[2:]:
-            izbrani = random.sample(predmeti, k=random.randint(2, 5))
-            for predmet in izbrani:
-                UcenecPredmet.objects.get_or_create(ucenec=ucenec, predmet=predmet)
-
-        self.stdout.write(self.style.SUCCESS(f"Ustvarjenih {len(ucenci)} učencev (prva: {ucenci[0]}, {ucenci[1]}) in relacije."))
-        self.stdout.write(self.style.SUCCESS("--- TESTNI PODATKI Z DEJANSKIMI IMENI IN PRIIMKI USPEŠNO VNESENI ---"))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"\nTestni podatki uspešno vneseni:\n"
+                f"- Predmetov: {len(predmeti)}\n"
+                f"- Učiteljev: {len(ucitelji)} (vsak uči različne predmete)\n"
+                f"- Razredov: {len(RAZREDI_UCENCI)} (1.A, 2.A, 3.A)\n"
+                f"- Učencev: {skupaj_ucencev} (30 na razred)\n"
+                f"- Vpisov v predmete: {skupaj_vpisov}"
+            )
+        )
