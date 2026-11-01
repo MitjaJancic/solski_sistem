@@ -376,7 +376,7 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
 ### Kriterij 17: Javna domena in šifrirana povezava HTTPS
 - **Implementacija:** Cloudflare vsebnik vzpostavi varen odhodni tunel do strežnika Cloudflare Edge, ki uporabnikom servira veljavno javno HTTPS potrdilo.
 - **Navodila za posnetek zaslona (Slika 26):**
-  - *URL naslov:* Javni URL (npr. `https://lens-computing-marina-chemical.trycloudflare.com`).
+  - *URL naslov:* Javni URL (npr. `https://situations-generating-taken-rouge.trycloudflare.com`).
   - *Kaj slikati:* Celotno okno brskalnika z javnim naslovom ter klikom na **varnostno ključavnico**, ki prikazuje veljavno šifrirano potrdilo (Connection is secure / Certifikat je veljaven).
   - *Podnapis:* **Slika 26: Javna domena z veljavnim HTTPS potrdilom v brskalniku (lasten vir)**
 
