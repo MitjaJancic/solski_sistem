@@ -58,8 +58,12 @@ V okviru šesttedenskega zaključnega praktičnega projekta smo zasnovali, imple
 
 ## KAZALO SLIK
 
-- **Slika 1:** Shema arhitekture vsebnikov Docker Compose v skupnem omrežju
-- **Slika 2:** Konceptualni in logični ER diagram relacijske baze podatkov
+- *![Slika 1](slike/slika_01.png)
+
+*Slika 1:** Shema arhitekture vsebnikov Docker Compose v skupnem omrežju
+- *![Slika 2](slike/slika_02.png)
+
+*Slika 2:** Konceptualni in logični ER diagram relacijske baze podatkov
 - **Slika 3:** Seznam vseh 10 predmetov z administrativnimi dejanji
 - **Slika 4:** Seznam 20 učiteljev z razvidnimi večpredmetnimi povezavami
 - **Slika 5:** Obrazec za dodeljevanje več predmetov posameznemu učitelju
@@ -210,6 +214,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Celotno tabelo s seznamom predmetov. Vidnih mora biti vseh 10 predmetov z njihovimi šiframi, nazivi in gumbi *Uredi* ter *Izbriši*, zgoraj desno pa zelen gumb *+ Nov predmet*.
   - *Podnapis:* **Slika 3: Seznam vseh 10 predmetov z administrativnimi dejanji (lasten vir)**
 
+![Slika 3](slike/slika_03.png)
+
 ---
 
 ### Kriterij 2: Vpis, popravljanje in brisanje učiteljev (najmanj 20) z večpredmetnimi povezavami
@@ -219,8 +225,12 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov:* `/ucitelji/`
   - *Kaj slikati za Sliko 4:* Tabela seznama učiteljev, kjer so v stolpcu *Predmeti* jasno vidne značke z več predmeti na učitelja (npr. Matic Holobar: INF, MAT; Janez Novak: MAT, FIZ). Vidna mora biti paginacija (stran 1 od 1 ali tabela z 20 vnosi).
   - *Podnapis:* **Slika 4: Seznam 20 učiteljev z razvidnimi večpredmetnimi povezavami (lasten vir)**
+
+![Slika 4](slike/slika_04.png)
   - *Kaj slikati za Sliko 5:* Kliknite na gumb *Uredi* pri enem od učiteljev (npr. pri Janezu Novaku na `/ucitelji/<id>/uredi/`). Slikajte obrazec, kjer je v polju za izbiro predmetov (večkratna izbira) označenih več predmetov hkrati.
   - *Podnapis:* **Slika 5: Obrazec za dodeljevanje več predmetov posameznemu učitelju (lasten vir)**
+
+![Slika 5](slike/slika_05.png)
 
 ---
 
@@ -231,8 +241,12 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov:* `/ucenci/`
   - *Kaj slikati za Sliko 6:* Tabela učencev s stolpci *Priimek in ime*, *Razred* (z modro značko `4.A`, `3.A` itd.), *E-pošta*, *Predmeti* (več predmetnih značk pri vsakem učencu) ter dejanja. Na vrhu seznama sta avtorja Mitja Jančič in Nal Dobravc.
   - *Podnapis:* **Slika 6: Seznam 120 učencev z razredi (1.A–4.A) in iskalnim filtrom (lasten vir)**
+
+![Slika 6](slike/slika_06.png)
   - *Kaj slikati za Sliko 7:* Kliknite na zeleni gumb *+ Nov učenec* (`/ucenci/dodaj/`). Slikajte obrazec, ki vsebuje polja za vnos imena, priimka, razreda, e-pošte in večkratno izbiro predmetov.
   - *Podnapis:* **Slika 7: Obrazec za vpis novega učenca z izbiro razreda in predmetnika (lasten vir)**
+
+![Slika 7](slike/slika_07.png)
 
 ---
 
@@ -244,6 +258,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Iskalno polje z vpisanim nizom `4.A` in spodnjo tabelo, ki prikazuje samo učence tega razreda, z rdečim gumbom `✕` za preklic filtra.
   - *Podnapis:* **Slika 8: Dinamično filtriranje učencev po razredu in priimku (lasten vir)**
 
+![Slika 8](slike/slika_08.png)
+
 ---
 
 ### Kriterij 5: Učiteljevo nalaganje in brisanje gradiv (le za predmete, ki jih poučuje)
@@ -253,8 +269,12 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov:* `/portal/ucitelj/predmeti/`
   - *Kaj slikati za Sliko 9:* Pregled dodeljenih predmetov (Informatika in Matematika) z izpisom naloženih gradiv in rdečim gumbom za brisanje gradiva.
   - *Podnapis:* **Slika 9: Učiteljev pregled dodeljenih predmetov in upravljanje gradiv (lasten vir)**
+
+![Slika 9](slike/slika_09.png)
   - *Kaj slikati za Sliko 10:* Odprite stran za nalaganje gradiva (`/portal/ucitelj/gradivo/nalozi/`). Slikajte obrazec, kjer je v spustnem meniju razvidno, da lahko učitelj izbira samo med svojimi predmeti.
   - *Podnapis:* **Slika 10: Obrazec za varno nalaganje učnega gradiva z avtorizacijo (lasten vir)**
+
+![Slika 10](slike/slika_10.png)
 
 ---
 
@@ -266,6 +286,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Seznam nalog pri predmetu Informatika (npr. *Projekt: Načrtovanje podatkovne baze*), kjer so vidni rok oddaje, število oddaj ter povezava na podrobnosti naloge.
   - *Podnapis:* **Slika 11: Učiteljev pregled oddanih nalog s stanjem rokov (lasten vir)**
 
+![Slika 11](slike/slika_11.png)
+
 ---
 
 ### Kriterij 7: Ocenjevanje oddaj (ocene 1–5, komentarji in CSV izvoz)
@@ -275,8 +297,12 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov:* `/portal/ucitelj/naloga/1/` (pregled oddaj projekta podatkovnih baz)
   - *Kaj slikati za Sliko 12:* Klik na povezavo *Oceni* pri eni izmed oddaj. Slikajte obrazec z vnosom ocene (npr. ocena 5) in komentarjem učitelja.
   - *Podnapis:* **Slika 12: Vmesnik za ocenjevanje oddaje z vnosom ocene in komentarja (lasten vir)**
+
+![Slika 12](slike/slika_12.png)
   - *Kaj slikati za Sliko 13:* Na strani naloge kliknite na gumb *Izvozi ocene v CSV*. Slikajte preneseno datoteko odprto v Excelu ali Beležnici s podatki o učencih, ocenah in opombah.
   - *Podnapis:* **Slika 13: Izvoz ocen nalog v formatu CSV (lasten vir)**
+
+![Slika 13](slike/slika_13.png)
 
 ---
 
@@ -286,10 +312,14 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov (neprijavljen):* `/registracija/`
   - *Kaj slikati za Sliko 14:* Obrazec za registracijo z vnosnimi polji uporabniško ime, ime, priimek, e-pošta in dvakratnim vnosom gesla.
   - *Podnapis:* **Slika 14: Obrazec za samoregistracijo novega učenca (lasten vir)**
+
+![Slika 14](slike/slika_14.png)
   - *Prijava z računom:* `M.Jancic` / `Ucenec123!`
   - *URL naslov:* `/portal/ucenec/profil/`
   - *Kaj slikati za Sliko 15:* Obrazec za urejanje profila prijavljenega učenca.
   - *Podnapis:* **Slika 15: Urejanje lastnega profila prijavljenega učenca (lasten vir)**
+
+![Slika 15](slike/slika_15.png)
 
 ---
 
@@ -301,6 +331,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Seznam vseh predmetov s potrditvenimi polji, kjer so označeni predmeti, ki jih učenec obiskuje, ter moder gumb *Shrani izbiro*.
   - *Podnapis:* **Slika 16: Učenčev modul za izbiro in posodabljanje predmetov (Moji predmeti) (lasten vir)**
 
+![Slika 16](slike/slika_16.png)
+
 ---
 
 ### Kriterij 10: Učenčev vpogled v gradiva in varen prenos
@@ -311,6 +343,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Seznam naloženih PDF gradiv (npr. *Priročnik – Relacijske podatkovne baze in SQL.pdf*) z gumbi za prenos datoteke in podatkom o avtorju gradiva.
   - *Podnapis:* **Slika 17: Učenčev pregled gradiv z gumbi za varen prenos (lasten vir)**
 
+![Slika 17](slike/slika_17.png)
+
 ---
 
 ### Kriterij 11: Oddaja nalog z avtomatskim poimenovanjem »Priimek Ime – Naslov naloge.pdf«
@@ -320,8 +354,12 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov:* `/portal/ucenec/naloga/1/` (Projekt podatkovne baze)
   - *Kaj slikati za Sliko 18:* Obrazec za oddajo naloge z gumbom za izbiro datoteke ter podatki o roku oddaje.
   - *Podnapis:* **Slika 18: Učenčeva oddaja domače naloge z izbiro PDF datoteke (lasten vir)**
+
+![Slika 18](slike/slika_18.png)
   - *Kaj slikati za Sliko 19:* Zajemite prikaz oddane datoteke v brskalniku ali v mapi strežnika, kjer je jasno viden format imena: `Jančič Mitja – Projekt: Načrtovanje podatkovne baze.pdf`.
   - *Podnapis:* **Slika 19: Datotečni sistem s pravilno poimenovano oddajo »Priimek Ime – Naslov naloge.pdf« (lasten vir)**
+
+![Slika 19](slike/slika_19.png)
 
 ---
 
@@ -333,6 +371,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Poskusite ponovno naložiti datoteko brez potrditve. Slikajte rdeče opozorilo: *»Za to nalogo že obstaja oddaja. Označi potrditev, da povoziš prejšnjo datoteko.«* ter potrditveno polje.
   - *Podnapis:* **Slika 20: Opozorilo in zahtevana potrditev ob poskusu povozitve oddaje (lasten vir)**
 
+![Slika 20](slike/slika_20.png)
+
 ---
 
 ### Kriterij 13: Center za obvestila z rdečo značko neprebranih vsebin
@@ -341,6 +381,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Prijava z računom:* `M.Jancic` ali `N.Dobravc` (ki imata neprebrana obvestila o novih ocenah).
   - *Kaj slikati:* Zgornjo navigacijsko vrstico z rdečo značko ob zvončku (npr. številka `2`) in odprto stran `/portal/obvestila/` s seznamom obvestil o prejetih ocenah s povezavami.
   - *Podnapis:* **Slika 21: Center za obvestila z rdečo značko neprebranih obvestil (lasten vir)**
+
+![Slika 21](slike/slika_21.png)
 
 ---
 
@@ -351,6 +393,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Zaslon brskalnika z zavrnitvijo dostopa (napaka 403 Forbidden ali 404 Not Found), kar dokazuje zaščito datotek.
   - *Podnapis:* **Slika 22: Zavrnitev nepooblaščenega neposrednega dostopa do naloženih datotek (HTTP 403) (lasten vir)**
 
+![Slika 22](slike/slika_22.png)
+
 ---
 
 ### Kriterij 15: Zgoščevanje gesel in overitveni mehanizem I.Priimek
@@ -359,8 +403,12 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov:* `/prijava/`
   - *Kaj slikati za Sliko 23:* Čisto prijavno okno z vpisanim uporabniškim imenom v formatu `M.Horvat` ali `M.Jancic`.
   - *Podnapis:* **Slika 23: Prijavno okno z overitvijo v formatu »I.Priimek« (lasten vir)**
+
+![Slika 23](slike/slika_23.png)
   - *Kaj odpreti za Sliko 24:* Odprite Adminer (`http://localhost:8081`) ali izpišite tabelo `auth_user` v bazi podatkov. Slikajte stolpec `password`, kjer je jasno viden niz oblike `pbkdf2_sha256$870000$...`, kar dokazuje, da gesla niso v čistem besedilu.
   - *Podnapis:* **Slika 24: Baza podatkov z zgoščenimi gesli (Adminer / SQL) (lasten vir)**
+
+![Slika 24](slike/slika_24.png)
 
 ---
 
@@ -371,6 +419,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Seznam vseh 5 delujočih vsebnikov (`aplikacija`, `baza`, `proxy`, `tunel`, `adminer`) s statusom **Up / Running**.
   - *Podnapis:* **Slika 25: Status vseh delujočih vsebnikov (docker compose ps) (lasten vir)**
 
+![Slika 25](slike/slika_25.png)
+
 ---
 
 ### Kriterij 17: Javna domena in šifrirana povezava HTTPS
@@ -379,6 +429,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *URL naslov:* Javni URL (npr. `https://situations-generating-taken-rouge.trycloudflare.com`).
   - *Kaj slikati:* Celotno okno brskalnika z javnim naslovom ter klikom na **varnostno ključavnico**, ki prikazuje veljavno šifrirano potrdilo (Connection is secure / Certifikat je veljaven).
   - *Podnapis:* **Slika 26: Javna domena z veljavnim HTTPS potrdilom v brskalniku (lasten vir)**
+
+![Slika 26](slike/slika_26.png)
 
 ---
 
@@ -389,6 +441,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Mobilni zaslon s strnjenim navigacijskim menijem (hamburger) in delujočim temnim načinom.
   - *Podnapis:* **Slika 27: Odzivni mobilni prikaz aplikacije na pametnem telefonu (lasten vir)**
 
+![Slika 27](slike/slika_27.png)
+
 ---
 
 ### Kriterij 19: Nadzor različic Git in GitHub (veje, PR, oznake)
@@ -398,6 +452,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj slikati:* Zavihek *Pull requests* (Closed) ali graf vej (*Network graph* / commit history), kjer se vidi sodelovanje obeh članov skupine ter oznaki `v1.0` in `v1.1`.
   - *Podnapis:* **Slika 28: Graf vej, commitov in združenih zahtevkov (Pull Requests) na GitHubu (lasten vir)**
 
+![Slika 28](slike/slika_28.png)
+
 ---
 
 ### Kriterij 20: Avtomatizirani testi (26/26 uspešnih testov)
@@ -406,6 +462,8 @@ V tem poglavju je za vsak uradni kriterij podrobno razložena programska izvedba
   - *Kaj pognati:* V terminalu zaženite: `docker compose exec -T aplikacija python manage.py test`.
   - *Kaj slikati:* Terminalski izpis z vrstico `Ran 26 tests ... OK`.
   - *Podnapis:* **Slika 29: Uspešna izvedba vseh 26 avtomatiziranih testov v terminalu (lasten vir)**
+
+![Slika 29](slike/slika_29.png)
 
 ---
 

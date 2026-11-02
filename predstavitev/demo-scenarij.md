@@ -1,87 +1,131 @@
-# Scenarij praktične demonstracije za zagovor
+# Scenarij zagovora v živo (Mitja Jančič & Nal Dobravc)
 
-Natančen potek korak za korakom za živo predstavitev pred mentorjem (≈8 do 10 minut).
-
-## Predpogoj pred začetkom predstavitve
-Preverite, da vsi Docker vsebniki tečejo in da je tunel aktiven:
-```bash
-docker compose ps
-powershell scripts\pokazi-javni-url.ps1
-```
-Pripravite dva odprta zavihka v brskalniku:
-1. `http://localhost/` (ali javna domena)
-2. `https://github.com/MitjaJancic/solski_sistem`
+Ta dokument je pripravljen kot natančen govorni in praktični scenarij za zagovor pred mentorjem **prof. Maticem Holobarjem**. Delo je enakomerno razdeljeno med **Mitjo** (vzdrževalec IS + razvijalec administracije) in **Nala** (razvijalec portala za učitelje in učence).
 
 ---
 
-## 1. Uvod in arhitektura (≈1 minuta)
-- Predstavite ekipo: **Mitja Jančič** (vzdrževalec IS in razvijalec) in **Nal Dobravc** (razvijalec).
-- Omenite tehnološki sklad: **Django 5.1**, **MariaDB 11**, **Nginx reverse proxy** s HTTPS ter **Cloudflare Tunnel** za javno domeno.
-- V terminalu pokažite izpis `docker compose ps` (5 ločenih vsebnikov) in zagon testov:
-  ```bash
-  docker compose exec aplikacija python manage.py test
-  ```
-  *(poudarite: vseh 26 avtomatiziranih testov se uspešno zaključi v nekaj sekundah)*.
+## Predpriprava (2 minuti pred vstopom mentorja)
+1. **Brskalnik – Zavihek 1:** Odprt `http://localhost/` (na pristajalni strani, neprijavljen).
+2. **Brskalnik – Zavihek 2:** Odprt Adminer `http://localhost:8081/` (prijavljen v bazo `sola_is`, strežnik `baza`, uporabnik `sola_is_app`, geslo `l0U0Fjj2lQGZS4JiESqvR2IW`).
+3. **Brskalnik – Zavihek 3:** Odprt GitHub `https://github.com/MitjaJancic/solski_sistem` (kjer se vidijo veje, Pull Requesti in zaprti Issue-ji).
+4. **Terminal (PowerShell):** Odprt v mapi `c:\Users\mitja\Downloads\sola_sistem`.
+5. **Pripravljena testna datoteka na namizju:** Ustvarite poljubno datoteko (npr. `naloga_test.pdf` ali `resitev.txt`), ki jo boste med zagovorom v živo oddali.
 
 ---
 
-## 2. Administrator — `admin` / `Admin123!` (≈2 minuti)
-1. **Prijava** kot `admin` na `/prijava/`.
-2. **Nadzorna plošča:** pokažite števce statistike (10 predmetov, 20 učiteljev, 120 učencev, aktivne naloge in oddaje).
-3. **Predmeti:**
-   - Odprite meni *Predmeti*.
-   - Kliknite *+ Nov predmet* → vnesite npr. šifro `ROB` in ime `Robotika` ter shranite.
-4. **Učitelji & M:N relacija:**
-   - Odprite meni *Učitelji*.
-   - Pokažite učitelja **Matic Holobar** (`M.Holobar`), ki poučuje *Informatiko* in *Matematiko*.
-   - Pokažite predmet *Informatika*, ki ga poučuje več učiteljev (M:N relacija).
-5. **Učenci in razredi:**
-   - Odprite meni *Učenci*.
-   - Pokažite razdelitev učencev v razrede **4.A**, **4.B** in **4.C**.
-   - V iskalno polje zgoraj vnesite `Jančič` ali `Dobravc` → pokažite hitro dinamično iskanje in gumb za čiščenje.
-6. **Odjava.**
+## 1. DEL: Uvod, Docker infrastruktura in GitHub (Govori: MITJA — 2 min)
+
+### 🎤 Kaj pove Mitja:
+> »Pozdravljeni. Predstavila bova zaključni projekt **Šolski IS+**, spletno aplikacijo za podporo šolskemu delu na daljavo. Jaz sem skrbel za sistemsko infrastrukturo, kontejnerizacijo, podatkovno bazo, varnost in administratorski del, Nal pa za razvoj uporabniškega portala za učitelje in učence ter sistem oddaje in ocenjevanja nalog.«
+
+### 💻 Kaj pokaže Mitja:
+1. **Preklopi na Terminal** in zažene:
+   ```powershell
+   docker compose ps
+   ```
+   * **Mitja pove:** »Celoten sistem teče v 5 ločenih, med seboj povezanih Docker vsebnikih: `baza` (MariaDB 11), `aplikacija` (Django 5 / Gunicorn), `proxy` (Nginx kot obrnjeni posrednik s HTTPS šifriranjem), `adminer` za vpogled v bazo ter `tunel` (Cloudflare Tunnel za javno domeno). Podatki so shranjeni na trajnem Docker volumnu, za varnostne kopije pa sva pripravila skripto `scripts/varnostna-kopija.sh`.«
+
+2. **Preklopi na Zavihek 3 (GitHub):**
+   * Pokaže veje (`main`, `develop`, `mitja`, `nal`), klikne na **Pull requests -> Closed (3)** in **Issues -> Closed (2)**.
+   * **Mitja pove:** »Razvoj je potekal po 6-tedenskem načrtu. Vsak je razvijal na svoji veji, kodo sva pregledovala prek Pull Requestov in odpravila zabeležene napake v GitHub Issues. Končna različica je označena z izdajo `v2.0`.«
+
+3. **Preklopi na Zavihek 2 (Adminer):**
+   * Pokaže seznam tabel (`administracija_predmet`, `administracija_ucitelj`, `administracija_ucenec`, `portal_gradivo`, `portal_naloga`, `portal_oddaja`, `portal_obvestilo`, `portal_profil`) in klikne na tabelo `auth_user`.
+   * **Mitja pove:** »Podatkovni model obsega 8 glavnih tabel z vmesnimi M:N tabelami. Kot vidite v tabeli `auth_user`, so vsa gesla zgoščena z algoritmom **PBKDF2-SHA256** in nikoli shranjena v čistem besedilu.«
 
 ---
 
-## 3. Učitelj — `M.Holobar` / `Ucitelj123!` (≈2 minuti)
-1. **Prijava** z mentorjevim računom `M.Holobar`.
-2. **Učiteljski pregled:**
-   - Pokažite KPI kartice (dodeljeni predmeti, aktivne naloge, oddaje, ki čakajo na oceno).
-   - Poudarite, da učitelj vidi **samo predmete, ki jih poučuje** (Informatika, Matematika).
-3. **Učna gradiva:**
-   - Kliknite *Naloži gradivo* ali pojdite v učilnico predmeta *Informatika*.
-   - Pokažite seznam naloženih PDF gradiv z varnim prenosom.
-4. **Naloge in ocenjevanje:**
-   - Kliknite na nalogo *»Načrtovanje podatkovne baze«*.
-   - Pokažite tabelo oddanih nalog učencev.
-   - Kliknite gumb **Oceni** ob oddaji učenca, vnesite oceno (npr. `5`) in spodbuden komentar: *»Izjemno natančen ER diagram, odlično delo.«*
-5. **Odjava.**
+## 2. DEL: Pogled Administratorja (Govori: MITJA — 2 min)
+
+### 💻 Kaj klikne in pove Mitja (Zavihek 1 – Aplikacija):
+1. Na začetni strani klikne gumb **Temni način / Svetli način** v zgornjem meniju.
+   * **Mitja pove:** »Uporabniški vmesnik je zgrajen z ogrodjem Bootstrap 5, vektorskimi ikonami in podpira preklop med svetlim in temnim načinom.«
+2. Klikne **Prijava** in vpiše:
+   * Uporabniško ime: `admin`
+   * Geslo: `Admin123!`
+3. **Nadzorna plošča administratorja:**
+   * **Mitja pove:** »V bazi imamo 10 predmetov, 20 učiteljev in 120 učencev, razdeljenih v tri razrede (4.A, 4.B in 4.C). Vsa uporabniška imena so standardizirana v obliki `Začetnica.Priimek`, prijava pa je neobčutljiva na velike/male črke in šumnike.«
+4. Klikne v meniju na **Predmeti**:
+   * Klikne **+ Nov predmet**, vpiše šifro `ROB`, ime `Robotika`, opis `Osnove robotike` in klikne **Shrani**.
+   * Nato pri predmetu `Robotika` klikne **Izbriši** in potrdi brisanje.
+   * **Mitja pove:** »Administratorju je prek vmesnika omogočen poln CRUD nad predmeti, učitelji in učenci.«
+5. Klikne na **Učitelji**:
+   * Pokaže vrstico **Holobar Matic (`M.Holobar`)**, kjer se vidita znački `INF` in `MAT`.
+   * **Mitja pove:** »Tukaj je prikazana relacija več-proti-več (M:N): posamezen učitelj poučuje več predmetov, prav tako pa ima posamezen predmet več učiteljev.«
+6. Klikne na **Učenci**:
+   * V iskalno polje vpiše `Jančič` in klikne **Išči**.
+   * Pokaže učenca **Jančič Mitja (4.A)** s seznamom vpisanih predmetov.
+7. Klikne **Odjava** in preda besedo Nalu.
 
 ---
 
-## 4. Učenec — `M.Jancic` / `Ucenec123!` (≈3 minute)
-1. **Pristajalna stran in prijava:**
-   - Pokažite gumb za **preklop med svetlim in temnim načinom** (Dark/Light mode).
-   - Prijavite se kot učenec `M.Jancic`.
-2. **Učenčev pregled:**
-   - Pokažite vpisane predmete, povprečno oceno in center za obvestila (rdeča značka z obvestilom, da je mentor pravkar ocenil nalogo!).
-3. **Moji predmeti:**
-   - Kliknite *Moji predmeti* → pokažite interaktivno izbiro predmetov (sistem zahteva vsaj 1 predmet).
-4. **Oddaja naloge in poimenovanje:**
-   - Kliknite na odprto nalogo pri Informatiki.
-   - Izberite datoteko (npr. PDF dokument) in kliknite **Oddaj**.
-   - **Ključni dokaz za mentorja:** Odprite *Moje oddaje* in pokažite ime shranjene datoteke:  
-     `Jančič Mitja – Načrtovanje podatkovne baze.pdf` (točno po navodilih!).
-5. **Potrditev prepisa (povozitve):**
-   - Ponovno kliknite na isto nalogo za ponovno oddajo.
-   - Pokažite opozorilo, da nova oddaja nadomesti staro šele, ko učenec to **izrecno potrdi**.
+## 3. DEL: Pogled Učitelja in ocenjevanje (Govori: NAL — 2.5 min)
+
+### 🎤 Kaj pove Nal:
+> »Jaz bom predstavil uporabniški portal za učitelje in učence, ki vključuje avtorizacijo po vlogah, upravljanje gradiv, oddajo nalog s pravilnim poimenovanjem ter nadgradnjo: ustvarjanje nalog z roki, ocenjevanje in center za obvestila.«
+
+### 💻 Kaj klikne in pove Nal:
+1. Prijavi se kot učitelj (mentorjev račun):
+   * Uporabniško ime: `M.Holobar` (ali `m.holobar`)
+   * Geslo: `Ucitelj123!`
+2. **Pregled učitelja:**
+   * **Nal pove:** »Ob prijavi učitelj vidi svojo nadzorno ploščo: število dodeljenih predmetov, aktivne naloge in koliko oddaj čaka na oceno. Učitelj ima dostop **izključno do predmetov, ki jih dejansko poučuje** – v tem primeru Informatika in Matematika.«
+3. Klikne na predmet **Informatika** (*Učilnica predmeta*):
+   * Pokaže tabelo **Učna gradiva predmeta** in klikne **Naloži gradivo** (zgoraj desno).
+   * Pokaže spustni seznam predmetov.
+   * **Nal pove:** »Pri nalaganju gradiva lahko učitelj izbere samo svoj predmet. Tujih predmetov sistem sploh ne ponudi, tudi ob ročnem poskusu prek URL-ja pa strežnik vrne napako `403 Forbidden`.«
+4. Vrne se nazaj v učilnico predmeta **Informatika** in v tabeli nalog klikne **Pregled oddaj** pri nalogi *»Načrtovanje podatkovne baze«*:
+   * Pokaže seznam oddanih nalog dijakov.
+   * **Nal pove:** »Učitelj tukaj vidi vse oddaje učencev pri svojem predmetu, natančen čas oddaje in rdečo oznako, če je bila naloga oddana po roku. Seznam lahko tudi izvozi v CSV.«
+5. Pri enem izmed učencev (npr. **Kovač Luka**, ki ima status *V pregledu* ali pri **Jančič Mitja**) klikne **Oceni** (ali **Popravi**):
+   * Izbere oceno **`5`**, v komentar vpiše: `Odlično izdelan ER diagram in normalizacija.` ter klikne **Shrani oceno**.
+   * **Nal pove:** »Ko učitelj shrani oceno, sistem učencu samodejno pošlje obvestilo v njegov center za obvestila.«
+6. Klikne **Odjava**.
 
 ---
 
-## 5. Varnostni mehanizmi in zaključek (≈1 minuta)
-1. **Avtorizacija (preizkus vdora):**
-   - Kot prijavljen učenec v naslovno vrstico ročno vpišite `/admin-portal/` → sistem nemudoma zavrne dostop s kodo **403 Forbidden**.
-   - Poskusite neposreden prenos datoteke brez prijave → Nginx in Django zavrneta dostop (datoteke niso javne).
-2. **Zaključek:**
-   - Pokažite repozitorij na GitHubu z oznako izdaje **`v2.0`** ter Pull Requesti članov skupine.
-   - Zahvalite se mentorju in povabite k vprašanjem.
+## 4. DEL: Pogled Učenca, poimenovanje datoteke in povozitev (Govori: NAL — 2.5 min)
+
+### 💻 Kaj klikne in pove Nal:
+1. Na prijavni strani klikne spodaj **Registracija učenca** (`/registracija/`):
+   * **Nal pove:** »Novi učenci se lahko sami registrirajo in si uredijo profil, za demonstracijo pa se bova prijavila z obstoječim računom dijaka.«
+2. Klikne nazaj na **Prijava** in se prijavi kot učenec:
+   * Uporabniško ime: `M.Jancic`
+   * Geslo: `Ucenec123!`
+3. **Pregled učenca:**
+   * Pokaže statistiko (vpisani predmeti, oddane naloge, povprečna ocena) in zgoraj v meniju klikne na **zvonček (Obvestila)**, kjer sveti rdeča številka.
+   * **Nal pove:** »Učenec takoj prejme neprebrano obvestilo, da mu je profesor Matic Holobar pravkar ocenil nalogo.«
+4. V zgornjem meniju klikne **Moji predmeti** (`/ucenec/predmeti/`):
+   * **Nal pove:** »Učenec si tukaj sam določa in popravlja seznam predmetov, ki jih obiskuje. Validacija zahteva, da obiskuje vsaj en predmet.«
+   * Klikne **Prekliči** (ali **Shrani izbiro**).
+5. Na pregledu učenca pri predmetu **Informatika** klikne **Učna gradiva predmeta**:
+   * Klikne **Prenesi** pri enem gradivu.
+   * **Nal pove:** »Učenec ima vpogled v gradiva vseh svojih predmetov. Datoteke niso javno dostopne v mapi `/media/`, ampak gre vsak prenos čez zaščiten Django pogled `/prenos/`, ki preveri, ali je učenec res vpisan v ta predmet.«
+6. V zgornjem meniju klikne **Naloge** in odpre nalogo (npr. *»Normalizacija relacijske sheme (3NF)«* ali *»Načrtovanje podatkovne baze«*):
+   * **Nal pove:** »Tukaj prideva do ključne zahteve navodil: oddaja naloge, avtomatsko preimenovanje datoteke in potrditev povozitve.«
+   * **1. korak (Oddaja):** Če naloga še ni oddana, izbere datoteko z računalnika in klikne **Oddaj rešitev**.
+   * Pokaže razdelek **Vaša trenutna oddaja**, kjer piše ime datoteke:  
+     **`Jančič Mitja – Normalizacija relacijske sheme (3NF).pdf`**
+   * **Nal pove:** »Ne glede na to, kako je učenec poimenoval datoteko na svojem računalniku, jo strežnik samodejno shrani točno v formatu **`Priimek Ime – Naslov naloge`** z ustrezno končnico.«
+   * **2. korak (Ponovna oddaja brez potrditve):** Na desni strani v obrazcu *Ponovna oddaja rešitve* ponovno izbere datoteko, **NE označi** potrditvenega polja in klikne **Povozi in oddaj novo verzijo**.
+   * Pokaže rdeče opozorilo: *»Za povozitev obstoječe oddaje označi potrditev.«*
+   * **Nal pove:** »Sistem prepreči nenamerno povozitev datoteke, dokler učenec tega izrecno ne potrdi.«
+   * **3. korak (Ponovna oddaja s potrditvijo):** Ponovno izbere datoteko, **označi kljukico** *»Potrjujem, da želim povoziti prejšnjo oddano datoteko«* in klikne gumb za oddajo.
+   * Pokaže zeleno sporočilo, da je bila prejšnja datoteka uspešno nadomeščena.
+
+---
+
+## 5. DEL: Varnostni preizkus in zaključek (Skupaj — 1 min)
+
+### 💻 Kaj naredi Nal (še vedno prijavljen kot učenec `M.Jancic`):
+1. V naslovno vrstico brskalnika ročno vpiše: `http://localhost/predmeti/` (administratorski URL) ali `http://localhost/ucitelj/` in pritisne Enter.
+2. Na zaslonu se izpiše **`403 Forbidden`**.
+   * **Nal pove:** »Če učenec poskusi dostopati do učiteljskega ali administratorskega pogleda, ga avtorizacijski sistem na strežniku takoj ustavi s statusom `403 Forbidden`.«
+
+### 💻 Kaj naredi Mitja za konec:
+1. Preklopi na **Terminal** in požene:
+   ```powershell
+   docker compose exec aplikacija python manage.py test
+   ```
+2. Počaka nekaj sekund, da se izpiše **`Ran 26 tests ... OK`**.
+   * **Mitja pove:** »Za zagotavljanje zanesljivosti sva napisala 26 avtomatiziranih testov, ki preverijo vse tri vloge, M:N relacije, poimenovanje datotek, potrditev povozitve in zaščito pred nepooblaščenim dostopom. Vseh 26 testov je uspešnih. Hvala za pozornost, z veseljem odgovoriva na vaša vprašanja.«
